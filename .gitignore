@@ -2,6 +2,9 @@
 !.gitignore
 !.config/
 /.config/*
+!.config/autostart/
+/.config/autostart/*
+!.config/autostart/gnome-keyring-ssh.desktop
 !.config/git/
 !.config/guix/
 /.config/guix/*
