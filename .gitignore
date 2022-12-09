@@ -1,0 +1,11 @@
+/*
+!.gitignore
+!.config/
+/.config/*
+!.config/git/
+!.config/guix/
+/.config/guix/*
+!.config/guix/ariadne.scm
+!.config/guix/channels.scm
+!.config/guix/modules/
+
