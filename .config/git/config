@@ -13,3 +13,5 @@
     name = Kevin J Hoerr
     signingKey = BEDBA29269ED7111
 
+[push]
+	autoSetupRemote = true
