@@ -11,4 +11,8 @@
 !.config/guix/ariadne.scm
 !.config/guix/channels.scm
 !.config/guix/modules/
+!.config/nixos/
+/.config/nixos/*
+!.config/nixos/whisker.nix
+!.config/nixos/hardware-whisker.nix
 
