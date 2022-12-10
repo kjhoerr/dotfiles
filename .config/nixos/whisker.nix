@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
@@ -22,7 +22,6 @@
   };
 
   networking.hostName = "whisker"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -31,7 +30,7 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.utf8";
 
-  # Enable the GNOME Desktop Environment.
+  # Enable the GNOME Desktop Environment with wayland.
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.displayManager.gdm.wayland = true;
@@ -119,9 +118,11 @@
   ];
 
   # Add env vars
-  environment.sessionVariables.QT_QPA_PLATFORM = "wayland";
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
-  environment.sessionVariables.NIXOS_CONFIG = "/home/kjhoerr/.config/nixos/whisker.nix";
+  environment.sessionVariables = {
+    QT_QPA_PLATFORM = "wayland";
+    NIXOS_OZONE_WL = "1";
+    NIXOS_CONFIG = "/home/kjhoerr/.config/nixos/whisker.nix";
+  };
   
   services.tailscale.enable = true;
   services.syncthing = {
@@ -140,6 +141,16 @@
   ];
   services.fwupd.enable = true;
   services.fwupd.extraRemotes = [ "lvfs-testing" ];
+  # Enable in support of Framework laptop firmware updates
+  #environment.etc = {
+  #  # recommended by framework for firmware 3.10
+  #  "fwupd/uefi_capsule.conf" = lib.mkForce {
+  #    source = pkgs.runCommand "fwupd-uefi-capsule-update-on-disk-disable.conf" { } ''
+  #      sed "s,^#DisableCapsuleUpdateOnDisk=true,DisableCapsuleUpdateOnDisk=true," \
+  #      "${pkgs.fwupd}/etc/fwupd/uefi_capsule.conf" > "$out"
+  #    '';
+  #  };
+  #};
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
