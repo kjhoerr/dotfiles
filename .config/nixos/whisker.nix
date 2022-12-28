@@ -115,6 +115,13 @@
     ];
   };
 
+  programs.java.enable = true;
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   
@@ -133,6 +140,7 @@
     gnomeExtensions.gsconnect
     gnomeExtensions.clipboard-history
     gnomeExtensions.tailscale-status
+    (steam.override { withJava = true; })
   ];
   
   fonts.fonts = with pkgs; [
