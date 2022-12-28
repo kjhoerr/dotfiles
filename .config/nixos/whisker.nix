@@ -50,6 +50,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.interfaces.enp9s0.useDHCP = false;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
