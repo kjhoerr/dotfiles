@@ -7,38 +7,13 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-whisker.nix
+      ./hardware-ariadne.nix
     ];
 
   # Bootloader.
-  time.hardwareClockInLocalTime = true;
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  boot.loader.grub = {
-    # despite what the configuration.nix manpage seems to indicate,
-    # as of release 17.09, setting device to "nodev" will still call
-    # `grub-install` if efiSupport is true
-    # (the devices list is not used by the EFI grub install,
-    # but must be set to some value in order to pass an assert in grub.nix)
-    device = "nodev";
-    efiSupport = true;
-    enableCryptodisk = true;
-    enable = true;
-    # set $FS_UUID to the UUID of the EFI partition
-    #extraEntries = ''
-    #  menuentry "Windows 11" {
-    #    insmod part_gpt
-    #    insmod fat
-    #    insmod search_fs_uuid
-    #    insmod chain
-    #    search --fs-uuid --set=root 569D-4A46
-    #    chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-    #  }
-    #'';
-    version = 2;
-    useOSProber = true;
-  };
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Setup keyfile
@@ -50,7 +25,6 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.interfaces.enp9s0.useDHCP = false;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -108,18 +82,10 @@
       git
       starship
       pueue
-      protonmail-bridge
       mkcert
       pfetch
       runelite
     ];
-  };
-
-  programs.java.enable = true;
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
   };
 
   # Allow unfree packages
@@ -140,7 +106,6 @@
     gnomeExtensions.gsconnect
     gnomeExtensions.clipboard-history
     gnomeExtensions.tailscale-status
-    (steam.override { withJava = true; })
   ];
   
   fonts.fonts = with pkgs; [
@@ -155,7 +120,7 @@
   environment.sessionVariables = {
     QT_QPA_PLATFORM = "wayland";
     NIXOS_OZONE_WL = "1";
-    NIXOS_CONFIG = "/home/kjhoerr/.config/nixos/whisker.nix";
+    NIXOS_CONFIG = "/home/kjhoerr/.config/nixos/ariadne.nix";
   };
   
   services.tailscale.enable = true;
@@ -205,7 +170,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.05"; # Did you read the comment?
+  system.stateVersion = "22.11"; # Did you read the comment?
   
   nix.settings.experimental-features = "nix-command flakes";
 
