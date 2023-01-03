@@ -2,36 +2,37 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
-
-{
+{ config, pkgs, lib, inputs, ... }: {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-ariadne.nix
     ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.supportedFilesystems = [ "btrfs" ];
+  hardware.enableAllFirmware = true;
 
-  # Setup keyfile
-  boot.initrd.secrets = {
-    "/crypto_keyfile.bin" = null;
+  # Bootloader.
+  boot.lanzaboote = {
+    enable = true;
+    publicKeyFile = "/etc/secureboot/keys/db/db.pem";
+    privateKeyFile = "/etc/secureboot/keys/db/db.key";
   };
 
-  networking.hostName = "whisker"; # Define your hostname.
-
-  # Enable networking
+  networking.hostName = "ariadne";
   networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.utf8";
 
-  # Enable the GNOME Desktop Environment with wayland.
-  services.xserver.enable = true;
+  # Enable the X11 windowing system.
+  services.xserver = {
+    enable = true;
+    layout = "us";
+    xkbVariant = "";
+  };
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.displayManager.gdm.wayland = true;
   services.xserver.desktopManager.gnome = {
@@ -41,12 +42,6 @@
       experimental-features=['scale-monitor-framebuffer']
     '';
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
-  };
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
   };
 
   # Enable CUPS to print documents.
@@ -64,10 +59,13 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.mutableUsers = false;
+  users.users.root.passwordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
+    passwordFile = "/persist/passwords/kjhoerr";
     packages = with pkgs; [
       firefox-wayland
       caprine-bin
@@ -90,7 +88,7 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
+
   # Add docker
   virtualisation.docker.enable = true;
 
@@ -107,7 +105,7 @@
     gnomeExtensions.clipboard-history
     gnomeExtensions.tailscale-status
   ];
-  
+
   fonts.fonts = with pkgs; [
     ibm-plex
     merriweather
@@ -122,7 +120,7 @@
     NIXOS_OZONE_WL = "1";
     NIXOS_CONFIG = "/home/kjhoerr/.config/nixos/ariadne.nix";
   };
-  
+
   services.tailscale.enable = true;
   services.syncthing = {
     enable = true;
@@ -130,7 +128,7 @@
     dataDir = "/home/kjhoerr/Documents";
     configDir = "/home/kjhoerr/.config/syncthing";
   };
-  
+
   programs.neovim.enable = true;
   programs.neovim.defaultEditor = true;
   programs.ssh.startAgent = false;
@@ -155,9 +153,33 @@
     gpg-connect-agent /bye
     export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
   '';
-  
-  # udev 250 doesn't reliably reinitialize devices after restart
-  systemd.services.systemd-udevd.restartIfChanged = false;
+
+  # symlinks to enable "erase your darlings"
+  environment.persistence."/persist" = {
+    directories = [
+      "/etc/nixos"
+      "/etc/secureboot"
+      "/etc/NetworkManager/system-connections"
+      "/var/lib/bluetooth"
+      "/var/lib/colord"
+      "/var/lib/docker"
+      "/var/lib/fprint"
+      "/var/lib/tailscale"
+      "/var/lib/upower"
+      "/var/lib/systemd/coredump"
+    ];
+    files = [
+      "/var/lib/NetworkManager/secret_key"
+      "/var/lib/NetworkManager/seen-bssids"
+      "/var/lib/NetworkManager/timestamps"
+      "/etc/machine-id"
+      "/var/lib/power-profiles-daemon/state.ini"
+    ];
+  };
+  security.sudo.extraConfig = ''
+    # rollback results in sudo lectures after each reboot
+    Defaults lecture = never
+  '';
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -171,7 +193,7 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
-  
+
   nix.settings.experimental-features = "nix-command flakes";
 
 }
