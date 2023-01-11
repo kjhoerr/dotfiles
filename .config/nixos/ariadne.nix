@@ -2,23 +2,48 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, ... }: {
+{ lib, config, pkgs, ... }: {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-ariadne.nix
     ];
 
+  #boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.resumeDevice = "/dev/disk/by-uuid/5babb118-50f9-4384-8a76-dd0cadf64eee";
+  boot.kernelParams = [
+    "quiet"
+    "splash"
+    "rd.systemd.show_status=false"
+    "rd.udev.log_level=3"
+    "udev.log_priority=3"
+    "boot.shell_on_fail"
+  ];
+  boot.consoleLogLevel = 0;
   boot.supportedFilesystems = [ "btrfs" ];
   hardware.enableAllFirmware = true;
 
-  # Bootloader.
+  boot.plymouth.enable = true;
+
+  boot.initrd.verbose = false;
+  boot.initrd.systemd.enable = true;
+
   boot.lanzaboote = {
     enable = true;
     publicKeyFile = "/etc/secureboot/keys/db/db.pem";
     privateKeyFile = "/etc/secureboot/keys/db/db.key";
   };
+
+  services.logind = {
+    lidSwitch = "suspend-then-hibernate";
+    extraConfig = ''
+      HandlePowerKey=suspend-then-hibernate
+      IdleAction=suspend-then-hibernate
+      IdleActionSec=2m
+    '';
+  };
+  systemd.sleep.extraConfig = "HibernateDelaySec=30min";
 
   networking.hostName = "ariadne";
   networking.networkmanager.enable = true;
@@ -47,7 +72,7 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
+  # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -66,24 +91,6 @@
     description = "Kevin Hoerr";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     passwordFile = "/persist/passwords/kjhoerr";
-    packages = with pkgs; [
-      firefox-wayland
-      caprine-bin
-      bind
-      discord-canary
-      doctl
-      keepassxc
-      vscode
-      k9s
-      kubernetes-helm
-      kubectl
-      git
-      starship
-      pueue
-      mkcert
-      pfetch
-      runelite
-    ];
   };
 
   # Allow unfree packages
@@ -92,18 +99,19 @@
   # Add docker
   virtualisation.docker.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim
     kakoune
     syncthing-tray
     yubikey-personalization
+    gcc
     gnupg
     pinentry-gnome
+    gnome.gnome-tweaks
     gnomeExtensions.gsconnect
     gnomeExtensions.clipboard-history
     gnomeExtensions.tailscale-status
+    gnomeExtensions.night-theme-switcher
   ];
 
   fonts.fonts = with pkgs; [
@@ -114,40 +122,15 @@
     noto-fonts-emoji
   ];
 
-  # Add env vars
   environment.sessionVariables = {
     QT_QPA_PLATFORM = "wayland";
     NIXOS_OZONE_WL = "1";
-    NIXOS_CONFIG = "/home/kjhoerr/.config/nixos/ariadne.nix";
   };
 
   services.tailscale.enable = true;
-  services.syncthing = {
-    enable = true;
-    user = "kjhoerr";
-    dataDir = "/home/kjhoerr/Documents";
-    configDir = "/home/kjhoerr/.config/syncthing";
-  };
-
-  programs.neovim.enable = true;
-  programs.neovim.defaultEditor = true;
-  programs.ssh.startAgent = false;
-  services.pcscd.enable = true;
-  services.udev.packages = with pkgs; [
-    yubikey-personalization
-  ];
   services.fwupd.enable = true;
   services.fwupd.extraRemotes = [ "lvfs-testing" ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  #services.gnome3.gnome-keyring.enable = false;
-  #programs.gpg.scdaemonSettings = { disable-ccid = true; };
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
   environment.shellInit = ''
     export GPG_TTY="$(tty)"
     gpg-connect-agent /bye
@@ -181,10 +164,134 @@
     Defaults lecture = never
   '';
 
+  home-manager.users.kjhoerr = {
+    home.packages = with pkgs; [
+      firefox-wayland
+      caprine-bin
+      bind
+      discord-canary
+      doctl
+      keepassxc
+      vscode
+      k9s
+      kubernetes-helm
+      kubectl
+      starship
+      pueue
+      mkcert
+      pfetch
+      runelite
+    ];
+
+    programs.bash = {
+      enable = true;
+
+      bashrcExtra = ''
+        eval "$(starship init bash)"
+      '';
+    };
+    programs.git = {
+      enable = true;
+      package = pkgs.gitAndTools.gitFull;
+      userName = "Kevin J Hoerr";
+      userEmail = "kjhoerr@protonmail.com";
+      signing = {
+        key = "BEDBA29269ED7111";
+        signByDefault = true;
+      };
+      extraConfig = {
+        init.defaultBranch = "trunk";
+        core.editor = "nvim";
+        color.ui = "always";
+        stash.showPatch = true;
+        pull.ff = "only";
+        push.autoSetupRemote = true;
+      };
+    };
+    programs.home-manager.enable = true;
+    programs.neovim = {
+      enable = true;
+      vimAlias = true;
+      defaultEditor = true;
+      extraConfig = ''
+        set nocompatible
+        set showmatch
+        set ignorecase
+        set hlsearch
+        set incsearch
+        set number
+        set wildmode=longest,list
+        filetype plugin indent on
+	if !exists('g:vscode')
+          syntax on
+          set mouse=a
+          cmap w!! w !sudo tee > /dev/null %
+          colorscheme dracula
+	endif
+      '';
+      plugins = with pkgs.vimPlugins; [
+        bufferline-nvim
+        dracula-vim
+        nvim-colorizer-lua
+        nvim-tree-lua
+        tokyonight-nvim
+        telescope-fzf-native-nvim
+        telescope-nvim
+        gitsigns-nvim
+        (nvim-treesitter.withPlugins (plugins: with plugins; [
+          tree-sitter-bash
+          tree-sitter-dockerfile
+          tree-sitter-html
+          tree-sitter-java
+          tree-sitter-javascript
+          tree-sitter-json
+          tree-sitter-markdown
+          tree-sitter-nix
+          tree-sitter-regex
+        ]))
+      ];
+
+      extraPackages = with pkgs; [
+        nodePackages.bash-language-server
+        nodePackages.dockerfile-language-server-nodejs
+        hadolint
+        nodePackages.vim-language-server
+        shellcheck
+        rnix-lsp
+        deadnix
+        statix
+      ];
+    };
+
+    services.syncthing = {
+      enable = true;
+    };
+    services.gpg-agent = {
+      enable = true;
+      enableSshSupport = true;
+      enableExtraSocket = true;
+      pinentryFlavor = "gnome3";
+    };
+
+    home.stateVersion = "22.11";
+  };
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
   networking.firewall.checkReversePath = "loose";
+
+  # Copy the NixOS configuration file and link it from the resulting system
+  # (/run/current-system/configuration.nix). This is useful in case you
+  # accidentally delete configuration.nix.
+  # system.copySystemConfiguration = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -197,3 +304,4 @@
   nix.settings.experimental-features = "nix-command flakes";
 
 }
+
