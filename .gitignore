@@ -5,7 +5,6 @@
 !.config/autostart/
 /.config/autostart/*
 !.config/autostart/gnome-keyring-ssh.desktop
-!.config/git/
 !.config/guix/
 /.config/guix/*
 !.config/guix/ariadne.scm
