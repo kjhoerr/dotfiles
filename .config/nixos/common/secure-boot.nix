@@ -31,6 +31,9 @@
   # sudo bootctl status                # View current boot status
   # sudo sbctl enroll-keys --microsoft # Add your SB keys to UEFI - must be in Secure Boot setup mode to enroll keys
   #
+  # Most importantly, review this document:
+  # https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
+  #
   boot.initrd.systemd.enable = true;
   boot.bootspec.enable = true;
   boot.loader.systemd-boot.enable = lib.mkForce false;
