@@ -3,15 +3,9 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { lib, config, pkgs, ... }: {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-ariadne.nix
-    ];
-
   #boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.resumeDevice = "/dev/disk/by-uuid/5babb118-50f9-4384-8a76-dd0cadf64eee";
   boot.kernelParams = [
     "quiet"
     "splash"
@@ -28,22 +22,33 @@
 
   boot.initrd.verbose = false;
   boot.initrd.systemd.enable = true;
+  boot.initrd.postMountCommands = lib.mkBefore ''
+    ln -snfT /persist/etc/machine-id /etc/machine-id
+    ln -snfT /persist/var/lib/NetworkManager/secret_key /var/lib/NetworkManager/secret_key
+    ln -snfT /persist/var/lib/NetworkManager/seen-bssids /var/lib/NetworkManager/seen-bssids
+    ln -snfT /persist/var/lib/NetworkManager/timestamps /var/lib/NetworkManager/timestamps
+    ln -snfT /persist/var/lib/power-profiles-daemon/state.ini /var/lib/power-profiles-daemon/state.ini
+  '';
 
+  boot.bootspec.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.lanzaboote = {
     enable = true;
-    publicKeyFile = "/etc/secureboot/keys/db/db.pem";
-    privateKeyFile = "/etc/secureboot/keys/db/db.key";
+    pkiBundle = "/etc/secureboot";
   };
+  security.tpm2.enable = true;
+  security.tpm2.tctiEnvironment.enable = true;
 
-  services.logind = {
-    lidSwitch = "suspend-then-hibernate";
-    extraConfig = ''
-      HandlePowerKey=suspend-then-hibernate
-      IdleAction=suspend-then-hibernate
-      IdleActionSec=2m
-    '';
-  };
-  systemd.sleep.extraConfig = "HibernateDelaySec=30min";
+  # No swap is configured at present - 
+  #services.logind = {
+  #  lidSwitch = "suspend-then-hibernate";
+  #  extraConfig = ''
+  #    HandlePowerKey=suspend-then-hibernate
+  #    IdleAction=suspend-then-hibernate
+  #    IdleActionSec=2m
+  #  '';
+  #};
+  #systemd.sleep.extraConfig = "HibernateDelaySec=30min";
 
   networking.hostName = "ariadne";
   networking.networkmanager.enable = true;
@@ -100,16 +105,18 @@
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
+    appimage-run
     neovim
     kakoune
     syncthing-tray
     yubikey-personalization
     gcc
     gnupg
+    tpm2-tss
     pinentry-gnome
     gnome.gnome-tweaks
+    gnome.gpaste
     gnomeExtensions.gsconnect
-    gnomeExtensions.clipboard-history
     gnomeExtensions.tailscale-status
     gnomeExtensions.night-theme-switcher
   ];
@@ -130,6 +137,7 @@
   services.tailscale.enable = true;
   services.fwupd.enable = true;
   services.fwupd.extraRemotes = [ "lvfs-testing" ];
+  programs.gpaste.enable = true;
 
   environment.shellInit = ''
     export GPG_TTY="$(tty)"
@@ -151,13 +159,6 @@
       "/var/lib/upower"
       "/var/lib/systemd/coredump"
     ];
-    files = [
-      "/var/lib/NetworkManager/secret_key"
-      "/var/lib/NetworkManager/seen-bssids"
-      "/var/lib/NetworkManager/timestamps"
-      "/etc/machine-id"
-      "/var/lib/power-profiles-daemon/state.ini"
-    ];
   };
   security.sudo.extraConfig = ''
     # rollback results in sudo lectures after each reboot
@@ -167,7 +168,6 @@
   home-manager.users.kjhoerr = {
     home.packages = with pkgs; [
       firefox-wayland
-      caprine-bin
       bind
       discord-canary
       doctl
