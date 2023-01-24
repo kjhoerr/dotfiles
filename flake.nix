@@ -26,16 +26,17 @@
           ./.config/nixos/common
         ];
       };
-      #cronos = nixpkgs.lib.nixosSystem {
-      #  system = "x86_64-linux";
-      #  modules = [
-      #    nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
-      #    lanzaboote.nixosModules.lanzaboote
-      #    impermanence.nixosModules.impermanence
-      #    home-manager.nixosModules.home-manager
-      #    ./.config/nixos/cronos.nix
-      #  ];
-      #};
+      cronos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
+          lanzaboote.nixosModules.lanzaboote
+          impermanence.nixosModules.impermanence
+          home-manager.nixosModules.home-manager
+          ./.config/nixos/cronos.nix
+          ./.config/nixos/common
+        ];
+      };
       whisker = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
