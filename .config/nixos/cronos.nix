@@ -66,6 +66,7 @@
     passwordFile = "/persist/passwords/khoerr";
   };
   
+  nixpkgs.config.allowUnfree = true;
   home-manager.users.khoerr = import ./common/home.nix;
 
   # This value determines the NixOS release from which the default
