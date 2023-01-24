@@ -2,17 +2,15 @@
 # Requires home-manager flake
 { lib, config, pkgs, ... }: {
 
-  boot.initrd.postMountCommands = lib.mkBefore ''
-    ln -snfT /persist/etc/machine-id /etc/machine-id
-    ln -snfT /persist/var/lib/NetworkManager/secret_key /var/lib/NetworkManager/secret_key
-    ln -snfT /persist/var/lib/NetworkManager/seen-bssids /var/lib/NetworkManager/seen-bssids
-    ln -snfT /persist/var/lib/NetworkManager/timestamps /var/lib/NetworkManager/timestamps
-    ln -snfT /persist/var/lib/power-profiles-daemon/state.ini /var/lib/power-profiles-daemon/state.ini
-  '';
-
   networking.networkmanager.enable = true;
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.utf8";
+
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
 
   # Enable the X11 windowing system.
   services.xserver = {
