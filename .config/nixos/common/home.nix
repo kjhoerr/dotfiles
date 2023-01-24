@@ -46,7 +46,6 @@
     appimage-run
     neovim
     kakoune
-    syncthing-tray
     yubikey-personalization
     gcc
     gnupg

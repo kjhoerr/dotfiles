@@ -23,9 +23,7 @@
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
           ./.config/nixos/ariadne.nix
-          ./.config/nixos/persist.nix
-          ./.config/nixos/secure-boot.nix
-          ./.config/nixos/home.nix
+          ./.config/nixos/common
         ];
       };
       #cronos = nixpkgs.lib.nixosSystem {
