@@ -1,6 +1,9 @@
 # home.nix
 # Requires home-manager flake
 { pkgs, ... }: {
+
+  nixpkgs.config.allowUnfree = true;
+
   home.packages = with pkgs; [
     firefox-wayland
     bind
