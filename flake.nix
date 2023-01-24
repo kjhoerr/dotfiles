@@ -22,8 +22,9 @@
           lanzaboote.nixosModules.lanzaboote
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
-          ./.config/nixos/hardware-ariadne.nix
           ./.config/nixos/ariadne.nix
+	  ./.config/nixos/secure-boot.nix
+	  ./.config/nixos/home.nix
         ];
       };
       #cronos = nixpkgs.lib.nixosSystem {

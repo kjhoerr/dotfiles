@@ -1,70 +1,113 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ lib, config, pkgs, ... }: {
-  #boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [
-    "quiet"
-    "splash"
-    "rd.systemd.show_status=false"
-    "rd.udev.log_level=3"
-    "udev.log_priority=3"
-    "boot.shell_on_fail"
-  ];
-  boot.consoleLogLevel = 0;
-  boot.supportedFilesystems = [ "btrfs" ];
-  hardware.enableAllFirmware = true;
-
-  boot.plymouth.enable = true;
-
-  boot.initrd.verbose = false;
-  boot.initrd.systemd.enable = true;
-  boot.initrd.postMountCommands = lib.mkBefore ''
-    ln -snfT /persist/etc/machine-id /etc/machine-id
-    ln -snfT /persist/var/lib/NetworkManager/secret_key /var/lib/NetworkManager/secret_key
-    ln -snfT /persist/var/lib/NetworkManager/seen-bssids /var/lib/NetworkManager/seen-bssids
-    ln -snfT /persist/var/lib/NetworkManager/timestamps /var/lib/NetworkManager/timestamps
-    ln -snfT /persist/var/lib/power-profiles-daemon/state.ini /var/lib/power-profiles-daemon/state.ini
-  '';
-
-  boot.bootspec.enable = true;
-  boot.loader.systemd-boot.enable = lib.mkForce false;
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/etc/secureboot";
-  };
-  security.tpm2.enable = true;
-  security.tpm2.tctiEnvironment.enable = true;
-
-  # No swap is configured at present - 
-  #services.logind = {
-  #  lidSwitch = "suspend-then-hibernate";
-  #  extraConfig = ''
-  #    HandlePowerKey=suspend-then-hibernate
-  #    IdleAction=suspend-then-hibernate
-  #    IdleActionSec=2m
-  #  '';
-  #};
-  #systemd.sleep.extraConfig = "HibernateDelaySec=30min";
+# ariadne.nix
+# Requires impermanence flake
+{ config, lib, pkgs, modulesPath, ... }: {
 
   networking.hostName = "ariadne";
-  networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.utf8";
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix")
+    ];
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    layout = "us";
-    xkbVariant = "";
-  };
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
+  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+  boot.initrd.kernelModules = [ "tpm_tis" ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+  
+  # Note `lib.mkBefore` is used instead of `lib.mkAfter` here.
+  boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
+    mkdir -p /mnt
+
+    # We first mount the btrfs root to /mnt
+    # so we can manipulate btrfs subvolumes.
+    mount -o subvol=/ /dev/mapper/enc /mnt
+
+    # While we're tempted to just delete /root and create
+    # a new snapshot from /root-blank, /root is already
+    # populated at this point with a number of subvolumes,
+    # which makes `btrfs subvolume delete` fail.
+    # So, we remove them first.
+    #
+    # /root contains subvolumes:
+    # - /root/var/lib/portables
+    # - /root/var/lib/machines
+    #
+    # I suspect these are related to systemd-nspawn, but
+    # since I don't use it I'm not 100% sure.
+    # Anyhow, deleting these subvolumes hasn't resulted
+    # in any issues so far, except for fairly
+    # benign-looking errors from systemd-tmpfiles.
+    btrfs subvolume list -o /mnt/root |
+      cut -f9 -d' ' |
+      while read subvolume; do
+        echo "deleting /$subvolume subvolume..."
+        btrfs subvolume delete "/mnt/$subvolume"
+      done &&
+      echo "deleting /root subvolume..." &&
+      btrfs subvolume delete /mnt/root
+
+    echo "restoring blank /root subvolume..."
+    btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+    # Once we're done rolling back to a blank snapshot,
+    # we can unmount /mnt and continue on the boot process.
+    umount /mnt
+  '';
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+      fsType = "btrfs";
+      options = [ "subvol=root" "compress=zstd" "noatime" ];
+    };
+
+  boot.initrd.luks.devices."enc".device = "/dev/disk/by-uuid/0ab7fa69-80bd-449e-8d45-bdc91d72af96";
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+      fsType = "btrfs";
+      options = [ "subvol=home" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+      fsType = "btrfs";
+      options = [ "subvol=nix" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/persist" =
+    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+      fsType = "btrfs";
+      options = [ "subvol=persist" "compress=zstd" "noatime" ];
+      neededForBoot=true;
+    };
+
+  fileSystems."/var/log" =
+    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+      fsType = "btrfs";
+      options = [ "subvol=log" "compress=zstd" "noatime" ];
+      neededForBoot=true;
+    };
+
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/60E1-4324";
+      fsType = "vfat";
+    };
+
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  hardware.cpu.intel.updateMicrocode = true;
+  # high-resolution display
+  hardware.video.hidpi.enable = lib.mkDefault true;
+
+  services.tailscale.enable = true;
+  networking.firewall.checkReversePath = "loose";
+
+  # Enable fractional scaling
   services.xserver.desktopManager.gnome = {
     enable = true;
     extraGSettingsOverrides = ''
@@ -72,20 +115,6 @@
       experimental-features=['scale-monitor-framebuffer']
     '';
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -97,53 +126,6 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     passwordFile = "/persist/passwords/kjhoerr";
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # Add docker
-  virtualisation.docker.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    appimage-run
-    neovim
-    kakoune
-    syncthing-tray
-    yubikey-personalization
-    gcc
-    gnupg
-    tpm2-tss
-    pinentry-gnome
-    gnome.gnome-tweaks
-    gnome.gpaste
-    gnomeExtensions.gsconnect
-    gnomeExtensions.tailscale-status
-    gnomeExtensions.night-theme-switcher
-  ];
-
-  fonts.fonts = with pkgs; [
-    ibm-plex
-    merriweather
-    nerdfonts
-    noto-fonts
-    noto-fonts-emoji
-  ];
-
-  environment.sessionVariables = {
-    QT_QPA_PLATFORM = "wayland";
-    NIXOS_OZONE_WL = "1";
-  };
-
-  services.tailscale.enable = true;
-  services.fwupd.enable = true;
-  services.fwupd.extraRemotes = [ "lvfs-testing" ];
-  programs.gpaste.enable = true;
-
-  environment.shellInit = ''
-    export GPG_TTY="$(tty)"
-    gpg-connect-agent /bye
-    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-  '';
 
   # symlinks to enable "erase your darlings"
   environment.persistence."/persist" = {
@@ -160,138 +142,9 @@
       "/var/lib/systemd/coredump"
     ];
   };
-  security.sudo.extraConfig = ''
-    # rollback results in sudo lectures after each reboot
-    Defaults lecture = never
-  '';
 
-  home-manager.users.kjhoerr = {
-    home.packages = with pkgs; [
-      firefox-wayland
-      bind
-      discord-canary
-      doctl
-      keepassxc
-      vscode
-      k9s
-      kubernetes-helm
-      kubectl
-      starship
-      pueue
-      mkcert
-      pfetch
-      runelite
-    ];
-
-    programs.bash = {
-      enable = true;
-
-      bashrcExtra = ''
-        eval "$(starship init bash)"
-      '';
-    };
-    programs.git = {
-      enable = true;
-      package = pkgs.gitAndTools.gitFull;
-      userName = "Kevin J Hoerr";
-      userEmail = "kjhoerr@protonmail.com";
-      signing = {
-        key = "BEDBA29269ED7111";
-        signByDefault = true;
-      };
-      extraConfig = {
-        init.defaultBranch = "trunk";
-        core.editor = "nvim";
-        color.ui = "always";
-        stash.showPatch = true;
-        pull.ff = "only";
-        push.autoSetupRemote = true;
-      };
-    };
-    programs.home-manager.enable = true;
-    programs.neovim = {
-      enable = true;
-      vimAlias = true;
-      defaultEditor = true;
-      extraConfig = ''
-        set nocompatible
-        set showmatch
-        set ignorecase
-        set hlsearch
-        set incsearch
-        set number
-        set wildmode=longest,list
-        filetype plugin indent on
-	if !exists('g:vscode')
-          syntax on
-          set mouse=a
-          cmap w!! w !sudo tee > /dev/null %
-          colorscheme dracula
-	endif
-      '';
-      plugins = with pkgs.vimPlugins; [
-        bufferline-nvim
-        dracula-vim
-        nvim-colorizer-lua
-        nvim-tree-lua
-        tokyonight-nvim
-        telescope-fzf-native-nvim
-        telescope-nvim
-        gitsigns-nvim
-        (nvim-treesitter.withPlugins (plugins: with plugins; [
-          tree-sitter-bash
-          tree-sitter-dockerfile
-          tree-sitter-html
-          tree-sitter-java
-          tree-sitter-javascript
-          tree-sitter-json
-          tree-sitter-markdown
-          tree-sitter-nix
-          tree-sitter-regex
-        ]))
-      ];
-
-      extraPackages = with pkgs; [
-        nodePackages.bash-language-server
-        nodePackages.dockerfile-language-server-nodejs
-        hadolint
-        nodePackages.vim-language-server
-        shellcheck
-        rnix-lsp
-        deadnix
-        statix
-      ];
-    };
-
-    services.syncthing = {
-      enable = true;
-    };
-    services.gpg-agent = {
-      enable = true;
-      enableSshSupport = true;
-      enableExtraSocket = true;
-      pinentryFlavor = "gnome3";
-    };
-
-    home.stateVersion = "22.11";
-  };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-  networking.firewall.checkReversePath = "loose";
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
+  services.tailscale.enable = true;
+  services.fwupd.extraRemotes = [ "lvfs-testing" ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -302,6 +155,4 @@
   system.stateVersion = "22.11"; # Did you read the comment?
 
   nix.settings.experimental-features = "nix-command flakes";
-
 }
-
