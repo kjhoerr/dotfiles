@@ -53,7 +53,6 @@
   # symlinks to enable "erase your darlings"
   environment.persistence."/persist" = {
     directories = [
-      "/etc/nixos"
       "/etc/secureboot"
       "/etc/NetworkManager/system-connections"
       "/var/lib/bluetooth"
