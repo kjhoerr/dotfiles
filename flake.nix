@@ -23,8 +23,8 @@
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
           ./.config/nixos/ariadne.nix
-	  ./.config/nixos/secure-boot.nix
-	  ./.config/nixos/home.nix
+          ./.config/nixos/secure-boot.nix
+          ./.config/nixos/home.nix
         ];
       };
       #cronos = nixpkgs.lib.nixosSystem {
@@ -39,13 +39,13 @@
       #};
       whisker = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-	modules = [
+        modules = [
           lanzaboote.nixosModules.lanzaboote
-	  impermanence.nixosModules.impermanence
-	  home-manager.nixosModules.home-manager
-	  ./.config/nixos/hardware-whisker.nix
-	  ./.config/nixos/whisker.nix
-	];
+          impermanence.nixosModules.impermanence
+          home-manager.nixosModules.home-manager
+          ./.config/nixos/hardware-whisker.nix
+          ./.config/nixos/whisker.nix
+        ];
       };
     };
   };

@@ -107,6 +107,12 @@
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
 
+  # Enable LVFS testing to get UEFI updates
+  services.fwupd.extraRemotes = [ "lvfs-testing" ];
+
+  # Turn off fprint - authentication is persisted
+  services.fprintd.enable = false;
+
   # Enable fractional scaling
   services.xserver.desktopManager.gnome = {
     enable = true;
@@ -117,7 +123,7 @@
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # User accounts
   users.mutableUsers = false;
   users.users.root.passwordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
@@ -142,9 +148,6 @@
       "/var/lib/systemd/coredump"
     ];
   };
-
-  services.tailscale.enable = true;
-  services.fwupd.extraRemotes = [ "lvfs-testing" ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

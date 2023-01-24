@@ -136,14 +136,15 @@
         set hlsearch
         set incsearch
         set number
+        set expandtab
         set wildmode=longest,list
         filetype plugin indent on
-	if !exists('g:vscode')
+        if !exists('g:vscode')
           syntax on
           set mouse=a
           cmap w!! w !sudo tee > /dev/null %
           colorscheme dracula
-	endif
+        endif
       '';
       plugins = with pkgs.vimPlugins; [
         bufferline-nvim
