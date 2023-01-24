@@ -65,6 +65,8 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     passwordFile = "/persist/passwords/khoerr";
   };
+  
+  home-manager.users.khoerr = import ./common/home.nix;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
