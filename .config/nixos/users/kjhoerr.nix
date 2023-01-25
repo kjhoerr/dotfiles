@@ -6,6 +6,8 @@
   home.homeDirectory = "/home/kjhoerr";
 
   home.packages = with pkgs; [
+    doctl
+    mkcert
     runelite
     discord-canary
   ];

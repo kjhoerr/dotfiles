@@ -21,17 +21,17 @@
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
-        ./.config/nixos/common
+        ./.config/nixos/os
       ];
     in {
       homeConfigurations = {
         kjhoerr = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          modules = homeModules ++ [ ./.config/nixos/home/kjhoerr.nix ];
+          modules = homeModules ++ [ ./.config/nixos/users/kjhoerr.nix ];
         };
         khoerr = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          modules = homeModules ++ [ ./.config/nixos/home/khoerr.nix ];
+          modules = homeModules ++ [ ./.config/nixos/users/khoerr.nix ];
         };
       };
       nixosConfigurations = {
@@ -39,20 +39,20 @@
           inherit system;
           modules = [
             inputs.nixos-hardware.nixosModules.framework
-            ./.config/nixos/ariadne.nix
+            ./.config/nixos/systems/ariadne.nix
           ] ++ osModules;
         };
         cronos = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
-            ./.config/nixos/cronos.nix
+            ./.config/nixos/systems/cronos.nix
           ] ++ osModules;
         };
         whisker = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            ./.config/nixos/whisker.nix
+            ./.config/nixos/systems/whisker.nix
           ] ++ osModules;
         };
       };
