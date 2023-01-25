@@ -13,23 +13,23 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { nixpkgs, impermanence, lanzaboote, home-manager, nixos-hardware, ... }:
+  outputs = { nixpkgs, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      homeModules = [ ./.config/nixos/home/common.nix ];
+      homeModules = [ ./.config/nixos/home ];
       osModules = [
-        lanzaboote.nixosModules.lanzaboote
-        impermanence.nixosModules.impermanence
+        inputs.lanzaboote.nixosModules.lanzaboote
+        inputs.impermanence.nixosModules.impermanence
         ./.config/nixos/common
       ];
     in {
       homeConfigurations = {
-        "kjhoerr" = home-manager.lib.homeManagerConfiguration {
+        kjhoerr = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = homeModules ++ [ ./.config/nixos/home/kjhoerr.nix ];
         };
-        "khoerr" = home-manager.lib.homeManagerConfiguration {
+        khoerr = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = homeModules ++ [ ./.config/nixos/home/khoerr.nix ];
         };
@@ -38,14 +38,14 @@
         ariadne = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            nixos-hardware.nixosModules.framework
+            inputs.nixos-hardware.nixosModules.framework
             ./.config/nixos/ariadne.nix
           ] ++ osModules;
         };
         cronos = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
+            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
             ./.config/nixos/cronos.nix
           ] ++ osModules;
         };
