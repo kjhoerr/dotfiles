@@ -70,6 +70,7 @@
     NIXOS_OZONE_WL = "1";
   };
 
+  services.gnome.gnome-keyring.enable = lib.mkForce false;
   services.fwupd.enable = true;
   programs.gpaste.enable = true;
 
