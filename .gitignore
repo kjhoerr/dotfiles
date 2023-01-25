@@ -9,4 +9,5 @@
 !.m2/.keep
 !flake.nix
 !flake.lock
+!README.md
 

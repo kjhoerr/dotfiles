@@ -13,52 +13,48 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { nixpkgs, impermanence, lanzaboote, home-manager, nixos-hardware, ... }: {
-    defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
-
-    homeConfigurations = {
-      "kjhoerr" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./.config/nixos/home/kjhoerr.nix ];
+  outputs = { nixpkgs, impermanence, lanzaboote, home-manager, nixos-hardware, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      homeModules = [ ./.config/nixos/home/common.nix ];
+      osModules = [
+        lanzaboote.nixosModules.lanzaboote
+        impermanence.nixosModules.impermanence
+        ./.config/nixos/common
+      ];
+    in {
+      homeConfigurations = {
+        "kjhoerr" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = homeModules ++ [ ./.config/nixos/home/kjhoerr.nix ];
+        };
+        "khoerr" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = homeModules ++ [ ./.config/nixos/home/khoerr.nix ];
+        };
       };
-      "khoerr" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./.config/nixos/home/khoerr.nix ];
-      };
-    };
-    nixosConfigurations = {
-      ariadne = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          nixos-hardware.nixosModules.framework
-          lanzaboote.nixosModules.lanzaboote
-          impermanence.nixosModules.impermanence
-          home-manager.nixosModules.home-manager
-          ./.config/nixos/ariadne.nix
-          ./.config/nixos/common
-        ];
-      };
-      cronos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
-          lanzaboote.nixosModules.lanzaboote
-          impermanence.nixosModules.impermanence
-          home-manager.nixosModules.home-manager
-          ./.config/nixos/cronos.nix
-          ./.config/nixos/common
-        ];
-      };
-      whisker = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          lanzaboote.nixosModules.lanzaboote
-          impermanence.nixosModules.impermanence
-          home-manager.nixosModules.home-manager
-          ./.config/nixos/hardware-whisker.nix
-          ./.config/nixos/whisker.nix
-        ];
+      nixosConfigurations = {
+        ariadne = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            nixos-hardware.nixosModules.framework
+            ./.config/nixos/ariadne.nix
+          ] ++ osModules;
+        };
+        cronos = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            nixos-hardware.nixosModules.lenovo-thinkpad-p1-gen3
+            ./.config/nixos/cronos.nix
+          ] ++ osModules;
+        };
+        whisker = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            ./.config/nixos/whisker.nix
+          ] ++ osModules;
+        };
       };
     };
-  };
 }
