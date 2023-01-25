@@ -14,6 +14,18 @@
   };
 
   outputs = { nixpkgs, impermanence, lanzaboote, home-manager, nixos-hardware, ... }: {
+    defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
+
+    homeConfigurations = {
+      "kjhoerr" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./.config/nixos/home/kjhoerr.nix ];
+      };
+      "khoerr" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./.config/nixos/home/khoerr.nix ];
+      };
+    };
     nixosConfigurations = {
       ariadne = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
