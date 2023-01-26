@@ -13,6 +13,8 @@
   ];
 
   services.syncthing.enable = true;
+  services.syncthing.tray.enable = true;
+  services.pueue.enable = true;
 
   home.stateVersion = "22.11";
 }
