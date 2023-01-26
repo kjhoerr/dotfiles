@@ -7,7 +7,7 @@
 
   home.packages = with pkgs; [
     teams
-    microsoft-edge
+    microsoft-edge-dev
   ];
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
