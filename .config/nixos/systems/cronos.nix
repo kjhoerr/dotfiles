@@ -53,6 +53,9 @@
   # high-resolution display
   hardware.video.hidpi.enable = lib.mkDefault true;
 
+  # Turn off fprint - authentication is persisted
+  services.fprintd.enable = lib.mkForce false;
+
   # User accounts
   users.mutableUsers = false;
   users.users.root.passwordFile = "/persist/passwords/root";
