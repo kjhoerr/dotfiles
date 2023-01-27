@@ -83,7 +83,6 @@
   fonts.fonts = with pkgs; [
     ibm-plex
     merriweather
-    nerdfonts
     noto-fonts
     noto-fonts-emoji
   ];
@@ -97,7 +96,7 @@
   programs.neovim.enable = true;
   programs.neovim.defaultEditor = true;
 
-  services.gnome.gnome-keyring.enable = false;
+  services.gnome.gnome-keyring.enable = lib.mkForce false;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
