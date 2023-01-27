@@ -2,6 +2,20 @@
 # Common system configuration, flakeless
 { lib, config, pkgs, ... }: {
 
+  # Enable automatic updates through this flake
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:kjhoerr/dotfiles";
+  };
+
+  # Since automatic updates are enabled, automatically gc older generations
+  # To note, this will gc home-manager user profiles as well
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
+
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.utf8";
 
