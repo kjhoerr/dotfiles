@@ -35,7 +35,6 @@
   # Most importantly, review this document:
   # https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
   #
-  boot.initrd.systemd.enable = true;
   boot.bootspec.enable = true;
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.lanzaboote = {
