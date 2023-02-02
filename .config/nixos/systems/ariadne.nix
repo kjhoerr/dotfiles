@@ -42,6 +42,17 @@
       neededForBoot=true;
     };
 
+  fileSystems."/swap" =
+    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+      fsType = "btrfs";
+      options = [ "subvol=swap" "compress=zstd" "noatime" ];
+    };
+
+  swapDevices = [{
+    device = "/swap/swapfile";
+    size = 1024 * 32;
+  }];
+
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/60E1-4324";
       fsType = "vfat";
