@@ -13,8 +13,23 @@
   ];
 
   services.syncthing.enable = true;
-  services.syncthing.tray.enable = true;
-  services.pueue.enable = true;
+  services.pueue = {
+    enable = true;
+    settings = {
+      client = {
+        dark_mode = false;
+        show_expanded_aliases = false;
+      };
+      daemon = {
+        default_parallel_tasks = 2;
+        pause_group_on_failure = false;
+        pause_all_on_failure = false;
+      };
+      shared = {
+        use_unix_socket = true;
+      };
+    };
+  };
 
   home.stateVersion = "22.11";
 }
