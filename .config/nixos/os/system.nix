@@ -64,6 +64,18 @@
     gnomeExtensions.night-theme-switcher
   ];
 
+  # Remove unused/icky packages
+  environment.gnome.excludePackages = with pkgs.gnome; [
+    epiphany
+    geary
+    gedit
+    gnome-contacts
+    gnome-music
+  ];
+  services.xserver.excludePackages = with pkgs; [
+    xterm
+  ];
+
   fonts.fonts = with pkgs; [
     ibm-plex
     merriweather
