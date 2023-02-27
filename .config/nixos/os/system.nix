@@ -12,7 +12,6 @@
   # To note, this will gc home-manager user profiles as well
   nix.gc = {
     automatic = true;
-    dates = "weekly";
     options = "--delete-older-than 14d";
   };
 
