@@ -50,6 +50,7 @@
 
   environment.systemPackages = with pkgs; [
     appimage-run
+    blackbox-terminal
     neovim
     kakoune
     yubikey-personalization
@@ -64,13 +65,16 @@
   ];
 
   # Remove unused/icky packages
-  environment.gnome.excludePackages = with pkgs.gnome; [
+  environment.gnome.excludePackages = (with pkgs.gnome; [
     epiphany
     geary
     gedit
     gnome-contacts
     gnome-music
-  ];
+  ]) ++ (with pkgs; [
+    gnome-console
+    gnome-text-editor
+  ]);
   services.xserver.excludePackages = with pkgs; [
     xterm
   ];
