@@ -5,8 +5,8 @@
     enable = lib.mkDefault true;
 
     settings = {
-      theme = "dracula";
-      lsp.display-messages = true;
+      theme = "base16_transparent";
+      editor.lsp.display-messages = true;
     };
 
     languages = [
