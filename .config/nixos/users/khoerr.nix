@@ -6,7 +6,6 @@
   home.homeDirectory = "/home/khoerr";
 
   home.packages = with pkgs; [
-    teams
     #microsoft-edge-dev
   ];
 
