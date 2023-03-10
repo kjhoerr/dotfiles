@@ -9,8 +9,6 @@
       "initrd.target"
     ];
     after = [
-      # ZFS solution
-      #"zfs-import-zroot.service"
       # LUKS/TPM process
       "systemd-cryptsetup@enc.service"
     ];
