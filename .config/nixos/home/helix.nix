@@ -36,10 +36,6 @@
     lldb
 
     # Language support
-    # c-sharp
-    omnisharp-roslyn
-    # c-sharp debugging
-    netcoredbg
     # go
     gopls
     # go debugging
