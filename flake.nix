@@ -30,13 +30,22 @@
       };
 
       # Base user config modules to be overwritten
-      homeModules = [ ./.config/nixos/home ];
+      homeModules = [
+        ./.config/nixos/home/user.nix
+        ./.config/nixos/home/git.nix
+        ./.config/nixos/home/gnome.nix
+        ./.config/nixos/home/neovim.nix
+        ./.config/nixos/home/helix.nix
+        ./.config/nixos/home/gpg-agent.nix
+      ];
 
       # Base OS configs, adapts to system configs
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
-        ./.config/nixos/os
+        ./.config/nixos/os/persist.nix
+        ./.config/nixos/os/secure-boot.nix
+        ./.config/nixos/os/system.nix
       ];
 
       # Function to build a home configuration from user modules
