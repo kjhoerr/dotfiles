@@ -79,13 +79,23 @@
     xterm
   ];
 
-  fonts.fonts = with pkgs; [
-    ibm-plex
-    merriweather
-    nerdfonts
-    noto-fonts
-    noto-fonts-emoji
-  ];
+  fonts = {
+    enableDefaultFonts = true;
+    fonts = with pkgs; [
+      ibm-plex
+      merriweather
+      noto-fonts-emoji
+      (nerdfonts.override { fonts = [ "FiraCode" "UbuntuMono" "CascadiaCode" "Noto" ]; })
+    ];
+
+    fontconfig = {
+      defaultFonts = {
+        serif = [ "Merriweather" ];
+        sansSerif = [ "IBM Plex Sans" ];
+        monospace = [ "FiraCode Nerd Font" "CaskaydiaCove Nerd Font" ];
+      };
+    };
+  };
 
   # Add Docker
   virtualisation.docker.enable = true;
