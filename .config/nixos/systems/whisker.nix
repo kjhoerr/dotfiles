@@ -14,8 +14,6 @@
   networking.interfaces.enp6s0.useDHCP = false;
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  # high-resolution display
-  hardware.video.hidpi.enable = lib.mkDefault true;
 
   time.hardwareClockInLocalTime = true;
   boot.supportedFilesystems = [ "btrfs" "ntfs" ];

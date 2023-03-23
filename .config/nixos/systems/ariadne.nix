@@ -61,8 +61,6 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = true;
-  # high-resolution display
-  hardware.video.hidpi.enable = lib.mkDefault true;
 
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";

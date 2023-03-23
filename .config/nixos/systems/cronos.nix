@@ -50,8 +50,6 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = true;
-  # high-resolution display
-  hardware.video.hidpi.enable = lib.mkDefault true;
 
   # Turn off fprint - authentication is persisted
   services.fprintd.enable = lib.mkForce false;
