@@ -31,6 +31,25 @@
     };
   };
 
+  dconf.settings = {
+    "org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = [
+        "gsconnect@andyholmes.github.io"
+        "tailscale-status@maxgallup.github.com"
+        "nightthemeswitcher@romainvigier.fr"
+        "GPaste@gnome-shell-extensions.gnome.org"
+      ];
+      favorite-apps = [
+        "firefox.desktop"
+        "org.keepassxc.KeePassXC.desktop"
+        "code.desktop"
+        "org.gnome.Nautilus.desktop"
+        "com.raggesilver.BlackBox.desktop"
+      ];
+    };
+  };
+
   home.stateVersion = "22.11";
 }
 
