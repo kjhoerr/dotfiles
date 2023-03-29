@@ -19,6 +19,7 @@
     kubernetes-helm
     kubectl
     pfetch
+    microsoft-edge-dev
   ]);
 
 }

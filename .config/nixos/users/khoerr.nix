@@ -5,10 +5,6 @@
   home.username = "khoerr";
   home.homeDirectory = "/home/khoerr";
 
-  home.packages = with pkgs; [
-    #microsoft-edge-dev
-  ];
-
   programs.git.userEmail = "khoerr@ksmpartners.com";
 
   home.stateVersion = "22.11";
