@@ -68,10 +68,13 @@
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
 
+  users.mutableUsers = false;
+  users.users.root.passwordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
+    passwordFile = "/persist/passwords/kjhoerr";
   };
 
   programs.steam = {
