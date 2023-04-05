@@ -92,7 +92,13 @@
       defaultFonts = {
         serif = [ "Merriweather" ];
         sansSerif = [ "IBM Plex Sans" ];
-        monospace = [ "FiraCode Nerd Font" "CaskaydiaCove Nerd Font" ];
+        monospace = [ "FiraCode" "CascadiaCode" ];
+      };
+
+      antialias = true;
+      subpixel = {
+        rgba = "none";
+        lcdfilter = "none";
       };
     };
   };
