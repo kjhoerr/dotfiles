@@ -24,6 +24,12 @@
           ".jdt/jdtls_data"
         ];
       }
+      {
+        name = "yaml";
+        config = {
+          yaml.keyOrdering = false;
+        };
+      }
     ];
   };
 
