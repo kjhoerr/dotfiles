@@ -30,11 +30,11 @@ jobs:
           nix build '.#homeConfigurations.khoerr.activationPackage'
           nix build '.#homeConfigurations.kjhoerr.activationPackage'
 
-      #- name: Build NixOS configs
-      #  run: |-
-      #    nix build '.#nixosConfigurations.ariadne.config.system.build.toplevel'
-      #    nix build '.#nixosConfigurations.cronos.config.system.build.toplevel'
-      #    nix build '.#nixosConfigurations.whisker.config.system.build.toplevel'
+      - name: Build NixOS configs
+        run: |-
+          nix build '.#nixosConfigurations.ariadne.config.system.build.toplevel'
+          nix build '.#nixosConfigurations.cronos.config.system.build.toplevel'
+          nix build '.#nixosConfigurations.whisker.config.system.build.toplevel'
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
