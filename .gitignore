@@ -5,6 +5,7 @@
 !.config/guix/
 /.config/guix/current
 !.config/nixos/
+!.config/nix/
 !.m2/
 /.m2/*
 !.m2/.keep
