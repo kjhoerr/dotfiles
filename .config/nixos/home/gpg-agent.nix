@@ -4,6 +4,10 @@
   programs.gpg.enable = lib.mkDefault true;
   programs.gpg.mutableKeys = lib.mkDefault false;
   programs.gpg.mutableTrust = lib.mkDefault false;
+  programs.gpg.scdaemonSettings = {
+    reader-port = "Yubico Yubi";
+    disable-ccid = true;
+  };
   programs.gpg.publicKeys = [
     {
       text = ''
