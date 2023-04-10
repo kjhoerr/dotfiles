@@ -3,6 +3,7 @@
 !.config/
 /.config/*
 !.config/guix/
+/.config/guix/current
 !.config/nixos/
 !.m2/
 /.m2/*
