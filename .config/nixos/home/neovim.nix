@@ -17,7 +17,6 @@
       syntax on
       set mouse=a
       cmap w!! w !sudo tee > /dev/null %
-      colorscheme dracula
     endif
   '';
 
