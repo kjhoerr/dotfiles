@@ -4,8 +4,6 @@
 ;; used in this configuration.
 (use-modules
  (gnu)
- ((nongnu packages linux) #:select (linux linux-firmware))
- ((nongnu system linux-initrd) #:select (microcode-initrd))
  ((kh packages) #:select (%incl-packages))
  ((kh services) #:select (%incl-services)))
 
@@ -17,10 +15,6 @@
 (define %default-modprobe-blacklist (@@ (gnu system) %default-modprobe-blacklist))
 
 (operating-system
- (kernel linux)
- (initrd microcode-initrd)
- ;; includes iwlwifi, intel-microcode
- (firmware (list linux-firmware))
  (locale "en_US.utf8")
  (timezone "America/New_York")
  (keyboard-layout (keyboard-layout "us"))
@@ -31,7 +25,6 @@
    "quiet"
    "numa=off"
    "nowatchdog"
-   "nvme.noacpi=1"
    (string-append
     "modprobe.blacklist="
     (string-join
@@ -41,14 +34,6 @@
       "uhci_hcd"          ;; USB 1.1
       %default-modprobe-blacklist)
      ","))))
-
- ;; plugdev group, udev support for hardware key
- (groups
-  (cons
-   (user-group
-    (name "plugdev")
-    (system? #t))
-   %base-groups))
 
  ;; The list of user accounts ('root' is implicit).
  (users
@@ -64,29 +49,25 @@
  (packages %incl-packages)
  (services %incl-services)
 
- (bootloader
-  (bootloader-configuration
-   (bootloader grub-efi-bootloader)
-   (targets (list "/boot/efi"))
-   (keyboard-layout keyboard-layout)))
- (mapped-devices
-  (list
-   (mapped-device
-    (source
-     (uuid "3bfd1204-f91e-4050-9450-77c53b7f30f3"))
-    (target "cryptroot")
-    (type luks-device-mapping))))
+  (bootloader (bootloader-configuration
+                (bootloader grub-efi-bootloader)
+                (targets (list "/boot/efi"))
+                (keyboard-layout keyboard-layout)))
+  (swap-devices (list (swap-space
+                        (target (uuid
+                                 "2acd6653-e121-4993-9594-22b1b153e3a8")))))
 
- (file-systems
-  (cons*
-   (file-system
-    (mount-point "/boot/efi")
-    (device (uuid "2344-C297"
-                  'fat32))
-    (type "vfat"))
-   (file-system
-    (mount-point "/")
-    (device "/dev/mapper/cryptroot")
-    (type "ext4")
-    (dependencies mapped-devices)) %base-file-systems)))
-
+  ;; The list of file systems that get "mounted".  The unique
+  ;; file system identifiers there ("UUIDs") can be obtained
+  ;; by running 'blkid' in a terminal.
+  (file-systems (cons* (file-system
+                         (mount-point "/")
+                         (device (uuid
+                                  "4a1644df-2dc2-45dd-892d-3156a73e0c83"
+                                  'ext4))
+                         (type "ext4"))
+                       (file-system
+                         (mount-point "/boot/efi")
+                         (device (uuid "7B41-BB11"
+                                       'fat32))
+                         (type "vfat")) %base-file-systems)))
