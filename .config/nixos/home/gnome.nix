@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{
 
   dconf.settings = {
     # shell configuration depends on the user
@@ -13,14 +13,6 @@
       monospace-font-name = "FiraMono Nerd Font 10";
     };
 
-    "com/raggesilver/BlackBox" = {
-      style-preference = 2;
-      opacity = 87;
-      terminal-padding = lib.hm.gvariant.mkTuple [4 4 4 4];
-      theme-dark = "Pencil Dark";
-      use-sixel = true;
-      floating-controls = true;
-    };
   };
 
 }
