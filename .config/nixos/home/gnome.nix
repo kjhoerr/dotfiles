@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, ... }: {
 
   dconf.settings = {
     # shell configuration depends on the user
@@ -10,7 +10,16 @@
       cursor-theme = "capitaine-cursors";
       document-font-name = "Merriweather 11";
       font-name = "IBM Plex Sans Arabic 11";
-      monospace-font-name = "FuraMono Nerd Font 10";
+      monospace-font-name = "FiraMono Nerd Font 10";
+    };
+
+    "com/raggesilver/BlackBox" = {
+      style-preference = 2;
+      opacity = 87;
+      terminal-padding = lib.hm.gvariant.mkTuple [4 4 4 4];
+      theme-dark = "Pencil Dark";
+      use-sixel = true;
+      floating-controls = true;
     };
   };
 
