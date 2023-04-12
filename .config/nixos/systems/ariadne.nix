@@ -1,65 +1,60 @@
 # ariadne.nix
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
 
   networking.hostName = "ariadne";
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "tpm_tis" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" "tpm_tis" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  boot.initrd.luks.devices."enc" = {
+    device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
+    preLVM = true;
+  };
+
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+    { device = "/dev/disk/by-uuid/5767338b-cc2e-43f3-8e07-f31c82a42345";
       fsType = "btrfs";
       options = [ "subvol=root" "compress=zstd" "noatime" ];
     };
 
-  boot.initrd.luks.devices."enc".device = "/dev/disk/by-uuid/0ab7fa69-80bd-449e-8d45-bdc91d72af96";
-
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+    { device = "/dev/disk/by-uuid/5767338b-cc2e-43f3-8e07-f31c82a42345";
       fsType = "btrfs";
       options = [ "subvol=home" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+    { device = "/dev/disk/by-uuid/5767338b-cc2e-43f3-8e07-f31c82a42345";
       fsType = "btrfs";
       options = [ "subvol=nix" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/persist" =
-    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+    { device = "/dev/disk/by-uuid/5767338b-cc2e-43f3-8e07-f31c82a42345";
       fsType = "btrfs";
       options = [ "subvol=persist" "compress=zstd" "noatime" ];
-      neededForBoot=true;
+      neededForBoot = true;
     };
 
   fileSystems."/var/log" =
-    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
+    { device = "/dev/disk/by-uuid/5767338b-cc2e-43f3-8e07-f31c82a42345";
       fsType = "btrfs";
       options = [ "subvol=log" "compress=zstd" "noatime" ];
-      neededForBoot=true;
+      neededForBoot = true;
     };
-
-  fileSystems."/swap" =
-    { device = "/dev/disk/by-uuid/683ba586-d4cc-4e75-bfd4-edf674ee6a78";
-      fsType = "btrfs";
-      options = [ "subvol=swap" "compress=zstd" "noatime" ];
-    };
-
-  swapDevices = [{
-    device = "/swap/swapfile";
-    size = 1024 * 32;
-  }];
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/60E1-4324";
+    { device = "/dev/disk/by-uuid/C464-D756";
       fsType = "vfat";
     };
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  swapDevices =
+    [ { device = "/dev/disk/by-uuid/e0126018-1442-4e0f-9a48-81af5aa0778d"; }
+    ];
+
+  nixpkgs.hostPlatform = "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = true;
 
   services.tailscale.enable = true;
