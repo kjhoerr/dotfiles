@@ -1,4 +1,8 @@
-{
+{ lib, ... }:
+let
+  mkUint32 = lib.hm.gvariant.mkUint32;
+  mkTuple = lib.hm.gvariant.mkTuple; 
+in {
 
   dconf.settings = {
     # shell configuration depends on the user
@@ -13,6 +17,14 @@
       monospace-font-name = "FiraMono Nerd Font 10";
     };
 
+    "com/raggesilver/BlackBox" = {
+      style-preference = mkUint32 2;
+      opacity = mkUint32 87;
+      terminal-padding = mkTuple [(mkUint32 4) (mkUint32 4) (mkUint32 4) (mkUint32 4)];
+      theme-dark = "Pencil Dark";
+      use-sixel = true;
+      floating-controls = true;
+    };
   };
 
 }
