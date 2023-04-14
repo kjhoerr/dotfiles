@@ -25,6 +25,19 @@ in {
       use-sixel = true;
       floating-controls = true;
     };
+
+    "org/gnome/shell/extensions/blur-my-shell" = {
+      sigma = 55;
+      brightness = 0.60;
+      color = mkTuple [ 0.0 0.0 0.0 0.31 ];
+      noise-amount = 0.55;
+      noise-lightness = 1.25;
+    };
+    "org/gnome/shell/extensions/blur-my-shell/applications" = {
+      blur = true;
+      opacity = 210;
+      whitelist = [ "com.raggesilver.BlackBox" ];
+    };
   };
 
 }
