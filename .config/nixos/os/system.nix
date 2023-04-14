@@ -1,6 +1,6 @@
 # system.nix
 # Common system configuration, flakeless
-{ lib, config, pkgs, ... }: {
+{ lib, pkgs, ... }: {
 
   # Enable automatic updates through this flake
   system.autoUpgrade = {
@@ -48,7 +48,7 @@
     pulse.enable = true;
   };
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = (with pkgs; [
     appimage-run
     blackbox-terminal
     neovim
@@ -59,10 +59,13 @@
     capitaine-cursors
     pinentry-gnome
     gnome.gnome-tweaks
-    gnomeExtensions.gsconnect
-    gnomeExtensions.tailscale-status
-    gnomeExtensions.night-theme-switcher
-  ];
+    gnome.gnome-boxes
+  ]) ++ (with pkgs.gnomeExtensions; [
+    gsconnect
+    tailscale-status
+    night-theme-switcher
+    blur-my-shell
+  ]);
 
   # Remove unused/icky packages
   environment.gnome.excludePackages = (with pkgs.gnome; [
