@@ -54,6 +54,7 @@
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
+        "${inputs.nixos-pkgs}/nixos/modules/profiles/hardened.nix"
         ./.config/nixos/os/persist.nix
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
