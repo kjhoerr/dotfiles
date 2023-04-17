@@ -75,6 +75,35 @@
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
   };
 
+  # Set display settings with 150% fractional scaling
+  systemd.tmpfiles.rules = [
+    "L+ /run/gdm/.config/monitors.xml - - - - ${pkgs.writeText "gdm-monitors.xml" ''
+      <monitors version="2">
+        <configuration>
+          <logicalmonitor>
+            <x>0</x>
+            <y>0</y>
+            <scale>1.5009980201721191</scale>
+            <primary>yes</primary>
+            <monitor>
+              <monitorspec>
+                <connector>eDP-1</connector>
+                <vendor>BOE</vendor>
+                <product>0x095f</product>
+                <serial>0x00000000</serial>
+              </monitorspec>
+              <mode>
+                <width>2256</width>
+                <height>1504</height>
+                <rate>59.999</rate>
+              </mode>
+            </monitor>
+          </logicalmonitor>
+        </configuration>
+      </monitors>
+    ''}"
+  ];
+
   # User accounts
   users.mutableUsers = false;
   users.users.root.passwordFile = "/persist/passwords/root";
