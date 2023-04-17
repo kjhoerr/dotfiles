@@ -123,10 +123,5 @@
   # gpaste has a daemon, must be enabled over package
   programs.gpaste.enable = true;
 
-  security.sudo.extraConfig = ''
-    # rollback results in sudo lectures after each reboot
-    Defaults lecture = never
-  '';
-
 }
 
