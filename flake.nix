@@ -2,11 +2,21 @@
   inputs = {
     nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    # Temporary until lanzaboote refactors its dependencies
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixos-pkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
 
     # Secure Boot for NixOS
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixos-pkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
 
     # User profile manager based on Nix
