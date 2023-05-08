@@ -50,7 +50,6 @@
 
   environment.systemPackages = (with pkgs; [
     appimage-run
-    blackbox-terminal
     neovim
     kakoune
     yubikey-personalization
@@ -74,9 +73,6 @@
     gedit
     gnome-contacts
     gnome-music
-  ]) ++ (with pkgs; [
-    gnome-console
-    gnome-text-editor
   ]);
   services.xserver.excludePackages = with pkgs; [
     xterm
