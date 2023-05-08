@@ -15,6 +15,7 @@
 
   home.packages = lib.mkBefore (with pkgs; [
     bind
+    blackbox-terminal
     keepassxc
     kubernetes-helm
     kubectl
