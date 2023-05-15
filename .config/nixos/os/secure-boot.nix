@@ -22,17 +22,7 @@
 
   # Bootspec and Secure Boot using lanzaboote
   #
-  # This throws a bootspec RFC warning - proceed with caution. May need to clear existing /boot entries first:
-  # sudo rm -rf /boot/*
-  #
-  # Commands for reference:
-  # sudo sbctl create-keys             # Should be persisted, default is in /etc/secureboot. will not overwrite existing keys
-  # sudo sbctl verify                  # Will show warning for any files that will cause lockup while Secure Boot is enabled
-  # sudo bootctl status                # View current boot status
-  # sudo sbctl enroll-keys --microsoft # Add your SB keys to UEFI - must be in Secure Boot setup mode to enroll keys
-  #
-  # Most importantly, review this document:
-  # https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
+  # See: https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
   #
   boot.bootspec.enable = true;
   boot.loader.systemd-boot.enable = lib.mkForce false;
@@ -53,17 +43,6 @@
   #
   security.tpm2.enable = true;
   security.tpm2.tctiEnvironment.enable = true;
-
-  # No swap is configured at present :(
-  #services.logind = {
-  #  lidSwitch = "suspend-then-hibernate";
-  #  extraConfig = ''
-  #    HandlePowerKey=suspend-then-hibernate
-  #    IdleAction=suspend-then-hibernate
-  #    IdleActionSec=2m
-  #  '';
-  #};
-  #systemd.sleep.extraConfig = "HibernateDelaySec=30min";
 
 }
 
