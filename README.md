@@ -121,7 +121,7 @@ Generally, the install process goes something like this:
         boot.initrd.luks.devices."enc" = {
           device = "/dev/disk/by-uuid/..."; # UUID can be found using: `blkid | grep /dev/nvme0n1p2`
           preLVM = true; # only needed if using LVM
-        }
+        };
       }
       ```
 
@@ -168,7 +168,15 @@ Generally, the install process goes something like this:
    mkpasswd --method=SHA-512 1>/persist/passwords/$user
    ```
 
-9. Post-bootstrap instructions (TODO: expand these into separate steps): Enable TPM unlocking using systemd-cryptenroll. Create or modify system configuration flake. Reboot. Enroll sb keys.
+### TODO: expand final steps
+
+9. Create or modify system configuration flake. Copy `/etc/nixos/hardware-configuration.nix` into the systems folder to match the hostname.
+
+10. Reboot again.
+
+11. Enroll sb keys.
+
+12. Enable TPM unlocking using systemd-cryptenroll.
 
 TODO: Fallback instructions - reboot installation media, remount partitions and nixos-enter
 
