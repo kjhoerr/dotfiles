@@ -82,7 +82,7 @@ Generally, the install process goes something like this:
    btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
    umount /mnt
    
-   # aliasing function to simplify typing if need be:
+   # Aliasing function to simplify typing if need be:
    # function pm { mount -o subvol=$1,compress=zstd,noatime /dev/pool/root /mnt/$2 ; }
    # `pm root`
    # `pm home home`
@@ -112,15 +112,17 @@ Generally, the install process goes something like this:
 
 4. Edit the `hardware-configuration.nix`. There are typically a couple of things missing that you will need to add:
 
-    - `"compress=zstd" "noatime"` on each of the btrfs subvolumes
+    - `"compress=zstd" "noatime"` on each option field of the btrfs subvolumes
     - `neededForBoot = true;` for persist and log subvolumes
     - If using LVM, the LUKS spec is missing entirely. This should be:
 
       ```nix
+      {
         boot.initrd.luks.devices."enc" = {
           device = "/dev/disk/by-uuid/..."; # UUID can be found using: `blkid | grep /dev/nvme0n1p2`
           preLVM = true; # only needed if using LVM
         }
+      }
       ```
 
 5. Once edits are complete all that should be left to do is:
@@ -131,7 +133,42 @@ Generally, the install process goes something like this:
 
    And reboot! We're only halfway there, but we're at the fun part! Next is all about managing secureboot, TPM, and getting the impermanence set up.
 
-6. Post-bootstrap instructions (TODO: expand these into separate steps): use sbctl to create, enroll keys (have to enter setup mode, which depends on the device) for secure boot. Enable TPM unlocking using systemd-cryptenroll. Copy files and directories to /persist. Create persisted passwords. Create or modify system configuration flake. Reboot.
+6. After reboot, we need to create the secureboot keys. These keys do not need to be enrolled yet as long as secure boot is not enabled.
+
+   ```bash
+   # Create new keys and add to /etc/secureboot
+   sbctl create-keys
+   ```
+
+7. Next we need to set up the system for impermanence. The folders and files defined in [persist.nix](./.config/nixos/os/persist.nix) must be set up to be linked or mounted.
+
+   ```bash
+   # Create directories to be mounted
+   mkdir -p /persist/etc/{NetworkManager/system-connections,nixos,secureboot}
+   mkdir -p /persist/passwords
+   mkdir -p /persist/var/lib/{bluetooth,colord,docker,fprint,NetworkManager,power-profiles-daemon,systemd,tailscale,upower}
+
+   # Copy any existing configuration items
+   cp -R {,/persist}/etc/NetworkManager/system-connections
+   cp -R {,/persist}/etc/nixos
+   cp -R {,/persist}/etc/secureboot
+
+   # Move system ID and state files
+   mv {,/persist}/etc/machine-id
+   mv {,/persist}/var/lib/NetworkManager/secret_key
+   mv {,/persist}/var/lib/NetworkManager/seen-bssids
+   mv {,/persist}/var/lib/NetworkManager/timestamps
+   mv {,/persist}/var/lib/power-profiles-daemon/state.ini
+   ```
+
+8. Impermanence also clears passwords stored in `/etc/shadow`, so these must be stored separately in the persist subvolume for each user:
+
+   ```bash
+   # Run for each user - change $user to username
+   mkpasswd --method=SHA-512 1>/persist/passwords/$user
+   ```
+
+9. Post-bootstrap instructions (TODO: expand these into separate steps): Enable TPM unlocking using systemd-cryptenroll. Create or modify system configuration flake. Reboot. Enroll sb keys.
 
 TODO: Fallback instructions - reboot installation media, remount partitions and nixos-enter
 
