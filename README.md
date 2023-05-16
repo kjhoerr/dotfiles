@@ -1,5 +1,6 @@
 # kjhoerr dotfiles
 [![update](https://github.com/kjhoerr/dotfiles/actions/workflows/update.yml/badge.svg)](https://github.com/kjhoerr/dotfiles/actions/workflows/update.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## NixOS Configuration
 
