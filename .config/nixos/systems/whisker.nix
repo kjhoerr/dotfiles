@@ -1,5 +1,5 @@
 # whisker.nix
-{ config, pkgs, lib, ... }: {
+{ pkgs, lib, ... }: {
 
   networking.hostName = "whisker";
 
@@ -54,7 +54,7 @@
   # disable unused ethernet interface
   networking.interfaces.enp7s0.useDHCP = false;
 
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = true;
 
   time.hardwareClockInLocalTime = true;
   boot.supportedFilesystems = [ "btrfs" "ntfs" ];

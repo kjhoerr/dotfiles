@@ -1,6 +1,6 @@
 # secure-boot.nix
 # Requires lanzaboote flake
-{ lib, config, pkgs, ... }: {
+{ lib, pkgs, ... }: {
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
