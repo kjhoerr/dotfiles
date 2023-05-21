@@ -62,8 +62,6 @@
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
 
-  services.xserver.upscaleDefaultCursor = true;
-
   users.mutableUsers = false;
   users.users.root.passwordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
