@@ -8,8 +8,6 @@
   home.packages = with pkgs; [
     doctl
     mkcert
-    runelite
-    discord-canary
   ];
 
   services.syncthing.enable = true;
