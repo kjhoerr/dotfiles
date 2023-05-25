@@ -25,6 +25,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Module for running NixOS as WSL2 instance
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixos-pkgs";
+    };
+
+    # Service to fix libraries and links for NixOS hosting as VSCode remote
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Links persistent folders into system
     impermanence.url = "github:nix-community/impermanence";
 
@@ -35,6 +47,7 @@
   outputs = { nixpkgs, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
+      lib = inputs.nixos-pkgs.lib;
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -64,6 +77,19 @@
         ./.config/nixos/os/system.nix
       ];
 
+      # User config modules for hosting services
+      serverHomeModules = [
+        inputs.vscode-server.nixosModules.home
+        ./.config/nixos/home/services.nix
+      ];
+
+      # OS config modules for base WSL system
+      wslModules = [
+        "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
+        inputs.nixos-wsl.nixosModules.wsl
+        ./.config/nixos/systems/wsl.nix
+      ];
+
       # Function to build a home configuration from user modules
       homeUser = (userModules: home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
@@ -72,10 +98,16 @@
       });
 
       # Function to build a nixos configuration from system modules
-      nixosSystem = (systemModules: nixpkgs.lib.nixosSystem {
+      nixosSystem = (systemModules: lib.nixosSystem {
         inherit system;
         # osModules depends on some values from systemModules, so is appended
         modules = systemModules ++ osModules;
+      });
+
+      # Function to build a nixos configuration for WSL
+      wslSystem = (systemModules: lib.nixosSystem {
+        inherit system;
+        modules = systemModules ++ wslModules;
       });
 
     in {
@@ -100,6 +132,21 @@
 
         whisker = nixosSystem [
           ./.config/nixos/systems/whisker.nix
+        ];
+
+        nixos-wsl = wslSystem [
+          # By design, user integration is tightly coupled to system for WSL
+          # Include home-manager module here so all updates are shipped together
+          home-manager.nixosModules.home-manager
+          {
+            users.users.kjhoerr.extraGroups = lib.mkAfter [ "docker" ];
+            wsl.defaultUser = "kjhoerr";
+            home-manager.users.kjhoerr = {
+              imports = homeModules ++ serverHomeModules ++ [
+                ./.config/nixos/users/kjhoerr.nix
+              ];
+            };
+          }
         ];
 
       };
