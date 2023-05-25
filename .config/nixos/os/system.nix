@@ -63,6 +63,7 @@
     gnupg
     capitaine-cursors
     pinentry-gnome
+    wl-clipboard
     gnome.gnome-tweaks
     gnome.gnome-boxes
   ]) ++ (with pkgs.gnomeExtensions; [
