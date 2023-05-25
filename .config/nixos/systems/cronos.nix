@@ -1,5 +1,5 @@
 # cronos.nix
-{ config, lib, pkgs, ... }: {
+{ lib, ... }: {
 
   networking.hostName = "cronos";
 
@@ -10,8 +10,8 @@
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/e7801e57-5291-4c9a-beb7-1dc31a071023";
-    fsType = "btrfs";
-    options = [ "subvol=root" "compress=zstd" "noatime" ];
+      fsType = "btrfs";
+      options = [ "subvol=root" "compress=zstd" "noatime" ];
     };
 
   boot.initrd.luks.devices."enc".device = "/dev/disk/by-uuid/5ccdb8cb-4ffa-4798-b091-cdb2398acb28";

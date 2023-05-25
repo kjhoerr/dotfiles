@@ -25,6 +25,12 @@
   networking.useDHCP = lib.mkDefault true;
   networking.networkmanager.enable = true;
 
+  # do not wait for networking
+  systemd = {
+    targets.network-online.wantedBy = lib.mkForce []; # Normally ["multi-user.target"]
+    services.NetworkManager-wait-online.wantedBy = lib.mkForce []; # Normally ["network-online.target"]
+  };
+
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
@@ -57,6 +63,7 @@
     gnupg
     capitaine-cursors
     pinentry-gnome
+    wl-clipboard
     gnome.gnome-tweaks
     gnome.gnome-boxes
   ]) ++ (with pkgs.gnomeExtensions; [

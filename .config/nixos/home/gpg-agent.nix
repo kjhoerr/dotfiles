@@ -42,7 +42,6 @@ dRkFvHvWWUlOGTU8PAEAkwcdrCiv9u39IFb33fneTOvk3R5sUW26Ct35pF6Yjws=
   services.gpg-agent.enable = lib.mkDefault true;
   services.gpg-agent.enableSshSupport = lib.mkDefault true;
   services.gpg-agent.enableExtraSocket = lib.mkDefault true;
-  services.gpg-agent.pinentryFlavor = lib.mkDefault "gnome3";
 
 }
 

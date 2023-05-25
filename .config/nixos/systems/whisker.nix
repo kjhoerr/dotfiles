@@ -1,5 +1,5 @@
 # whisker.nix
-{ config, pkgs, lib, ... }: {
+{ pkgs, lib, ... }: {
 
   networking.hostName = "whisker";
 
@@ -54,13 +54,7 @@
   # disable unused ethernet interface
   networking.interfaces.enp7s0.useDHCP = false;
 
-  # do not wait for networking
-  systemd = {
-    targets.network-online.wantedBy = pkgs.lib.mkForce []; # Normally ["multi-user.target"]
-    services.NetworkManager-wait-online.wantedBy = pkgs.lib.mkForce []; # Normally ["network-online.target"]
-  };
-
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = true;
 
   time.hardwareClockInLocalTime = true;
   boot.supportedFilesystems = [ "btrfs" "ntfs" ];

@@ -1,6 +1,6 @@
 # persist.nix
 # Requires impermanence flake
-{ lib, config, pkgs, ... }: {
+{ lib, ... }: {
 
   boot.initrd.systemd.enable = lib.mkDefault true;
   boot.initrd.systemd.services.rollback = {

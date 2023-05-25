@@ -35,6 +35,7 @@ jobs:
           nix build '.#nixosConfigurations.ariadne.config.system.build.toplevel'
           nix build '.#nixosConfigurations.cronos.config.system.build.toplevel'
           nix build '.#nixosConfigurations.whisker.config.system.build.toplevel'
+          nix build '.#nixosConfigurations.nixos-wsl.config.system.build.toplevel'
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4

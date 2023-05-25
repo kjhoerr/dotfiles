@@ -1,5 +1,5 @@
 # neovim.nix
-{ lib, pkgs, ... }: {
+{ lib, ... }: {
 
   programs.neovim.enable = lib.mkDefault true;
   programs.neovim.vimAlias = lib.mkDefault true;

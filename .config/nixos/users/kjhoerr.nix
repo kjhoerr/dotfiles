@@ -8,8 +8,6 @@
   home.packages = with pkgs; [
     doctl
     mkcert
-    runelite
-    discord-canary
   ];
 
   services.syncthing.enable = true;
@@ -39,7 +37,6 @@
         "tailscale-status@maxgallup.github.com"
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
-        "blur-my-shell@aunetx"
       ];
       favorite-apps = [
         "firefox.desktop"
