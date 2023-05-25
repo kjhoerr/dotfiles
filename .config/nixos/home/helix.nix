@@ -94,7 +94,7 @@
         "markup.heading" = "light-blue";
         "markup.list" = "light-red";
         "markup.bold" = { fg = "light-yellow"; modifiers = ["bold"]; };
-        "markup.italic" = { fg = "light-magenta"; modfiiers = ["italic"]; };
+        "markup.italic" = { fg = "light-magenta"; modfiers = ["italic"]; };
         "markup.strikethrough" = { modifiers = ["crossed_out"]; };
         "markup.link.url" = { fg = "yellow"; underline = { color = "yellow"; style = "line"; }; };
         "markup.link.text" = "light-red";
@@ -114,7 +114,7 @@
         "hint" = "light-gray";
         "debug" = "light-gray";
         "warning" = "light-yellow";
-        "error" = "light-red"; 
+        "error" = "light-red";
 
         "diagnostic.info" = { underline = { color = "light-blue"; style = "dotted"; }; };
         "diagnostic.hint" = { underline = { color = "light-gray"; style = "double_line"; }; };
