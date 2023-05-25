@@ -1,7 +1,7 @@
 # wsl.nix
 { lib, pkgs, ... }: {
 
-  networking.hostname = "nixos-wsl";
+  networking.hostName = "nixos-wsl";
 
   wsl = {
     enable = true;
