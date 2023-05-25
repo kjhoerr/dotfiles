@@ -40,14 +40,19 @@
         config.allowUnfree = true;
       };
 
-      # Base user config modules to be overwritten
+      # Base user config modules
       homeModules = [
-        ./.config/nixos/home/user.nix
+        ./.config/nixos/home/tui.nix
         ./.config/nixos/home/git.nix
-        ./.config/nixos/home/gnome.nix
         ./.config/nixos/home/neovim.nix
         ./.config/nixos/home/helix.nix
         ./.config/nixos/home/gpg-agent.nix
+      ];
+
+      # Additional user applications and configurations
+      guiModules = [
+        ./.config/nixos/home/applications.nix
+        ./.config/nixos/home/gnome.nix
       ];
 
       # Base OS configs, adapts to system configs
@@ -63,7 +68,7 @@
       homeUser = (userModules: home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         # userModules overwrites, so is appended
-        modules = homeModules ++ userModules;
+        modules = homeModules ++ guiModules ++ userModules;
       });
 
       # Function to build a nixos configuration from system modules
