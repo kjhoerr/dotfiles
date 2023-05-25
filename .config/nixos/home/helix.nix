@@ -141,7 +141,7 @@
     # markdown
     marksman
     # nix
-    rnix-lsp
+    nil
     # rust
     rust-analyzer
     # scala
