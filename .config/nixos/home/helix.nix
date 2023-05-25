@@ -46,8 +46,6 @@
   home.sessionVariables.EDITOR = "hx";
 
   home.packages = lib.mkBefore ((with pkgs; [
-    # wayland clipboard integration
-    wl-clipboard
     # debugging
     lldb
 
