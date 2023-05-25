@@ -1,5 +1,5 @@
 # helix.nix
-{ lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }: {
 
   programs.helix = {
     enable = lib.mkDefault true;
@@ -9,28 +9,38 @@
       editor.lsp.display-messages = true;
     };
 
-    languages = [
-      {
-        name = "java";
-        roots = [ "pom.xml" ];
-
-        # Will create .jdt folder in project root... No way to map to user cache with hardcoding
-        # Could map to /tmp but might cause issues after reboot
-        language-server.command = "jdt-language-server";
-        language-server.args = [
+    languages = {
+      language-server.jdt-language-server = {
+        command = "${pkgs.jdt-language-server}/bin/jdt-language-server";
+        args = [
           "-configuration"
-          ".jdt/jdtls_install/config_linux"
+          "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
           "-data"
-          ".jdt/jdtls_data"
+          "${config.xdg.cacheHome}/.jdt/jdtls_data"
         ];
-      }
-      {
-        name = "yaml";
-        config = {
-          yaml.keyOrdering = false;
-        };
-      }
-    ];
+      };
+      language = [
+        {
+          name = "java";
+          roots = [ "pom.xml" ];
+
+          # temporary until helix release after 23.05
+          language-server.command = "${pkgs.jdt-language-server}/bin/jdt-language-server";
+          language-server.args = [
+            "-configuration"
+            "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
+            "-data"
+            "${config.xdg.cacheHome}/.jdt/jdtls_data"
+          ];
+        }
+        {
+          name = "yaml";
+          config = {
+            yaml.keyOrdering = false;
+          };
+        }
+      ];
+    };
   };
 
   home.sessionVariables.EDITOR = "hx";
