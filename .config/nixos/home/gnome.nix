@@ -46,4 +46,6 @@ in {
     components = [ "pkcs11" "secrets" ];
   };
 
+  services.gpg-agent.pinentryFlavor = lib.mkDefault "gnome3";
+
 }
