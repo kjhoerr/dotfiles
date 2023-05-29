@@ -72,6 +72,7 @@
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
+        inputs.nixos-hardware.nixosModules.common-hidpi
         ./.config/nixos/os/persist.nix
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
@@ -131,6 +132,7 @@
         ];
 
         whisker = nixosSystem [
+          inputs.nixos-hardware.nixosModules.common-gpu-amd
           ./.config/nixos/systems/whisker.nix
         ];
 
