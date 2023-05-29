@@ -39,7 +39,7 @@
         "GPaste@gnome-shell-extensions.gnome.org"
       ];
       favorite-apps = [
-        "firefox.desktop"
+        "microsoft-edge-dev.desktop"
         "org.keepassxc.KeePassXC.desktop"
         "code.desktop"
         "org.gnome.Nautilus.desktop"
