@@ -3,7 +3,6 @@
 { lib, pkgs, ... }:
 let
   root-diff = pkgs.writeShellScriptBin "root-diff" ''
-    #!/usr/bin/env bash
     # Check current root for any files that are not persisted.
     # (These files will be lost on a reboot.)
 
@@ -22,6 +21,7 @@ let
 
     OLD_TRANSID=$(sudo btrfs subvolume find-new /mnt/tmp-root/root-blank 9999999 | awk '{print $NF}')
 
+    echo "These files differ from the root partition and will be cleared on next boot:"
     sudo btrfs subvolume find-new "/mnt/tmp-root/root" "$OLD_TRANSID" |
       sed '$d' |
       cut -f17- -d' ' |
