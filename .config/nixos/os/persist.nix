@@ -8,21 +8,21 @@ let
 
     set -euo pipefail
 
-    sudo mkdir -p /mnt/tmp-root
+    mkdir -p /mnt/tmp-root
 
     # We first mount the btrfs root to /mnt/tmp-root
     # so we can check the subvolumes for mismatching files.
     # If LVM exists, mount that.
     if [[ -b /dev/pool/root ]]; then
-      sudo mount -t btrfs -o subvol=/ /dev/pool/root /mnt/tmp-root
+      mount -t btrfs -o subvol=/ /dev/pool/root /mnt/tmp-root
     else
-      sudo mount -t btrfs -o subvol=/ /dev/mapper/enc /mnt/tmp-root
+      mount -t btrfs -o subvol=/ /dev/mapper/enc /mnt/tmp-root
     fi
 
-    OLD_TRANSID=$(sudo btrfs subvolume find-new /mnt/tmp-root/root-blank 9999999 | awk '{print $NF}')
+    OLD_TRANSID=$(btrfs subvolume find-new /mnt/tmp-root/root-blank 9999999 | awk '{print $NF}')
 
     echo "These files differ from the root partition and will be cleared on next boot:"
-    sudo btrfs subvolume find-new "/mnt/tmp-root/root" "$OLD_TRANSID" |
+    btrfs subvolume find-new "/mnt/tmp-root/root" "$OLD_TRANSID" |
       sed '$d' |
       cut -f17- -d' ' |
       sort |
@@ -38,7 +38,7 @@ let
         fi
       done
 
-    sudo umount /mnt/tmp-root
+    umount /mnt/tmp-root
   '';
 in {
 
