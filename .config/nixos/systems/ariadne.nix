@@ -63,9 +63,6 @@
   # Enable LVFS testing to get UEFI updates
   services.fwupd.extraRemotes = [ "lvfs-testing" ];
 
-  # Turn off fprint - authentication is persisted
-  services.fprintd.enable = false;
-
   # Enable fractional scaling
   services.xserver.desktopManager.gnome = {
     extraGSettingsOverrides = ''
