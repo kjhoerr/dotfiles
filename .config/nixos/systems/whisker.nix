@@ -57,7 +57,6 @@
   hardware.cpu.amd.updateMicrocode = true;
 
   time.hardwareClockInLocalTime = true;
-  boot.supportedFilesystems = [ "btrfs" "ntfs" ];
 
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
