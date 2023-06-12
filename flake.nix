@@ -58,6 +58,12 @@
         ./.config/nixos/home/gnome.nix
       ];
 
+      # User config modules for hosting services
+      serverHomeModules = [
+        inputs.vscode-server.nixosModules.home
+        ./.config/nixos/home/services.nix
+      ];
+
       # Base OS configs, adapts to system configs
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
@@ -66,18 +72,14 @@
         ./.config/nixos/os/persist.nix
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
-      ];
-
-      # User config modules for hosting services
-      serverHomeModules = [
-        inputs.vscode-server.nixosModules.home
-        ./.config/nixos/home/services.nix
+        ./.config/nixos/os/upgrade.nix
       ];
 
       # OS config modules for base WSL system
       wslModules = [
         "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
         inputs.nixos-wsl.nixosModules.wsl
+        ./.config/nixos/os/upgrade.nix
         ./.config/nixos/systems/wsl.nix
       ];
 
