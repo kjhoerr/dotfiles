@@ -5,7 +5,7 @@
 
     # Secure Boot for NixOS
     lanzaboote = {
-      url = "github:nix-community/lanzaboote";
+      url = "github:nix-community/lanzaboote?rev=9f97a908e4059221d39c7b7d0906c88b9fcc9c9b";
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
