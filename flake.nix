@@ -1,11 +1,11 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.05-small";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
     lanzaboote = {
-      url = "github:nix-community/lanzaboote?rev=9f97a908e4059221d39c7b7d0906c88b9fcc9c9b";
+      url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
