@@ -1,19 +1,6 @@
 # system.nix
-# Common system configuration, flakeless
+# Common system configuration
 { lib, pkgs, ... }: {
-
-  # Enable automatic updates through this flake
-  system.autoUpgrade = {
-    enable = true;
-    flake = "github:kjhoerr/dotfiles";
-  };
-
-  # Since automatic updates are enabled, automatically gc older generations
-  # To note, this will gc home-manager user profiles as well
-  nix.gc = {
-    automatic = true;
-    options = "--delete-older-than 14d";
-  };
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.utf8";
@@ -24,12 +11,6 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   networking.networkmanager.enable = true;
-
-  # do not wait for networking
-  systemd = {
-    targets.network-online.wantedBy = lib.mkForce []; # Normally ["multi-user.target"]
-    services.NetworkManager-wait-online.wantedBy = lib.mkForce []; # Normally ["network-online.target"]
-  };
 
   # Enable the X11 windowing system.
   services.xserver = {

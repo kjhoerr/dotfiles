@@ -1,27 +1,17 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.05-small";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-
-    # Temporary until lanzaboote refactors its dependencies
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixos-pkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
 
     # Secure Boot for NixOS
     lanzaboote = {
-      url = "github:nix-community/lanzaboote";
+      url = "github:nix-community/lanzaboote/v0.3.0";
       inputs.nixpkgs.follows = "nixos-pkgs";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.rust-overlay.follows = "rust-overlay";
     };
 
     # User profile manager based on Nix
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -68,26 +58,29 @@
         ./.config/nixos/home/gnome.nix
       ];
 
-      # Base OS configs, adapts to system configs
-      osModules = [
-        inputs.lanzaboote.nixosModules.lanzaboote
-        inputs.impermanence.nixosModules.impermanence
-        "${inputs.nixos-pkgs}/nixos/modules/profiles/hardened.nix"
-        ./.config/nixos/os/persist.nix
-        ./.config/nixos/os/secure-boot.nix
-        ./.config/nixos/os/system.nix
-      ];
-
       # User config modules for hosting services
       serverHomeModules = [
         inputs.vscode-server.nixosModules.home
         ./.config/nixos/home/services.nix
       ];
 
+      # Base OS configs, adapts to system configs
+      osModules = [
+        inputs.lanzaboote.nixosModules.lanzaboote
+        inputs.impermanence.nixosModules.impermanence
+        inputs.nixos-hardware.nixosModules.common-hidpi
+        "${inputs.nixos-pkgs}/nixos/modules/profiles/hardened.nix"
+        ./.config/nixos/os/persist.nix
+        ./.config/nixos/os/secure-boot.nix
+        ./.config/nixos/os/system.nix
+        ./.config/nixos/os/upgrade.nix
+      ];
+
       # OS config modules for base WSL system
       wslModules = [
         "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
         inputs.nixos-wsl.nixosModules.wsl
+        ./.config/nixos/os/upgrade.nix
         ./.config/nixos/systems/wsl.nix
       ];
 
@@ -132,6 +125,7 @@
         ];
 
         whisker = nixosSystem [
+          inputs.nixos-hardware.nixosModules.common-gpu-amd
           ./.config/nixos/systems/whisker.nix
         ];
 

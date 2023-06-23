@@ -1,5 +1,33 @@
 # helix.nix
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }:
+let
+  jdtls-config = {
+    command = "${pkgs.jdk}/bin/java";
+    args = [
+      "-Declipse.application=org.eclipse.jdt.ls.core.id1"
+      "-Dosgi.bundles.defaultStartLevel=4"
+      "-Declipse.product=org.eclipse.jdt.ls.core.product"
+      "-Dosgi.sharedConfiguration.area=${pkgs.jdt-language-server}/share/config"
+      "-Dosgi.sharedConfiguration.area.readOnly=true"
+      "-Dosgi.checkConfiguration=true"
+      "-Dosgi.configuration.cascaded=true"
+      "-Dlog.level=ALL"
+      "-javaagent:${pkgs.lombok}/share/java/lombok.jar"
+      "$JAVA_OPTS"
+      "-jar"
+      "${pkgs.jdt-language-server}/share/java/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar"
+      "--add-modules=ALL-SYSTEM"
+      "--add-opens"
+      "java.base/java.util=ALL-UNNAMED"
+      "--add-opens"
+      "java.base/java.lang=ALL-UNNAMED"
+      "-configuration"
+      "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
+      "-data"
+      "${config.xdg.cacheHome}/.jdt/jdtls_data"
+    ];
+  };
+in {
 
   programs.helix = {
     enable = lib.mkDefault true;
@@ -11,28 +39,14 @@
     };
 
     languages = {
-      language-server.jdt-language-server = {
-        command = "${pkgs.jdt-language-server}/bin/jdt-language-server";
-        args = [
-          "-configuration"
-          "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
-          "-data"
-          "${config.xdg.cacheHome}/.jdt/jdtls_data"
-        ];
-      };
+      language-server.jdt-language-server = jdtls-config;
       language = [
         {
           name = "java";
           roots = [ "pom.xml" ];
 
           # temporary until helix release after 23.05
-          language-server.command = "${pkgs.jdt-language-server}/bin/jdt-language-server";
-          language-server.args = [
-            "-configuration"
-            "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
-            "-data"
-            "${config.xdg.cacheHome}/.jdt/jdtls_data"
-          ];
+          language-server = jdtls-config;
         }
         {
           name = "yaml";
@@ -138,6 +152,7 @@
     delve
     # java
     jdt-language-server
+    lombok
     # markdown
     marksman
     # nix

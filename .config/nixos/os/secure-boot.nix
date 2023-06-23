@@ -6,7 +6,7 @@
   boot.kernelPackages = pkgs.linuxPackages_hardened;
   nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
-  boot.supportedFilesystems = [ "btrfs" ];
+  boot.supportedFilesystems = [ "btrfs" "ntfs" ];
 
   # Quiet boot with plymouth - supports LUKS passphrase entry if needed
   boot.kernelParams = [

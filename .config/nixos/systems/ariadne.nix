@@ -63,9 +63,6 @@
   # Enable LVFS testing to get UEFI updates
   services.fwupd.extraRemotes = [ "lvfs-testing" ];
 
-  # Turn off fprint - authentication is persisted
-  services.fprintd.enable = false;
-
   # Enable fractional scaling
   services.xserver.desktopManager.gnome = {
     extraGSettingsOverrides = ''
@@ -113,6 +110,8 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     passwordFile = "/persist/passwords/kjhoerr";
   };
+
+  programs.steam.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
