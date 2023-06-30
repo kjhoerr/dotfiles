@@ -13,4 +13,5 @@
   ];
   services.vscode-server.nodejsPackage = pkgs.nodejs-16_x;
   services.vscode-server.extraRuntimeDependencies = lib.mkDefault [ pkgs.curl ];
+  services.vscode-server.enableFHS = lib.mkDefault true;
 }
