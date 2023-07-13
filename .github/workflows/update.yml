@@ -1,6 +1,33 @@
 jobs:
   update-flakes:
+    name: Update nix flakes
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: cachix/install-nix-action@v22
+        with:
+          extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Set default git branch (to reduce log spam)
+        run: git config --global init.defaultBranch trunk
+
+      - name: Update flake.lock
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          nix flake update --commit-lock-file
+          git switch -c flake-update
+          git push
+
+  build-check-home:
+    name: "Build home-manager configurations"
+    runs-on: ubuntu-latest
+    needs: update-flakes
+    strategy:
+      matrix:
+        home-user: [ 'kjhoerr', 'khoerr' ]
     steps:
       - uses: easimon/maximize-build-space@v7
         with:
@@ -12,39 +39,63 @@ jobs:
           remove-docker-images: true
 
       - uses: actions/checkout@v3
+        with:
+          ref: flake-updates
 
       - uses: cachix/install-nix-action@v22
         with:
           extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-          nix_path: nixpkgs=channel:nixos-unstable
-
-      - name: Update flake.lock
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          nix flake update --commit-lock-file
-
-      - name: Set default git branch (to reduce log spam)
-        run: git config --global init.defaultBranch trunk
+          nix_path: nixpkgs=channel:nixos-23.05
 
       - name: Build Home-Manager configs
         run: |-
-          nix build '.#homeConfigurations.khoerr.activationPackage'
-          nix build '.#homeConfigurations.kjhoerr.activationPackage'
+          nix build '.#homeConfigurations.${{ matrix.home-user }}.activationPackage'
+
+  build-check-nixos:
+    name: "Build NixOS configurations"
+    runs-on: ubuntu-latest
+    needs: update-flakes
+    strategy:
+      matrix:
+        nixos-system: [ 'araidne', 'cronos', 'whisker', 'nixos-wsl' ]
+    steps:
+      - uses: easimon/maximize-build-space@v7
+        with:
+          overprovision-lvm: true
+          remove-android: true
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+
+      - uses: actions/checkout@v3
+        with:
+          ref: flake-updates
+
+      - uses: cachix/install-nix-action@v22
+        with:
+          extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-23.05
 
       - name: Build NixOS configs
         run: |-
-          nix build '.#nixosConfigurations.ariadne.config.system.build.toplevel'
-          nix build '.#nixosConfigurations.cronos.config.system.build.toplevel'
-          nix build '.#nixosConfigurations.whisker.config.system.build.toplevel'
-          nix build '.#nixosConfigurations.nixos-wsl.config.system.build.toplevel'
+          nix build '.#nixosConfigurations.${{ matrix.nixos-system }}.config.system.build.toplevel'
 
+  create-pr:
+    name: "Create Pull Request for flake updates"
+    runs-on: ubuntu-latest
+    needs: [ build-check-home, build-check-nixos ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: flake-updates
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           body: |
             ## Run report
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          base: trunk
           branch: flake-updates
           delete-branch: true
           title: Update flake.lock
