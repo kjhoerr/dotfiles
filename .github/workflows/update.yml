@@ -48,7 +48,16 @@ jobs:
 
       - uses: cachix/install-nix-action@v22
         with:
-          extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            # enable nix-community binary cache
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+            substituters = https://nix-community.cachix.org https://cache.nixos.org/
+            # save space on disk and in cache
+            auto-optimise-store = true
+            # keep all store paths necessary to build the outputs
+            keep-outputs = true
+            keep-derivations = true
           nix_path: nixpkgs=channel:nixos-23.05
 
       - name: Build Home-Manager configs
@@ -78,7 +87,16 @@ jobs:
 
       - uses: cachix/install-nix-action@v22
         with:
-          extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            # enable nix-community binary cache
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+            substituters = https://nix-community.cachix.org https://cache.nixos.org/
+            # save space on disk and in cache
+            auto-optimise-store = true
+            # keep all store paths necessary to build the outputs
+            keep-outputs = true
+            keep-derivations = true
           nix_path: nixpkgs=channel:nixos-23.05
 
       - name: Build NixOS configs
