@@ -57,7 +57,7 @@ jobs:
     needs: update-flakes
     strategy:
       matrix:
-        nixos-system: [ 'araidne', 'cronos', 'whisker', 'nixos-wsl' ]
+        nixos-system: [ 'ariadne', 'cronos', 'whisker', 'nixos-wsl' ]
     steps:
       - uses: easimon/maximize-build-space@v7
         with:
