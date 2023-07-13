@@ -63,13 +63,12 @@ jobs:
           nix_path: nixpkgs=channel:nixos-23.05
 
       - name: cache nix store for home-manager configurations
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          key: nix-store-${{ hashFiles('flake.lock') }}-hm-${{ matrix.home-user }}
+          key: nix-store-${{ hashFiles('flake.lock') }}-hm
           path: ~/nix
           restore-keys: |
-            nix-store-${{ hashFiles('flake.lock') }}-hm-${{ matrix.home-user }}
-            nix-store-${{ hashFiles('flake.lock') }}-hm-
+            nix-store-${{ hashFiles('flake.lock') }}-hm
             nix-store-
 
       - name: Build Home-Manager configs
@@ -114,13 +113,12 @@ jobs:
           nix_path: nixpkgs=channel:nixos-23.05
 
       - name: cache nix store for nixos configurations
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          key: nix-store-${{ hashFiles('flake.lock') }}-os-${{ matrix.nixos-system }}
+          key: nix-store-${{ hashFiles('flake.lock') }}-os
           path: ~/nix
           restore-keys: |
-            nix-store-${{ hashFiles('flake.lock') }}-os-${{ matrix.nixos-system }}
-            nix-store-${{ hashFiles('flake.lock') }}-os-
+            nix-store-${{ hashFiles('flake.lock') }}-os
             nix-store-
 
       - name: Build NixOS configs
