@@ -80,7 +80,6 @@
         "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
         inputs.nixos-wsl.nixosModules.wsl
         ./.config/nixos/os/upgrade.nix
-        ./.config/nixos/systems/wsl.nix
       ];
 
       # Function to build a home configuration from user modules
@@ -132,6 +131,7 @@
           # By design, user integration is tightly coupled to system for WSL
           # Include home-manager module here so all updates are shipped together
           home-manager.nixosModules.home-manager
+          ./.config/nixos/systems/wsl.nix
           {
             users.users.kjhoerr.extraGroups = lib.mkAfter [ "docker" ];
             wsl.defaultUser = "kjhoerr";
