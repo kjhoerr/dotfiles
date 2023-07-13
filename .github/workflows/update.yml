@@ -22,6 +22,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Upload changes into artifacts
         with:
+          path: ${{ github.workspace }}
           retention-days: 1
 
   build-check-home:
@@ -42,6 +43,8 @@ jobs:
           remove-docker-images: true
 
       - uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
 
       - uses: cachix/install-nix-action@v22
         with:
@@ -70,6 +73,8 @@ jobs:
           remove-docker-images: true
 
       - uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
 
       - uses: cachix/install-nix-action@v22
         with:
@@ -87,6 +92,8 @@ jobs:
     steps:
 
       - uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
