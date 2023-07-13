@@ -44,7 +44,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          path: ${{ github.workspace }}
+          name: artifact
 
       - uses: cachix/install-nix-action@v22
         with:
@@ -74,7 +74,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          path: ${{ github.workspace }}
+          name: artifact
 
       - uses: cachix/install-nix-action@v22
         with:
@@ -93,7 +93,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          path: ${{ github.workspace }}
+          name: artifact
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
