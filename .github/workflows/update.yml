@@ -18,8 +18,8 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           nix flake update --commit-lock-file
-          git switch -c flake-update
-          git push
+          git switch -c flake-updates
+          git push --set-upstream origin flake-updates
 
   build-check-home:
     name: "Build home-manager configurations"
