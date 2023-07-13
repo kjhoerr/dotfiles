@@ -18,8 +18,11 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           nix flake update --commit-lock-file
-          git switch -c flake-updates
-          git push --set-upstream origin flake-updates
+
+      - uses: actions/upload-artifact@v3
+        name: Upload changes into artifacts
+        with:
+          retention-days: 1
 
   build-check-home:
     name: "Build home-manager configurations"
@@ -38,9 +41,7 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/checkout@v3
-        with:
-          ref: flake-updates
+      - uses: actions/download-artifact@v3
 
       - uses: cachix/install-nix-action@v22
         with:
@@ -68,9 +69,7 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/checkout@v3
-        with:
-          ref: flake-updates
+      - uses: actions/download-artifact@v3
 
       - uses: cachix/install-nix-action@v22
         with:
@@ -86,9 +85,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-check-home, build-check-nixos ]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: flake-updates
+
+      - uses: actions/download-artifact@v3
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
