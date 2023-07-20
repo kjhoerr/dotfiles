@@ -32,6 +32,27 @@
     wget
   ];
 
+  # Provide wsl-vpnkit as built-in systemd service
+  systemd.services.wsl-vpnkit = {
+    enable = false;
+    description = "Provide network connectivity to WSL2 when blocked by VPN";
+
+    # Assumes wsl-vpnkit is installed as separate distro in WSL2.
+    #
+    # See: https://github.com/sakai135/wsl-vpnkit#setup-as-a-distro
+    #
+    # Could also try to set up a derivation to add the script as standalone so that
+    # there is no external dependency. Would have to be managed and updated manually
+    serviceConfig = {
+      ExecStart = "/mnt/c/Windows/system32/wsl.exe -d wsl-vpnkit --cd /app wsl-vpnkit";
+      Restart = "always";
+      KillMode = "mixed";
+    };
+
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+  };
+
   # Enable nix flakes
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
