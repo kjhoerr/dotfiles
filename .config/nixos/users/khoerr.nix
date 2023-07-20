@@ -5,7 +5,10 @@
   home.username = "khoerr";
   home.homeDirectory = "/home/khoerr";
 
-  home.packages = with pkgs; [ onedrive ];
+  home.packages = with pkgs; [
+    obsidian
+    onedrive
+  ];
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
 
