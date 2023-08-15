@@ -144,6 +144,8 @@ in {
   home.packages = lib.mkBefore ((with pkgs; [
     # debugging
     lldb
+    # native builds
+    graalvm17-ce
 
     # Language support
     # go
