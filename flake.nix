@@ -42,6 +42,13 @@
         inherit system;
         config.allowUnfree = true;
       };
+      osOverlays = [
+        (self: super: {
+          # Override gnomeExtensions with unstable variant
+          # See: https://github.com/NixOS/nixpkgs/issues/228504
+          inherit (pkgs) gnomeExtensions;
+        })
+      ];
 
       # Base user config modules
       homeModules = [
@@ -73,6 +80,9 @@
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
         ./.config/nixos/os/upgrade.nix
+        {
+          nixpkgs.overlays = osOverlays;
+        }
       ];
 
       # OS config modules for base WSL system
