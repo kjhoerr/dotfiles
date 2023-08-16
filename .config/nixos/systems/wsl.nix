@@ -17,7 +17,7 @@
         nativeBuildInputs = [ makeWrapper ];
       } ''
       makeWrapper ${bashInteractive}/bin/sh $out/bin/sh \
-        --prefix PATH ':' ${lib.makeBinPath ([ systemd gnugrep coreutils gnutar gzip ])}
+        --prefix PATH ':' ${lib.makeBinPath ([ systemd gnugrep coreutils gnutar gzip git ])}
     '');
   };
 
