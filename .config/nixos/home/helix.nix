@@ -2,7 +2,8 @@
 { config, lib, pkgs, ... }:
 let
   jdtls-config = {
-    command = "${pkgs.jdk}/bin/java";
+    # jdk reference same package used to configure `programs.java.package`?
+    command = "${pkgs.jdk17_headless}/bin/java";
     args = [
       "-Declipse.application=org.eclipse.jdt.ls.core.id1"
       "-Dosgi.bundles.defaultStartLevel=4"
@@ -27,6 +28,12 @@ let
       "${config.xdg.cacheHome}/.jdt/jdtls_data"
     ];
   };
+
+  # Override graalvm package with lower priority so jdk binaries can be selected
+  # native-image still works great (at least with Quarkus)
+  graalvm17-ce-low = pkgs.graalvm17-ce.overrideAttrs(oldAttrs: {
+    meta.priority = 10;
+  });
 in {
 
   programs.helix = {
@@ -145,7 +152,8 @@ in {
     # debugging
     lldb
     # native builds
-    graalvm17-ce
+    # See top of helix.nix for override details
+    graalvm17-ce-low
 
     # Language support
     # go
@@ -154,6 +162,7 @@ in {
     delve
     # java
     jdt-language-server
+    maven
     lombok
     # markdown
     marksman
