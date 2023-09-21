@@ -14,6 +14,7 @@
     runelite
     discord-canary
     microsoft-edge-dev
+    openlens
   ]);
 
   xdg.desktopEntries.microsoft-edge-dev = {

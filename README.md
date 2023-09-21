@@ -22,7 +22,7 @@ In this way system and user profiles can be managed and updated separately. Conf
 
 Auto-upgrade and garbage collection is enabled using the default daily frequency and targets `github:kjhoerr/dotfiles` as above. (This option does not exist yet for home-manager flake configurations, unfortunately.)
 
-The flake itself is kept as simple as possible: only necessary inputs, and no overlays. All imports are referenced directly through the flake rather than using nested imports to make it clear which configurations are being actively used by each system and user.
+The flake itself is kept as simple as possible: necessary inputs only and target stable branches where possible. All imports are referenced directly through the flake rather than using nested imports to make it clear which configurations are being actively used by each system and user.
 
 ### Instructions for adding a new NixOS system
 

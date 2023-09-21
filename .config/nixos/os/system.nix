@@ -66,6 +66,12 @@
     xterm
   ];
 
+  # Any packages for root that would otherwise be in home-manager
+  users.users.root.packages = with pkgs; [
+    bind
+    git
+  ];
+
   fonts = {
     enableDefaultFonts = true;
     fonts = with pkgs; [

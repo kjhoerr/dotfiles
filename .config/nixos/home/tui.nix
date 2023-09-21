@@ -10,6 +10,8 @@
   programs.k9s.enable = lib.mkDefault true;
   programs.kakoune.enable = lib.mkDefault true;
   programs.starship.enable = lib.mkDefault true;
+  programs.java.enable = lib.mkDefault true;
+  programs.java.package = lib.mkDefault pkgs.jdk17_headless;
 
   home.packages = lib.mkBefore (with pkgs; [
     bind

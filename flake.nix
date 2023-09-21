@@ -11,8 +11,14 @@
 
     # User profile manager based on Nix
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # User profile manager based on Nix
+    home-manager-wsl = {
+      url = "github:nix-community/home-manager/release-23.05";
+      inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
     # Module for running NixOS as WSL2 instance
@@ -34,7 +40,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs:
+  outputs = { nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = inputs.nixos-pkgs.lib;
@@ -42,6 +48,13 @@
         inherit system;
         config.allowUnfree = true;
       };
+      osOverlays = [
+        (self: super: {
+          # Override gnomeExtensions with unstable variant
+          # See: https://github.com/NixOS/nixpkgs/issues/228504
+          inherit (pkgs) gnomeExtensions;
+        })
+      ];
 
       # Base user config modules
       homeModules = [
@@ -74,6 +87,9 @@
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
         ./.config/nixos/os/upgrade.nix
+        {
+          nixpkgs.overlays = osOverlays;
+        }
       ];
 
       # OS config modules for base WSL system
@@ -81,11 +97,10 @@
         "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
         inputs.nixos-wsl.nixosModules.wsl
         ./.config/nixos/os/upgrade.nix
-        ./.config/nixos/systems/wsl.nix
       ];
 
       # Function to build a home configuration from user modules
-      homeUser = (userModules: home-manager.lib.homeManagerConfiguration {
+      homeUser = (userModules: inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         # userModules overwrites, so is appended
         modules = homeModules ++ guiModules ++ userModules;
@@ -132,7 +147,8 @@
         nixos-wsl = wslSystem [
           # By design, user integration is tightly coupled to system for WSL
           # Include home-manager module here so all updates are shipped together
-          home-manager.nixosModules.home-manager
+          inputs.home-manager-wsl.nixosModules.home-manager
+          ./.config/nixos/systems/wsl.nix
           {
             users.users.kjhoerr.extraGroups = lib.mkAfter [ "docker" ];
             wsl.defaultUser = "kjhoerr";
