@@ -8,9 +8,6 @@
     wslConf.automount.root = "/mnt";
     nativeSystemd = true;
 
-    # Enable native Docker support
-    docker-native.enable = true;
-
     # Needed to enable WSL wrapper for running VSCode WSL
     binShPkg = lib.mkForce (with pkgs; runCommand "nixos-wsl-bash-wrapper"
       {
@@ -31,6 +28,8 @@
     gnupg
     wget
   ];
+
+  virtualisation.docker.enable = true;
 
   # Provide wsl-vpnkit as built-in systemd service
   systemd.services.wsl-vpnkit = {
