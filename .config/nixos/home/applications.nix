@@ -10,6 +10,7 @@
 
   home.packages = lib.mkBefore (with pkgs; [
     blackbox-terminal
+    foliate
     keepassxc
     runelite
     discord-canary
@@ -20,7 +21,7 @@
   xdg.desktopEntries.microsoft-edge-dev = {
     name = "Microsoft Edge (dev)";
     genericName = "Web Browser";
-    exec = "microsoft-edge-dev -enable-features=UseOzonePlatform -ozone-platform=wayland %U";
+    exec = "microsoft-edge-dev --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer %U";
     terminal = false;
     icon = "microsoft-edge-dev";
     type = "Application";
