@@ -31,7 +31,7 @@ let
 
   # Override graalvm package with lower priority so jdk binaries can be selected
   # native-image still works great (at least with Quarkus)
-  graalvm17-ce-low = pkgs.graalvm17-ce.overrideAttrs(oldAttrs: {
+  graalvm-ce-low = pkgs.graalvm-ce.overrideAttrs(oldAttrs: {
     meta.priority = 10;
   });
 in {
@@ -153,7 +153,7 @@ in {
     lldb
     # native builds
     # See top of helix.nix for override details
-    graalvm17-ce-low
+    graalvm-ce-low
 
     # Language support
     # go
