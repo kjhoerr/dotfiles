@@ -4,7 +4,7 @@
   networking.hostName = "ariadne";
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "tpm_tis" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
