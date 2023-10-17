@@ -37,6 +37,7 @@
 
   environment.systemPackages = (with pkgs; [
     appimage-run
+    dmidecode
     neovim
     kakoune
     yubikey-personalization
