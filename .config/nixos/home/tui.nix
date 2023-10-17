@@ -15,6 +15,7 @@
 
   home.packages = lib.mkBefore (with pkgs; [
     bind
+    jq
     kubernetes-helm
     kubectl
     pfetch
