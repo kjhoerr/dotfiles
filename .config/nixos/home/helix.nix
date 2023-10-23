@@ -151,6 +151,8 @@ in {
   home.packages = lib.mkBefore ((with pkgs; [
     # debugging
     lldb
+    # testing
+    playwright-driver
     # native builds
     # See top of helix.nix for override details
     graalvm-ce-low
@@ -168,6 +170,8 @@ in {
     marksman
     # nix
     nil
+    # node
+    yarn-berry
     # rust
     rust-analyzer
     # scala
