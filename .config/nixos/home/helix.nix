@@ -170,8 +170,6 @@ in {
     marksman
     # nix
     nil
-    # node
-    yarn-berry
     # rust
     rust-analyzer
     # scala
