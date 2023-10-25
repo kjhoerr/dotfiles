@@ -40,7 +40,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # Temporarily use nixos-hardware fork for validation
-    kjhoerr-hardware.url = "github:kjhoerr/nixos-hardware";
+    kjhoerr-hardware.url = "github:kjhoerr/nixos-hardware/fw13-7040";
   };
 
   outputs = { nixpkgs, ... }@inputs:
