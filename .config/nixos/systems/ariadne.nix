@@ -1,5 +1,5 @@
 # ariadne.nix
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
 
   networking.hostName = "ariadne";
 
@@ -7,6 +7,22 @@
   boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+
+  # Temporarily provide configuration that was set by nixos-hardware
+  services.power-profiles-daemon.enable = true;
+  boot.extraModprobeConfig = ''
+    options snd-hda-intel model=dell-headset-multi
+  '';
+  services.fprintd.enable = lib.mkDefault true;
+  services.udev.extraRules = ''
+    # Fix headphone noise when on powersave
+    # https://community.frame.work/t/headphone-jack-intermittent-noise/5246/55
+    SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0xa0e0", ATTR{power/control}="on"
+    # Ethernet expansion card support
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8156", ATTR{power/autosuspend}="20"
+  '';
+  hardware.acpilight.enable = lib.mkDefault true;
+  hardware.sensor.iio.enable = lib.mkDefault true;
 
   boot.initrd.luks.devices."enc" = {
     device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
