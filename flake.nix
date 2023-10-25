@@ -129,7 +129,10 @@
       nixosConfigurations = {
 
         ariadne = nixosSystem [
-          inputs.nixos-hardware.nixosModules.framework
+          #inputs.nixos-hardware.nixosModules.framework
+          inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+          inputs.nixos-hardware.nixosModules.common-gpu-amd
+          inputs.nixos-hardware.nixosModules.common-pc-ssd
           ./.config/nixos/systems/ariadne.nix
         ];
 
