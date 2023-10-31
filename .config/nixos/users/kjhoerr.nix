@@ -40,8 +40,8 @@
       ];
       favorite-apps = [
         "microsoft-edge-dev.desktop"
-        "org.keepassxc.KeePassXC.desktop"
         "code.desktop"
+        "beeper.desktop"
         "org.gnome.Nautilus.desktop"
         "com.raggesilver.BlackBox.desktop"
       ];
