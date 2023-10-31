@@ -47,19 +47,13 @@ in {
 
     languages = {
       language-server.jdt-language-server = jdtls-config;
+      language-server.yaml-language-server.config = {
+        yaml.keyOrdering = false;
+      };
       language = [
         {
           name = "java";
           roots = [ "pom.xml" ];
-
-          # temporary until helix release after 23.05
-          language-server = jdtls-config;
-        }
-        {
-          name = "yaml";
-          config = {
-            yaml.keyOrdering = false;
-          };
         }
       ];
     };
