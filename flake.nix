@@ -132,7 +132,7 @@
       nixosConfigurations = {
 
         ariadne = nixosSystem [
-          inputs.kjhoerr-hardware.nixosModules.framework-7040-amd
+          inputs.kjhoerr-hardware.nixosModules.framework-13-7040-amd
           ./.config/nixos/systems/ariadne.nix
         ];
 
