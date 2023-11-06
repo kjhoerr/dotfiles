@@ -130,6 +130,7 @@ in {
       "/var/lib/colord"
       "/var/lib/docker"
       "/var/lib/fprint"
+      "/var/lib/power-profiles-daemon"
       "/var/lib/tailscale"
       "/var/lib/upower"
       "/var/lib/systemd/coredump"
@@ -138,7 +139,6 @@ in {
       "/var/lib/NetworkManager/secret_key"
       "/var/lib/NetworkManager/seen-bssids"
       "/var/lib/NetworkManager/timestamps"
-      "/var/lib/power-profiles-daemon/state.ini"
     ];
   };
 
