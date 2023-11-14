@@ -38,9 +38,6 @@
 
     # Provides module support for specific vendor hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware";
-
-    # Temporarily use nixos-hardware fork for validation
-    kjhoerr-hardware.url = "github:kjhoerr/nixos-hardware/fw-rework";
   };
 
   outputs = { nixpkgs, ... }@inputs:
@@ -132,7 +129,7 @@
       nixosConfigurations = {
 
         ariadne = nixosSystem [
-          inputs.kjhoerr-hardware.nixosModules.framework-13-7040-amd
+          inputs.nixos-hardware.nixosModules.framework-13-7040-amd
           ./.config/nixos/systems/ariadne.nix
         ];
 
