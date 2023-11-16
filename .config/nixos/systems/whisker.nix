@@ -62,12 +62,12 @@
   networking.firewall.checkReversePath = "loose";
 
   users.mutableUsers = false;
-  users.users.root.passwordFile = "/persist/passwords/root";
+  users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    passwordFile = "/persist/passwords/kjhoerr";
+    hashedPasswordFile = "/persist/passwords/kjhoerr";
   };
 
   programs.steam = {
