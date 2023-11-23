@@ -134,6 +134,11 @@
     passwordFile = "/persist/passwords/kjhoerr";
   };
 
+  environment.systemPackages = with pkgs; [
+    fw-ectool
+    powertop
+  ];
+
   programs.steam.enable = true;
 
   # This value determines the NixOS release from which the default
