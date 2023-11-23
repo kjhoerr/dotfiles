@@ -3,6 +3,7 @@
 
   networking.hostName = "ariadne";
 
+  boot.kernelPackages = pkgs.linuxPackages_testing;
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
   boot.kernelModules = [ "kvm-intel" ];
@@ -71,6 +72,28 @@
     '';
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
   };
+
+  boot.kernelParams = [
+    "cpufreq.default_governor=powersave"
+    "initcall_blacklist=cpufreq_gov_userspace_init"
+  ];
+
+  security.pam.services.login.fprintAuth = false;
+  # similarly to how other distributions handle the fingerprinting login
+  security.pam.services.gdm-fingerprint.text = ''
+    auth       required                    pam_shells.so
+    auth       requisite                   pam_nologin.so
+    auth       requisite                   pam_faillock.so      preauth
+    auth       required                    ${pkgs.fprintd}/lib/security/pam_fprintd.so
+    auth       optional                    pam_permit.so
+    auth       required                    pam_env.so
+    auth       [success=ok default=1]      ${pkgs.gnome.gdm}/lib/security/pam_gdm.so
+    auth       optional                    ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
+    account    include                     login
+    password   required                    pam_deny.so
+    session    include                     login
+    session    optional                    ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
+  '';
 
   # Set display settings with 150% fractional scaling
   systemd.tmpfiles.rules = [
