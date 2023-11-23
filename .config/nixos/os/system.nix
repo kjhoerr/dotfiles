@@ -44,6 +44,8 @@
     gcc
     gnupg
     capitaine-cursors
+    pciutils
+    sbctl
     pinentry-gnome
     wl-clipboard
     gnome.gnome-tweaks
