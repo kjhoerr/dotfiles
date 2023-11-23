@@ -40,7 +40,10 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # fw ectool as configured for FW13 7040 AMD (until patch is upstreamed)
-    fw-ectool.url = "github:tlvince/ectool.nix";
+    fw-ectool = {
+      url = "github:tlvince/ectool.nix";
+      inputs.nixpkgs.follows = "nixos-pkgs";
+    };
   };
 
   outputs = { nixpkgs, ... }@inputs:
