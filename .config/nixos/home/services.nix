@@ -7,11 +7,7 @@
   # And: https://github.com/nix-community/NixOS-WSL/issues/231
   services.vscode-server.enable = lib.mkDefault true;
 
-  # Must be explicitly declared until VSCode updates its node server dependency - node 16 is EOL
-  nixpkgs.config.permittedInsecurePackages = [
-    "nodejs-16.20.2"
-  ];
-  services.vscode-server.nodejsPackage = pkgs.nodejs-16_x;
+  services.vscode-server.nodejsPackage = pkgs.nodejs-18_x;
   services.vscode-server.extraRuntimeDependencies = lib.mkDefault [ pkgs.curl ];
   services.vscode-server.enableFHS = lib.mkDefault true;
 }
