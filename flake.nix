@@ -38,6 +38,9 @@
 
     # Provides module support for specific vendor hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+
+    # fw ectool as configured for FW13 7040 AMD (until patch is upstreamed)
+    fw-ectool.url = "github:tlvince/ectool.nix";
   };
 
   outputs = { nixpkgs, ... }@inputs:
@@ -49,6 +52,7 @@
         config.allowUnfree = true;
       };
       osOverlays = [
+        (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
         (self: super: {
           # Override gnomeExtensions with unstable variant
           # See: https://github.com/NixOS/nixpkgs/issues/228504
