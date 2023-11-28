@@ -15,10 +15,6 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: artifact
-
       - uses: cachix/install-nix-action@v22
         with:
           extra_nix_config: |
@@ -63,10 +59,6 @@ jobs:
           remove-haskell: true
           remove-codeql: true
           remove-docker-images: true
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: artifact
 
       - uses: cachix/install-nix-action@v22
         with:
