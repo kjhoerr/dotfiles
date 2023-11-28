@@ -6,9 +6,7 @@ jobs:
       matrix:
         home-user: [ 'kjhoerr', 'khoerr' ]
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: easimon/maximize-build-space@v7
+      - uses: easimon/maximize-build-space@v9
         with:
           overprovision-lvm: true
           remove-android: true
@@ -17,7 +15,9 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: cachix/install-nix-action@v22
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v24
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -53,9 +53,7 @@ jobs:
       matrix:
         nixos-system: [ 'ariadne', 'cronos', 'whisker', 'nixos-wsl' ]
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: easimon/maximize-build-space@v7
+      - uses: easimon/maximize-build-space@v9
         with:
           overprovision-lvm: true
           remove-android: true
@@ -64,7 +62,9 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: cachix/install-nix-action@v22
+      - uses: actions/checkout@v3
+
+      - uses: cachix/install-nix-action@v24
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
