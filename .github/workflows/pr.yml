@@ -1,0 +1,106 @@
+jobs:
+  build-check-home:
+    name: "Build home-manager configurations"
+    runs-on: ubuntu-latest
+    needs: update-flakes
+    strategy:
+      matrix:
+        home-user: [ 'kjhoerr', 'khoerr' ]
+    steps:
+      - uses: easimon/maximize-build-space@v7
+        with:
+          overprovision-lvm: true
+          remove-android: true
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifact
+
+      - uses: cachix/install-nix-action@v22
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            # enable nix-community binary cache
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            substituters = https://nix-community.cachix.org https://cache.nixos.org/
+            trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org/
+            # save space on disk and in cache
+            auto-optimise-store = true
+            # keep all store paths necessary to build the outputs
+            keep-outputs = true
+            keep-derivations = true
+            store = /home/runner/nix
+          nix_path: nixpkgs=channel:nixos-23.11
+
+      - name: cache nix store for home-manager configurations
+        uses: actions/cache@v3
+        with:
+          key: nix-store-${{ hashFiles('flake.lock') }}-hm
+          path: ~/nix
+          restore-keys: |
+            nix-store-${{ hashFiles('flake.lock') }}-hm
+            nix-store-
+
+      - name: Build Home-Manager configs
+        run: |-
+          nix build '.#homeConfigurations.${{ matrix.home-user }}.activationPackage'
+
+  build-check-nixos:
+    name: "Build NixOS configurations"
+    runs-on: ubuntu-latest
+    needs: update-flakes
+    strategy:
+      matrix:
+        nixos-system: [ 'ariadne', 'cronos', 'whisker', 'nixos-wsl' ]
+    steps:
+      - uses: easimon/maximize-build-space@v7
+        with:
+          overprovision-lvm: true
+          remove-android: true
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifact
+
+      - uses: cachix/install-nix-action@v22
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            # enable nix-community binary cache
+            trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            substituters = https://nix-community.cachix.org https://cache.nixos.org/
+            trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org/
+            # save space on disk and in cache
+            auto-optimise-store = true
+            # keep all store paths necessary to build the outputs
+            keep-outputs = true
+            keep-derivations = true
+            store = /home/runner/nix
+          nix_path: nixpkgs=channel:nixos-23.11
+
+      - name: cache nix store for nixos configurations
+        uses: actions/cache@v3
+        with:
+          key: nix-store-${{ hashFiles('flake.lock') }}-os
+          path: ~/nix
+          restore-keys: |
+            nix-store-${{ hashFiles('flake.lock') }}-os
+            nix-store-
+
+      - name: Build NixOS configs
+        run: |-
+          nix build '.#nixosConfigurations.${{ matrix.nixos-system }}.config.system.build.toplevel'
+
+name: PR Validation
+on:
+  pull_request:
+    branches-ignore:
+      - 'flake-updates'
