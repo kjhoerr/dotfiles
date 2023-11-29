@@ -56,12 +56,12 @@
 
   # User accounts
   users.mutableUsers = false;
-  users.users.root.passwordFile = "/persist/passwords/root";
+  users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.khoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    passwordFile = "/persist/passwords/khoerr";
+    hashedPasswordFile = "/persist/passwords/khoerr";
   };
   
   # This value determines the NixOS release from which the default

@@ -76,8 +76,8 @@
   ];
 
   fonts = {
-    enableDefaultFonts = true;
-    fonts = with pkgs; [
+    enableDefaultPackages = true;
+    packages = with pkgs; [
       ibm-plex
       merriweather
       noto-fonts-emoji

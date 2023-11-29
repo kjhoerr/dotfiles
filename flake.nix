@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
@@ -13,12 +13,6 @@
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # User profile manager based on Nix
-    home-manager-wsl = {
-      url = "github:nix-community/home-manager/release-23.05";
-      inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
     # Module for running NixOS as WSL2 instance
@@ -56,11 +50,6 @@
       };
       osOverlays = [
         (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
-        (self: super: {
-          # Override gnomeExtensions with unstable variant
-          # See: https://github.com/NixOS/nixpkgs/issues/228504
-          inherit (pkgs) gnomeExtensions;
-        })
       ];
 
       # Base user config modules
@@ -153,7 +142,7 @@
         nixos-wsl = wslSystem [
           # By design, user integration is tightly coupled to system for WSL
           # Include home-manager module here so all updates are shipped together
-          inputs.home-manager-wsl.nixosModules.home-manager
+          inputs.home-manager.nixosModules.home-manager
           ./.config/nixos/systems/wsl.nix
           {
             users.users.kjhoerr.extraGroups = lib.mkAfter [ "docker" ];

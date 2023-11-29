@@ -60,7 +60,7 @@ jobs:
             keep-outputs = true
             keep-derivations = true
             store = /home/runner/nix
-          nix_path: nixpkgs=channel:nixos-23.05
+          nix_path: nixpkgs=channel:nixos-23.11
 
       - name: cache nix store for home-manager configurations
         uses: actions/cache@v3
@@ -110,7 +110,7 @@ jobs:
             keep-outputs = true
             keep-derivations = true
             store = /home/runner/nix
-          nix_path: nixpkgs=channel:nixos-23.05
+          nix_path: nixpkgs=channel:nixos-23.11
 
       - name: cache nix store for nixos configurations
         uses: actions/cache@v3
@@ -146,8 +146,8 @@ jobs:
           delete-branch: true
           title: Update flake.lock
 
-name: update
-"on":
+name: Update flake.lock
+on:
   schedule:
     - cron: 40 4 * * 0,2,4,6
   workflow_dispatch: null
