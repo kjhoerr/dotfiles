@@ -22,7 +22,7 @@
   xdg.desktopEntries.microsoft-edge-dev = {
     name = "Microsoft Edge (dev)";
     genericName = "Web Browser";
-    exec = "${pkgs.microsoft-edge-dev} --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer %U";
+    exec = "${pkgs.microsoft-edge-dev}/bin/microsoft-edge-dev --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer %U";
     terminal = false;
     icon = "microsoft-edge-dev";
     type = "Application";
