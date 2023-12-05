@@ -150,6 +150,7 @@ in {
     # native builds
     # See top of helix.nix for override details
     graalvm-ce-low
+    yarn-berry
 
     # Language support
     # go
