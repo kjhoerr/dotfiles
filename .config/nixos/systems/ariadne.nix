@@ -137,6 +137,7 @@
   environment.systemPackages = with pkgs; [
     fw-ectool
     powertop
+    lact
   ];
 
   programs.steam.enable = true;

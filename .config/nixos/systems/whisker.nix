@@ -76,7 +76,10 @@
     dedicatedServer.openFirewall = true;
   };
 
-  environment.systemPackages = lib.mkAfter [ pkgs.lutris ];
+  environment.systemPackages = lib.mkAfter (with pkgs; [
+    lact
+    lutris
+  ]);
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
