@@ -44,5 +44,12 @@
   security.tpm2.enable = true;
   security.tpm2.tctiEnvironment.enable = true;
 
+  # Add personal yubikey IDs for wiring up PAM (not enabled here)
+  security.pam.yubico.mode = lib.mkDefault "challenge-response";
+  security.pam.yubico.id = lib.mkDefault [
+    "17965018"
+    "19870941"
+    "19870894"
+  ];
 }
 
