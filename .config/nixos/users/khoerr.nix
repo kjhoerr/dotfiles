@@ -6,11 +6,20 @@
   home.homeDirectory = "/home/khoerr";
 
   home.packages = with pkgs; [
+    azure-cli
+    kubelogin
+    liquibase
+    nodejs
+    openssh
     #obsidian
     onedrive
   ];
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
+
+  programs.java = {
+    package = pkgs.jdk11_headless;
+  };
 
   dconf.settings = {
     "org/gnome/shell" = {
