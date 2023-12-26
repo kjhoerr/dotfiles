@@ -17,10 +17,6 @@
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
 
-  programs.java = {
-    package = pkgs.jdk11_headless;
-  };
-
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;
