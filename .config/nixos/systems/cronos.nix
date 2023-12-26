@@ -1,5 +1,5 @@
 # cronos.nix
-{ lib, ... }: {
+{ lib, pkgs, ... }: {
 
   networking.hostName = "cronos";
 
@@ -50,6 +50,10 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = true;
+
+  environment.systemPackages = [
+    pkgs.gnomeExtensions.onedrive
+  ];
 
   # Turn off fprint - authentication is persisted
   services.fprintd.enable = lib.mkForce false;
