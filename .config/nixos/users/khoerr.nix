@@ -24,6 +24,7 @@
         "gsconnect@andyholmes.github.io"
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
+        "onedrive@client.onedrive.com"
       ];
       favorite-apps = [
         "microsoft-edge-dev.desktop"
