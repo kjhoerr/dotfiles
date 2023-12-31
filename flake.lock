@@ -147,11 +147,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1700653687,
-        "narHash": "sha256-B6v9CjYfEVdaiyRCMXzQzfF/bT9KuicnS4yCDB9f6sI=",
+        "lastModified": 1703923686,
+        "narHash": "sha256-OKwWIDm6GxMwoI0+mw0dAdeTC5i7VaZEZcIu+ALy+oc=",
         "owner": "tlvince",
         "repo": "ectool.nix",
-        "rev": "fe769ee497514f5848f410f7d07732eaa7a5b844",
+        "rev": "441b9b2534cc92cb69cf2b17c977ec8ccab13668",
         "type": "github"
       },
       "original": {
@@ -284,11 +284,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1703646364,
-        "narHash": "sha256-uCj41nq4hnw5aItXJg4DUNpqLSCNRM3xHZbGo8dwoXs=",
+        "lastModified": 1703991017,
+        "narHash": "sha256-5wlJYAktFeHJlQt9VubO0FjaLe+96A/N3Die5Ym5Y/E=",
         "owner": "nix-community",
         "repo": "NixOS-WSL",
-        "rev": "d72abaf29c40d8f6f9f527815c6dd24f76a50bd4",
+        "rev": "c1c843e5059d942092d9bb9dc93768e5d2d79bdc",
         "type": "github"
       },
       "original": {
