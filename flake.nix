@@ -61,7 +61,7 @@
                   owner = "superm1";
                   repo = "power-profiles-daemon";
                   rev = "mlimonci/pre-commit";
-                  sha256 = "sha256-4+V9UaCFwVRgla73YAmPQHg33lPd+dCaVZRNs5g4z8g=";
+                  sha256 = "sha256-3cdiZZsJHiFS00NEj0gE9ry06dfhWrSc9UNc8/x+p4c=";
                 };
               });
             }
