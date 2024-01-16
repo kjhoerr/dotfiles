@@ -5,4 +5,4 @@ labels: bug
 ---
 Failure occurred while testing system and home-manager configurations after updating flake inputs.
 
-See workflow run: {{ .env.WORKFLOW_JOB_URL }}
+See workflow run: {{ env.WORKFLOW_JOB_URL }}
