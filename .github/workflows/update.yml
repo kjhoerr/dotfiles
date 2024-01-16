@@ -75,6 +75,15 @@ jobs:
         run: |-
           nix build '.#homeConfigurations.${{ matrix.home-user }}.activationPackage'
 
+      - name: Create GH issue based on workflow failure
+        if: failure()
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          filename: .github/WORKFLOW_FAILURE.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_JOB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
   build-check-nixos:
     name: "Build NixOS configurations"
     runs-on: ubuntu-latest
@@ -124,6 +133,15 @@ jobs:
       - name: Build NixOS configs
         run: |-
           nix build '.#nixosConfigurations.${{ matrix.nixos-system }}.config.system.build.toplevel'
+
+      - name: Create GH issue based on workflow failure
+        if: failure()
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          filename: .github/WORKFLOW_FAILURE.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_JOB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   create-pr:
     name: "Create Pull Request for flake updates"
