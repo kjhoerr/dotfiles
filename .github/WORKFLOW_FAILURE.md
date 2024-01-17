@@ -1,7 +1,7 @@
 ---
 title: Failure in '{{ github.workflow }}' workflow {{ date | date('YYYY-MM-DD') }}
 assignees: kjhoerr
-labels: bug
+labels: bug, build-failure
 ---
 Failure occurred while testing system and home-manager configurations after updating flake inputs.
 
