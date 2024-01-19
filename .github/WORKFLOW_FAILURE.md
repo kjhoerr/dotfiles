@@ -1,5 +1,5 @@
 ---
-title: Failure in '{{ github.workflow }}' workflow {{ date | date('YYYY-MM-DD') }}
+title: Failure in '{{ env.WORKFLOW_NAME }}' workflow {{ date | date('YYYY-MM-DD') }}
 assignees: kjhoerr
 labels: bug, build-failure
 ---
