@@ -82,6 +82,7 @@ jobs:
           filename: .github/WORKFLOW_FAILURE.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.workflow }}
           WORKFLOW_JOB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   build-check-nixos:
@@ -141,6 +142,7 @@ jobs:
           filename: .github/WORKFLOW_FAILURE.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.workflow }}
           WORKFLOW_JOB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   create-pr:
