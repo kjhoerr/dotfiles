@@ -16,6 +16,8 @@
   ];
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
+  programs.gpg.mutableKeys = true;
+  programs.gpg.mutableTrust = true;
 
   dconf.settings = {
     "org/gnome/shell" = {
