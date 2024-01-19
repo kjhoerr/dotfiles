@@ -7,6 +7,7 @@
 
   home.packages = with pkgs; [
     azure-cli
+    azuredatastudio
     kubelogin
     liquibase
     nodejs
