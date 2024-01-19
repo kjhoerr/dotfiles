@@ -9,7 +9,6 @@
   programs.vscode.enable = lib.mkDefault true;
 
   home.packages = lib.mkBefore (with pkgs; [
-    beeper
     blackbox-terminal
     foliate
     keepassxc
