@@ -6,6 +6,7 @@
   home.homeDirectory = "/home/kjhoerr";
 
   home.packages = with pkgs; [
+    beeper
     doctl
     mkcert
   ];
