@@ -15,6 +15,20 @@
     #obsidian
     onedrive
   ];
+  helix.lsps = [
+    "bash"
+    "css"
+    "dockerfile"
+    "html"
+    "java"
+    "json"
+    "markdown"
+    "nix"
+    "python"
+    "toml"
+    "typescript"
+    "yaml"
+  ];
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
   programs.gpg.mutableKeys = true;
