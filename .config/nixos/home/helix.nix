@@ -2,26 +2,9 @@
 { config, lib, pkgs, ... }:
 let
   jdtls-config = {
-    # jdk reference same package used to configure `programs.java.package`?
-    command = "${pkgs.jdk17_headless}/bin/java";
+    command = "jdt-language-server";
     args = [
-      "-Declipse.application=org.eclipse.jdt.ls.core.id1"
-      "-Dosgi.bundles.defaultStartLevel=4"
-      "-Declipse.product=org.eclipse.jdt.ls.core.product"
-      "-Dosgi.sharedConfiguration.area=${pkgs.jdt-language-server}/share/config"
-      "-Dosgi.sharedConfiguration.area.readOnly=true"
-      "-Dosgi.checkConfiguration=true"
-      "-Dosgi.configuration.cascaded=true"
-      "-Dlog.level=ALL"
-      "-javaagent:${pkgs.lombok}/share/java/lombok.jar"
-      "$JAVA_OPTS"
-      "-jar"
-      "${pkgs.jdt-language-server}/share/java/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar"
-      "--add-modules=ALL-SYSTEM"
-      "--add-opens"
-      "java.base/java.util=ALL-UNNAMED"
-      "--add-opens"
-      "java.base/java.lang=ALL-UNNAMED"
+      "--jvm-arg=-javaagent:${pkgs.lombok}/share/java/lombok.jar"
       "-configuration"
       "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
       "-data"
@@ -46,7 +29,7 @@ in {
     };
 
     languages = {
-      language-server.jdt-language-server = jdtls-config;
+      language-server.jdtls = jdtls-config;
       language-server.yaml-language-server.config = {
         yaml.keyOrdering = false;
       };
