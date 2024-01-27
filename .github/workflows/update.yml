@@ -54,22 +54,7 @@ jobs:
             trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
             substituters = https://nix-community.cachix.org https://cache.nixos.org/
             trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org/
-            # save space on disk and in cache
-            auto-optimise-store = true
-            # keep all store paths necessary to build the outputs
-            keep-outputs = true
-            keep-derivations = true
-            store = /home/runner/nix
           nix_path: nixpkgs=channel:nixos-23.11
-
-      - name: cache nix store for home-manager configurations
-        uses: actions/cache@v4
-        with:
-          key: nix-store-${{ hashFiles('flake.lock') }}-hm
-          path: ~/nix
-          restore-keys: |
-            nix-store-${{ hashFiles('flake.lock') }}-hm
-            nix-store-
 
       - name: Build Home-Manager configs
         run: |-
@@ -114,22 +99,7 @@ jobs:
             trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
             substituters = https://nix-community.cachix.org https://cache.nixos.org/
             trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org/
-            # save space on disk and in cache
-            auto-optimise-store = true
-            # keep all store paths necessary to build the outputs
-            keep-outputs = true
-            keep-derivations = true
-            store = /home/runner/nix
           nix_path: nixpkgs=channel:nixos-23.11
-
-      - name: cache nix store for nixos configurations
-        uses: actions/cache@v4
-        with:
-          key: nix-store-${{ hashFiles('flake.lock') }}-os
-          path: ~/nix
-          restore-keys: |
-            nix-store-${{ hashFiles('flake.lock') }}-os
-            nix-store-
 
       - name: Build NixOS configs
         run: |-
