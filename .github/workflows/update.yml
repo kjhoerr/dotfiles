@@ -42,7 +42,7 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
 
@@ -102,7 +102,7 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
 
@@ -151,7 +151,7 @@ jobs:
     needs: [ build-check-home, build-check-nixos ]
     steps:
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
 
