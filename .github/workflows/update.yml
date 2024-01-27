@@ -33,7 +33,7 @@ jobs:
       matrix:
         home-user: [ 'kjhoerr', 'khoerr' ]
     steps:
-      - uses: easimon/maximize-build-space@v7
+      - uses: easimon/maximize-build-space@v10
         with:
           overprovision-lvm: true
           remove-android: true
@@ -93,7 +93,7 @@ jobs:
       matrix:
         nixos-system: [ 'ariadne', 'cronos', 'whisker', 'nixos-wsl' ]
     steps:
-      - uses: easimon/maximize-build-space@v7
+      - uses: easimon/maximize-build-space@v10
         with:
           overprovision-lvm: true
           remove-android: true
