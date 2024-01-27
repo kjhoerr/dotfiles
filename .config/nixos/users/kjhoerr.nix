@@ -29,6 +29,21 @@
     };
   };
 
+  helix.lsps = [
+    "bash"
+    "css"
+    "dockerfile"
+    "html"
+    "java"
+    "json"
+    "markdown"
+    "nix"
+    "rust"
+    "toml"
+    "typescript"
+    "yaml"
+  ];
+
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;

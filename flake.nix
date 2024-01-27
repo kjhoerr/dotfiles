@@ -64,10 +64,10 @@
                 # explicitly fetching the source to make sure we're patching over 0.13 (this isn't strictly needed):
                 src = prev.fetchFromGitLab {
                   domain = "gitlab.freedesktop.org";
-                  owner = "superm1";
+                  owner = "upower";
                   repo = "power-profiles-daemon";
-                  rev = "mlimonci/pre-commit";
-                  sha256 = "sha256-3cdiZZsJHiFS00NEj0gE9ry06dfhWrSc9UNc8/x+p4c=";
+                  rev = "main";
+                  sha256 = "sha256-Kjljrf/xhwbLtNkKDQWKMVlflQDurk7727ZwgU2p/Vc=";
                 };
               });
             }
