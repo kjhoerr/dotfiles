@@ -63,7 +63,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-23.11
 
       - name: cache nix store for home-manager configurations
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: nix-store-${{ hashFiles('flake.lock') }}-hm
           path: ~/nix
@@ -123,7 +123,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-23.11
 
       - name: cache nix store for nixos configurations
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: nix-store-${{ hashFiles('flake.lock') }}-os
           path: ~/nix
