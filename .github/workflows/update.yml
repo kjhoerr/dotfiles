@@ -19,7 +19,7 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           nix flake update --commit-lock-file
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload changes into artifacts
         with:
           path: ${{ github.workspace }}
