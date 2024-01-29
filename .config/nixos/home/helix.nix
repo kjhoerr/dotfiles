@@ -6,6 +6,9 @@ let
   graalvm-ce-low = pkgs.graalvm-ce.overrideAttrs(oldAttrs: {
     meta.priority = 10;
   });
+  python-env = pkgs.python311.withPackages(ps: with ps; [
+    python-lsp-server
+  ] ++ ps.python-lsp-server.optional-dependencies.all);
   lsp-enabled = lang: langconf: lib.mkIf (builtins.elem lang config.helix.lsps) langconf;
   lsp-package = lang: packages: if builtins.elem lang config.helix.lsps then packages else [];
 in {
@@ -94,7 +97,7 @@ in {
         command = "${pkgs.nil}/bin/nil";
       };
       language-server.pylsp = lsp-enabled "python" {
-        command = "${pkgs.python311Packages.python-lsp-server}/bin/pylsp";
+        command = "${python-env}/bin/pylsp";
       };
       language-server.rust-analyzer = lsp-enabled "rust" {
         command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
@@ -121,6 +124,10 @@ in {
         (lsp-enabled "java" {
           name = "java";
           roots = [ "pom.xml" ];
+        })
+        (lsp-enabled "python" {
+          name = "python";
+          language-servers = [ "pylsp" ];
         })
       ];
     };
@@ -217,6 +224,7 @@ in {
   ]
     ++ (lsp-package "go" [ pkgs.delve ])
     ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
+    ++ (lsp-package "python" [ python-env ])
     ++ (lsp-package "typescript" [ pkgs.yarn-berry ])
   );
 
