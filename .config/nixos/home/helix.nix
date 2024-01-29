@@ -222,6 +222,7 @@ in {
     # testing
     playwright-driver
   ]
+    ++ (lsp-package "bash" [ pkgs.shellcheck ])
     ++ (lsp-package "go" [ pkgs.delve ])
     ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
     ++ (lsp-package "python" [ python-env ])
