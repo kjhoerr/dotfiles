@@ -1,9 +1,8 @@
 # ariadne.nix
-{ lib, pkgs, ... }: {
+{ pkgs, ... }: {
 
   networking.hostName = "ariadne";
 
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_testing;
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
   boot.kernelModules = [ "kvm-intel" ];
