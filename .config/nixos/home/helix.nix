@@ -20,7 +20,8 @@ in {
     helix.lsps = lib.mkOption {
       type = lib.types.listOf (lib.types.enum [
         "bash"
-        "cmake"
+        "c"
+        "c#"
         "css"
         "dockerfile"
         "go"
@@ -55,24 +56,36 @@ in {
     languages = {
       language-server.bash-language-server = lsp-enabled "bash" {
         command = "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
+        args = [ "start" ];
       };
-      language-server.cmake-language-server = lsp-enabled "cmake" {
+      language-server.cmake-language-server = lsp-enabled "c" {
         command = "${pkgs.cmake-language-server}/bin/cmake-language-server";
       };
       language-server.vscode-css-language-server = lsp-enabled "css" {
         command = "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
+        args = [ "--stdio" ];
+        config = {
+          provideFormatter = true;
+          css.validate.enable = true;
+        };
       };
       language-server.docker-langserver = lsp-enabled "dockerfile" {
         command = "${pkgs.nodePackages.dockerfile-language-server-nodejs}/bin/docker-langserver";
+        args = [ "--stdio" ];
       };
       language-server.gopls = lsp-enabled "go" {
         command = "${pkgs.gopls}/bin/gopls";
       };
       language-server.haskell-language-server = lsp-enabled "haskell" {
         command = "${pkgs.haskellPackages.haskell-language-server}/bin/haskell-language-server";
+        args = [ "--lsp" ];
       };
       language-server.vscode-html-language-server = lsp-enabled "html" {
         command = "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
+        args = [ "--stdio" ];
+        config = {
+          provideFormatter = true;
+        };
       };
       language-server.jdtls = lsp-enabled "java" {
         command = "${pkgs.jdt-language-server}/bin/jdt-language-server";
@@ -86,9 +99,16 @@ in {
       };
       language-server.vscode-json-language-server = lsp-enabled "json" {
         command = "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server";
+        args = [ "--stdio" ];
+        config = {
+          provideFormatter = true;
+          json.validate.enable = true;
+        };
       };
       language-server.marksman = lsp-enabled "markdown" {
+        # marksman outputs to stderr which causes Helix to report errors, but works fine
         command = "${pkgs.marksman}/bin/marksman";
+        args = [ "server" ];
       };
       language-server.metals = lsp-enabled "scala" {
         command = "${pkgs.metals}/bin/metals";
@@ -96,23 +116,37 @@ in {
       language-server.nil = lsp-enabled "nix" {
         command = "${pkgs.nil}/bin/nil";
       };
+      language-server.omnisharp = lsp-enabled "c#" {
+        command = "${pkgs.omnisharp-roslyn}/bin/OmniSharp";
+        args = [ "--languageserver" ];
+      };
       language-server.pylsp = lsp-enabled "python" {
         command = "${python-env}/bin/pylsp";
       };
       language-server.rust-analyzer = lsp-enabled "rust" {
         command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
       };
+      language-server.tailwindcss-ls = lsp-enabled "css" {
+        command = "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
+        args = [ "--stdio" ];
+      };
       language-server.taplo = lsp-enabled "toml" {
         command = "${pkgs.taplo}/bin/taplo";
+        args = [ "lsp" "stdio" ];
       };
       language-server.typescript-language-server = lsp-enabled "typescript" {
-        command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
+        command = "${pkgs.nodePackages.typescript-language-server}/lib/node_modules/.bin/typescript-language-server";
+        args = [ "--stdio" ];
+        config = {
+          hostInfo = "helix";
+        };
       };
       language-server.vala-language-server = lsp-enabled "vala" {
         command = "${pkgs.vala-language-server}/bin/vala-language-server";
       };
       language-server.yaml-language-server = lsp-enabled "yaml" {
         command = "${pkgs.nodePackages.yaml-language-server}/bin/yaml-language-server";
+        args = [ "--stdio" ];
         config = {
           yaml.keyOrdering = false;
         };
@@ -222,7 +256,6 @@ in {
     # testing
     playwright-driver
   ]
-    ++ (lsp-package "bash" [ pkgs.shellcheck ])
     ++ (lsp-package "go" [ pkgs.delve ])
     ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
     ++ (lsp-package "python" [ python-env ])
