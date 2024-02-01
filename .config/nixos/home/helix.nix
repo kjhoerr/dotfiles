@@ -6,7 +6,7 @@ let
   graalvm-ce-low = pkgs.graalvm-ce.overrideAttrs(oldAttrs: {
     meta.priority = 10;
   });
-  jdtls-bin = if (lib.versionOlder "1.31.0" pkgs.jdt-language-server.version) then "jdt-language-server" else "jdtls";
+  jdtls-bin = if (lib.versionOlder pkgs.jdt-language-server.version "1.31.0") then "jdt-language-server" else "jdtls";
   python-env = pkgs.python311.withPackages(ps: with ps; [
     python-lsp-server
   ] ++ ps.python-lsp-server.optional-dependencies.all);
