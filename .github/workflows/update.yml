@@ -31,7 +31,7 @@ jobs:
     needs: update-flakes
     strategy:
       matrix:
-        home-user: [ 'kjhoerr', 'khoerr' ]
+        home-user: [ 'kjhoerr', 'khoerr', 'nixos' ]
     steps:
       - uses: easimon/maximize-build-space@v10
         with:
