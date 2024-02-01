@@ -15,12 +15,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # User profile manager based on Nix
-    home-manager-wsl = {
-      url = "github:nix-community/home-manager/release-23.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Module for running NixOS as WSL2 instance
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
@@ -123,6 +117,13 @@
         modules = homeModules ++ guiModules ++ userModules;
       });
 
+      # Function to build a home configuration from user modules for WSL
+      wslUser = (userModules: inputs.home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        # userModules overwrites, so is appended
+        modules = homeModules ++ serverHomeModules ++ userModules;
+      });
+
       # Function to build a nixos configuration from system modules
       nixosSystem = (systemModules: lib.nixosSystem {
         inherit system;
@@ -143,6 +144,8 @@
 
         kjhoerr = homeUser [ ./.config/nixos/users/kjhoerr.nix ];
 
+        nixos = wslUser [ ./.config/nixos/users/nixos.nix ];
+
       };
       nixosConfigurations = {
 
@@ -162,18 +165,9 @@
         ];
 
         nixos-wsl = wslSystem [
-          # By design, user integration is tightly coupled to system for WSL
-          # Include home-manager module here so all updates are shipped together
-          inputs.home-manager-wsl.nixosModules.home-manager
           ./.config/nixos/systems/wsl.nix
           {
-            users.users.kjhoerr.extraGroups = lib.mkAfter [ "docker" ];
-            wsl.defaultUser = "kjhoerr";
-            home-manager.users.kjhoerr = {
-              imports = homeModules ++ serverHomeModules ++ [
-                ./.config/nixos/users/kjhoerr.nix
-              ];
-            };
+            users.users.nixos.extraGroups = lib.mkAfter [ "docker" ];
           }
         ];
 
