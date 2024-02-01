@@ -4,7 +4,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        home-user: [ 'kjhoerr', 'khoerr' ]
+        home-user: [ 'kjhoerr', 'khoerr', 'nixos' ]
     steps:
       - uses: easimon/maximize-build-space@v10
         with:
