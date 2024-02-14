@@ -61,7 +61,7 @@
                   owner = "upower";
                   repo = "power-profiles-daemon";
                   rev = "main";
-                  sha256 = "sha256-UC93VIlTGtQeMhTRhCrVKq7VgPBvQmfvsd7ZF4KPVDc=";
+                  sha256 = "sha256-a+jJclMgrIWHQrfN/b91Bsk64AzT7evPBbzJ8ersb+A=";
                 };
               });
             }
