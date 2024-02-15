@@ -53,15 +53,13 @@
         (final: prev: {
             power-profiles-daemon = prev.power-profiles-daemon.overrideAttrs(
               old: {
-                version = "0.13-2";
-
-                # explicitly fetching the source to make sure we're patching over 0.13 (this isn't strictly needed):
+                version = "0.20";
                 src = prev.fetchFromGitLab {
                   domain = "gitlab.freedesktop.org";
                   owner = "upower";
                   repo = "power-profiles-daemon";
-                  rev = "main";
-                  sha256 = "sha256-a+jJclMgrIWHQrfN/b91Bsk64AzT7evPBbzJ8ersb+A=";
+                  rev = "0.20";
+                  sha256 = "sha256-8wSRPR/1ELcsZ9K3LvSNlPcJvxRhb/LRjTIxKtdQlCA=";
                 };
               });
             }
