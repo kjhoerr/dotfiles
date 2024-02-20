@@ -54,6 +54,7 @@
             power-profiles-daemon = prev.power-profiles-daemon.overrideAttrs(
               old: {
                 version = "0.20";
+                nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.argparse-manpage ];
                 src = prev.fetchFromGitLab {
                   domain = "gitlab.freedesktop.org";
                   owner = "upower";
@@ -61,6 +62,12 @@
                   rev = "0.20";
                   sha256 = "sha256-8wSRPR/1ELcsZ9K3LvSNlPcJvxRhb/LRjTIxKtdQlCA=";
                 };
+                postPatch = ''
+                  patchShebangs --build \
+                    src/powerprofilesctl \
+                    tests/integration-test.py \
+                    tests/unittest_inspector.py
+                '';
               });
             }
         )
