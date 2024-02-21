@@ -5,19 +5,19 @@
 ## provided as option(s) to nix build
 
 ## Setup - strongly assume defaults
-SOURCE=github:kjhoerr/dotfiles
+SOURCE="github:kjhoerr/dotfiles"
 HOSTNAME=$(hostname)
 USERNAME=$(whoami)
 cd "$(mktemp -d)" || exit
 
 ## Build NixOS, home-manager profiles
 if ! nix build "$@" \
-    "${SOURCE}#nixosConfigurations.${HOSTNAME}.config.system.build.toplevel" \
-    "${SOURCE}#homeConfigurations.${USERNAME}.activationPackage";
+	"${SOURCE}#nixosConfigurations.${HOSTNAME}.config.system.build.toplevel" \
+	"${SOURCE}#homeConfigurations.${USERNAME}.activationPackage";
 ## Detect errors at build and fail out before profiles get activated
 then
-    >&2 echo "Error occurred while building NixOS and home-manager profiles"
-    exit 1
+	>&2 echo "Error occurred while building NixOS and home-manager profiles"
+	exit 1
 fi
 
 ## Activate new profiles
