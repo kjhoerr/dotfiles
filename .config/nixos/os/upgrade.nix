@@ -2,7 +2,7 @@
 { lib, pkgs, ... }:
 let
   profiles-rebuild-src = builtins.readFile ../scripts/profiles-rebuild.sh;
-  profiles-rebuild = (pkgs.buildScriptBin "profiles-rebuild" profiles-rebuild-src).overrideAttrs(old: {
+  profiles-rebuild = (pkgs.writeScriptBin "profiles-rebuild" profiles-rebuild-src).overrideAttrs(old: {
     buildCommand = "${old.buildCommand}\n patchShebangs $out";
   });
 in {
