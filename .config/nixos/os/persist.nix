@@ -3,9 +3,11 @@
 { lib, pkgs, ... }:
 let
   root-diff-src = builtins.readFile ../scripts/root-diff.sh;
-  root-diff = (pkgs.writeScriptBin "root-diff" root-diff-src).overrideAttrs(old: {
-    buildCommand = "${old.buildCommand}\n patchShebangs $out";
-  });
+  root-diff = pkgs.writeShellApplication {
+    name = "root-diff";
+    runtimeInputs = [ pkgs.btrfs-progs ];
+    text = root-diff-src;
+  };
 in {
 
   boot.initrd.systemd.enable = lib.mkDefault true;
