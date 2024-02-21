@@ -1,5 +1,11 @@
 # upgrade.nix
-{ lib, ... }: {
+{ lib, pkgs, ... }:
+let
+  profiles-rebuild-src = builtins.readFile ../scripts/profiles-rebuild.sh;
+  profiles-rebuild = (pkgs.buildScriptBin "profiles-rebuild" profiles-rebuild-src).overrideAttrs(old: {
+    buildCommand = "${old.buildCommand}\n patchShebangs $out";
+  });
+in {
 
   # Enable automatic upgrades through this flake repository
   system.autoUpgrade.enable = lib.mkDefault true;
@@ -25,6 +31,9 @@
   # Similar to SSHD config, leave off by default but add personal pubkey
   nix.sshServe.enable = lib.mkDefault false;
   nix.sshServe.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEVH5c050+fT7lIYhycEVvbDx6+aNeDliEFTNLP2EULk openpgp:0x69ED7111" ];
+
+  # Add custom rebuild script to system path
+  environment.systemPackages = lib.mkAfter ([ profiles-rebuild ]);
 
   # Disable network targets due to common upgrade issues
   systemd = {
