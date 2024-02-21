@@ -11,7 +11,11 @@
 ## There is a root subvolume that is intended to be reset to using a blank
 ## snapshot (root-blank).
 
-set -euo pipefail
+if [ "$UID" -ne "0" ];
+then
+	>&2 echo "Must run as superuser to be able to mount main btrfs volume"
+	exit 1
+fi
 
 MOUNTDIR=$(mktemp -d)
 BLANK_ROOT_SNAPSHOT="${MOUNTDIR}/root-blank"
@@ -22,12 +26,18 @@ else
 	BTRFS_VOL=/dev/mapper/enc
 fi
 
+if [ ! -r "$BTRFS_VOL" ];
+then
+	>&2 echo "Device '$BTRFS_VOL' not found"
+	exit 1
+fi
+
 ## Mount the btrfs root to a tmpdir so we can check the subvolumes for
 ## mismatching files.
 mount -t btrfs -o subvol=/ ${BTRFS_VOL} "${MOUNTDIR}"
 
-OLD_TRANSID=$(btrfs subvolume find-new "${BLANK_ROOT_SNAPSHOT}" 9999999 \
-		| awk '{print $NF}')
+OLD_TRANSID=$(btrfs subvolume find-new "${BLANK_ROOT_SNAPSHOT}" 9999999 |
+		awk '{print $NF}')
 
 echo "These files differ from the root partition and will be cleared on next" \
 	" boot:"
