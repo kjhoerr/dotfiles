@@ -39,8 +39,8 @@ mount -t btrfs -o subvol=/ ${BTRFS_VOL} "${MOUNTDIR}"
 OLD_TRANSID=$(btrfs subvolume find-new "${BLANK_ROOT_SNAPSHOT}" 9999999 |
 		awk '{print $NF}')
 
-echo "These files differ from the root partition and will be cleared on next" \
-	" boot:"
+echo "These files differ from the root partition and will be" \
+	"cleared on next boot:"
 btrfs subvolume find-new "$MOUNTDIR/root" "$OLD_TRANSID" |
 	sed '$d' |
 	cut -f17- -d' ' |
