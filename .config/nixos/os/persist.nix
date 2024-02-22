@@ -2,11 +2,10 @@
 # Requires impermanence flake
 { lib, pkgs, ... }:
 let
-  root-diff-src = builtins.readFile ../scripts/root-diff.sh;
   root-diff = pkgs.writeShellApplication {
     name = "root-diff";
     runtimeInputs = [ pkgs.btrfs-progs ];
-    text = root-diff-src;
+    text = builtins.readFile ../scripts/root-diff.sh;
   };
 in {
 
