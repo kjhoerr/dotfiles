@@ -6,9 +6,9 @@
 ## been created. Essentially, this supports two modes:
 ##
 ## - A LUKS partition containing a BTRFS partition
-## - A LVM (can be contained in LUKS) thas has a BTRFS partition
+## - A LVM (can be contained in LUKS) that has a BTRFS partition
 ##
-## There is a root subvolume that is intended to be reset to using a blank
+## There is also a root subvolume that is intended to be reset using a blank
 ## snapshot (root-blank).
 
 if [ "$UID" -ne "0" ];
@@ -18,8 +18,7 @@ then
 fi
 
 MOUNTDIR=$(mktemp -d)
-BLANK_ROOT_SNAPSHOT="${MOUNTDIR}/root-blank"
-if [[ -b /dev/pool/root ]];
+if [ -b /dev/pool/root ];
 then
 	BTRFS_VOL=/dev/pool/root
 else
@@ -36,12 +35,14 @@ fi
 ## mismatching files.
 mount -t btrfs -o subvol=/ ${BTRFS_VOL} "${MOUNTDIR}"
 
+BLANK_ROOT_SNAPSHOT="${MOUNTDIR}/root-blank"
+ROOT_SUBVOL="${MOUNTDIR}/root"
 OLD_TRANSID=$(btrfs subvolume find-new "${BLANK_ROOT_SNAPSHOT}" 9999999 |
 		awk '{print $NF}')
 
 echo "These files differ from the root partition and will be" \
 	"cleared on next boot:"
-btrfs subvolume find-new "$MOUNTDIR/root" "$OLD_TRANSID" |
+btrfs subvolume find-new "$ROOT_SUBVOL" "$OLD_TRANSID" |
 	sed '$d' |
 	cut -f17- -d' ' |
 	sort |
