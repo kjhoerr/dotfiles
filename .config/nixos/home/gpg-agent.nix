@@ -1,11 +1,10 @@
 # gpg-agent.nix
 { lib, pkgs, ... }:
 let
-  gpg-sshid-ctl-src = builtins.readFile ../scripts/gpg-sshid-ctl.sh;
   gpg-sshid-ctl = pkgs.writeShellApplication {
     name = "gpg-sshid-ctl";
     runtimeInputs = with pkgs; [ openssh gnupg ];
-    text = gpg-sshid-ctl-src;
+    text = builtins.readFile ../scripts/gpg-sshid-ctl.sh;
   };
 in {
 
