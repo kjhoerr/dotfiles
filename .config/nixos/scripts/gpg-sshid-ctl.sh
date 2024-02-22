@@ -2,14 +2,11 @@
 ## Enable or disable sshcontrol for a specific key or all keys when the SSH
 ## agent is controlled by GPG
 
-if [ -z "$SSHCONTROL_FILE" ];
-then
-	SSHCONTROL_FILE=~/.gnupg/sshcontrol
-fi
+SSHCONTROL_FILE=${SSHCONTROL_FILE:-~/.gnupg/sshcontrol}
 
-command="$1"
-identity_file="$2"
-shift 2
+command="${1:-}"
+identity_file="${2:-}"
+shift 2 || true
 
 if [ ! -w "$SSHCONTROL_FILE" ];
 then
@@ -55,6 +52,7 @@ function sshctrl {
 }
 
 ## Parse identity_file for keygrip if it exists
+keygrip=""
 if [ -n "$identity_file" ] \
 	&& ! keygrip=$(find_keygrip "$identity_file");
 then
@@ -79,12 +77,7 @@ fi
 if [ "$result" -ne "0" ];
 then
 	>&2 echo "Error occurred while running $command sshcontrol."
-	ukg=$keygrip
-	if [ -z "$ukg" ];
-	then
-		ukg="N/A"
-	fi
-	>&2 echo "Keygrip used: $ukg"
+	>&2 echo "Keygrip used: ${keygrip:-N/A}"
 	exit 1
 fi
 
