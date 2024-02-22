@@ -2,9 +2,11 @@
 { lib, pkgs, ... }:
 let
   gpg-sshid-ctl-src = builtins.readFile ../scripts/gpg-sshid-ctl.sh;
-  gpg-sshid-ctl = (pkgs.writeScriptBin "gpg-sshid-ctl" gpg-sshid-ctl-src).overrideAttrs(old: {
-    buildCommand = "${old.buildCommand}\n patchShebangs $out";
-  });
+  gpg-sshid-ctl = pkgs.writeShellApplication {
+    name = "gpg-sshid-ctl";
+    runtimeInputs = with pkgs; [ openssh gnupg ];
+    text = gpg-sshid-ctl-src;
+  };
 in {
 
   programs.gpg.enable = lib.mkDefault true;
