@@ -1,6 +1,12 @@
 # system.nix
 # Common system configuration
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+let
+  get-sri-hash = pkgs.writeShellApplication {
+    name = "get-sri-hash";
+    text = builtins.readFile ../scripts/get-sri-hash.sh;
+  };
+in {
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.utf8";
@@ -38,6 +44,7 @@
   environment.systemPackages = (with pkgs; [
     appimage-run
     dmidecode
+    get-sri-hash
     neovim
     kakoune
     yubikey-personalization
