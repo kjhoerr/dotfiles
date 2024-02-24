@@ -16,6 +16,7 @@
     runelite
     discord-canary
     microsoft-edge-dev
+    obsidian
     openlens
   ]);
 
