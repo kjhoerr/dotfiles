@@ -19,10 +19,13 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           nix flake update --commit-lock-file
 
+      - name: Create archive of repository
+        run: tar cvf archive.tar ${{ github.workspace }}
+
       - uses: actions/upload-artifact@v4
         name: Upload changes into artifacts
         with:
-          path: ${{ github.workspace }}
+          path: archive.tar
           retention-days: 1
 
   build-check-home:
@@ -124,6 +127,9 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: artifact
+
+      - name: Extract archive
+        run: tar xvf archive.tar
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
