@@ -20,7 +20,7 @@ jobs:
           nix flake update --commit-lock-file
 
       - name: Create archive of repository
-        run: tar cvf archive.tar ${{ github.workspace }}
+        run: tar cvf archive.tar .
 
       - uses: actions/upload-artifact@v4
         name: Upload changes into artifacts
