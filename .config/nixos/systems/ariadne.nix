@@ -1,5 +1,5 @@
 # ariadne.nix
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
 
   networking.hostName = "ariadne";
 
@@ -7,6 +7,8 @@
   boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  # Update for 6.8-rc5
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_testing;
 
   boot.initrd.luks.devices."enc" = {
     device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
@@ -71,11 +73,6 @@
     '';
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
   };
-
-  boot.kernelParams = [
-    "cpufreq.default_governor=powersave"
-    "initcall_blacklist=cpufreq_gov_userspace_init"
-  ];
 
   security.pam.services.login.fprintAuth = false;
   # similarly to how other distributions handle the fingerprinting login
