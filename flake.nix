@@ -50,6 +50,8 @@
       };
       osOverlays = [
         (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
+        # Use nixpkgs-unstable PPD with latest source/inputs
+        (_: _: { power-profiles-daemon = pkgs.power-profiles-daemon; })
       ];
 
       # Base user config modules
@@ -84,8 +86,6 @@
         ./.config/nixos/os/upgrade.nix
         {
           nixpkgs.overlays = osOverlays;
-          # Use nixpkgs-unstable PPD with latest source/inputs
-          services.power-profiles-daemon.package = pkgs.power-profiles-daemon;
         }
       ];
 
