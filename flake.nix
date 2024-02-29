@@ -144,6 +144,7 @@
 
         ariadne = nixosSystem [
           inputs.nixos-hardware.nixosModules.framework-13-7040-amd
+          ./.config/nixos/os/disko.nix
           ./.config/nixos/systems/ariadne.nix
         ];
 
