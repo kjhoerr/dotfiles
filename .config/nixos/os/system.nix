@@ -32,6 +32,9 @@ in {
     };
   };
 
+  # unstable with both gnome and KDE enabled - force which sshaskpass is used
+  programs.ssh.askPassword = lib.mkForce "${pkgs.ksshaskpass}/bin/ksshaskpass";
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
