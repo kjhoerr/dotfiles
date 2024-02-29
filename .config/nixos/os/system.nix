@@ -22,10 +22,14 @@ in {
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-    desktopManager.plasma6.enable = true;
-    layout = "us";
-    xkbVariant = "";
+    desktopManager = {
+      gnome.enable = true;
+      plasma6.enable = true;
+    };
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
   };
 
   # Enable CUPS to print documents.
