@@ -9,6 +9,12 @@
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
+    # Declarative disk partitioning
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixos-pkgs";
+    };
+
     # User profile manager based on Nix
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -79,6 +85,7 @@
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
+        inputs.disko.nixosModules.disko
         inputs.nixos-hardware.nixosModules.common-hidpi
         ./.config/nixos/os/persist.nix
         ./.config/nixos/os/secure-boot.nix
