@@ -69,10 +69,9 @@ in {
   environment.gnome.excludePackages = (with pkgs.gnome; [
     epiphany
     geary
-    gedit
     gnome-contacts
     gnome-music
-  ]);
+  ]) ++ [ pkgs.gedit ];
   services.xserver.excludePackages = with pkgs; [
     xterm
   ];
