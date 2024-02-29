@@ -1,12 +1,11 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.3.0";
-      inputs.nixpkgs.follows = "nixos-pkgs";
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # User profile manager based on Nix
@@ -18,7 +17,7 @@
     # Module for running NixOS as WSL2 instance
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
-      inputs.nixpkgs.follows = "nixos-pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Service to fix libraries and links for NixOS hosting as VSCode remote
@@ -36,22 +35,20 @@
     # fw ectool as configured for FW13 7040 AMD (until patch is upstreamed)
     fw-ectool = {
       url = "github:tlvince/ectool.nix";
-      inputs.nixpkgs.follows = "nixos-pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
-      lib = inputs.nixos-pkgs.lib;
+      lib = nixpkgs.lib;
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
       osOverlays = [
         (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
-        # Use nixpkgs-unstable PPD with latest source/inputs
-        (_: _: { power-profiles-daemon = pkgs.power-profiles-daemon; })
       ];
 
       # Base user config modules
@@ -91,7 +88,7 @@
 
       # OS config modules for base WSL system
       wslModules = [
-        "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
+        "${inputs.nixpkgs}/nixos/modules/profiles/minimal.nix"
         inputs.nixos-wsl.nixosModules.wsl
         ./.config/nixos/os/upgrade.nix
       ];
