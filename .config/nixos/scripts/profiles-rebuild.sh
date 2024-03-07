@@ -6,6 +6,7 @@
 
 ## Setup - strongly assume defaults
 SOURCE="github:kjhoerr/dotfiles"
+SYSPROFILE="/nix/var/nix/profiles/system"
 HOSTNAME=$(hostname)
 USERNAME=$(whoami)
 cd "$(mktemp -d)" || exit
@@ -20,9 +21,12 @@ then
 	exit 1
 fi
 
+NEWSYSLINK=$(readlink -f ./result)
+
 ## Activate new profiles
 ## If either fails, the error will fall through the end of the script
 ./result-1/activate \
+ && sudo nix-env --profile $SYSPROFILE --set "$NEWSYSLINK" \
  && sudo ./result/bin/switch-to-configuration boot
 exit
 
