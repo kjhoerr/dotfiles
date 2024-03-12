@@ -21,12 +21,22 @@ then
 	exit 1
 fi
 
+echo
+echo "User profile updates:"
+nix store diff-closures ~/.nix-profile "$(readlink -f ./result-1/home-path)"
+
+echo
+echo "System profile updates:"
+nix store diff-closures $SYSPROFILE ./result
+
+read -r -p "Paused - enter to continue"
+
 NEWSYSLINK=$(readlink -f ./result)
 
 ## Activate new profiles
 ## If either fails, the error will fall through the end of the script
-./result-1/activate \
- && sudo nix-env --profile $SYSPROFILE --set "$NEWSYSLINK" \
- && sudo ./result/bin/switch-to-configuration boot
+sudo nix-env --profile $SYSPROFILE --set "$NEWSYSLINK" \
+ && sudo ./result/bin/switch-to-configuration boot \
+ && ./result-1/activate
 exit
 
