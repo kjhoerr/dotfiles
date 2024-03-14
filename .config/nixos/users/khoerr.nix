@@ -12,8 +12,8 @@
     liquibase
     nodejs
     openssh
-    #obsidian
     onedrive
+    thunderbird
   ];
   helix.lsps = [
     "bash"
