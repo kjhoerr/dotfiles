@@ -54,6 +54,7 @@ in {
     pciutils
     sbctl
     pinentry-gnome
+    podman-desktop
     wl-clipboard
     gnome.gnome-tweaks
     gnome.gnome-boxes
@@ -106,8 +107,8 @@ in {
     };
   };
 
-  # Add Docker
-  virtualisation.docker.enable = true;
+  # OCI engine
+  virtualisation.podman.enable = true;
 
   # Wayland-specific configuration
   services.xserver.displayManager.gdm.wayland = true;
