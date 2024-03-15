@@ -24,13 +24,13 @@ in {
     displayManager.gdm.enable = true;
     desktopManager = {
       gnome.enable = true;
-      plasma6.enable = true;
     };
     xkb = {
       layout = "us";
       variant = "";
     };
   };
+  services.desktopManager.plasma6.enable = true;
 
   # unstable with both gnome and KDE enabled - force which sshaskpass is used
   programs.ssh.askPassword = lib.mkForce "${pkgs.ksshaskpass}/bin/ksshaskpass";
@@ -61,7 +61,7 @@ in {
     capitaine-cursors
     pciutils
     sbctl
-    pinentry-gnome
+    pinentry-gnome3
     podman-desktop
     wl-clipboard
     gnome.gnome-tweaks
