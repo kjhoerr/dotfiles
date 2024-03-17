@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
   mkUint32 = lib.hm.gvariant.mkUint32;
   mkTuple = lib.hm.gvariant.mkTuple; 
@@ -46,6 +46,6 @@ in {
     components = [ "pkcs11" "secrets" ];
   };
 
-  services.gpg-agent.pinentryFlavor = lib.mkDefault "gnome3";
+  services.gpg-agent.pinentryPackage = lib.mkDefault pkgs.pinentry-gnome3;
 
 }
