@@ -108,7 +108,10 @@ in {
   };
 
   # OCI engine
-  virtualisation.podman.enable = true;
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
 
   # Wayland-specific configuration
   services.xserver.displayManager.gdm.wayland = true;
