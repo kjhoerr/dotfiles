@@ -14,7 +14,7 @@ in {
       cursor-theme = "capitaine-cursors";
       document-font-name = "Merriweather 11";
       font-name = "IBM Plex Sans Arabic 11";
-      monospace-font-name = "FiraMono Nerd Font 10";
+      monospace-font-name = "FiraCode Nerd Font 10";
     };
 
     "com/raggesilver/BlackBox" = {
