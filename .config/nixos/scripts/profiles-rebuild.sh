@@ -21,6 +21,11 @@ then
 	exit 1
 fi
 
+if [ ! -d ./result ] || [ ! -d ./result-1 ];
+then
+  exit 1
+fi
+
 echo
 echo "User profile updates:"
 nix store diff-closures ~/.nix-profile "$(readlink -f ./result-1/home-path)"
