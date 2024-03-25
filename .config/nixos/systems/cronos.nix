@@ -64,7 +64,7 @@
   users.users.khoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     hashedPasswordFile = "/persist/passwords/khoerr";
   };
   
