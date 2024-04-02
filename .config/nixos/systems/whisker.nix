@@ -66,7 +66,7 @@
   users.users.kjhoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     hashedPasswordFile = "/persist/passwords/kjhoerr";
   };
 
@@ -80,6 +80,11 @@
     lact
     lutris
   ]);
+
+  services.mpd = {
+    enable = true;
+    fluidsynth = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
