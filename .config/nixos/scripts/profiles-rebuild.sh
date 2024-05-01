@@ -33,6 +33,7 @@ nix store diff-closures ~/.nix-profile "$(readlink -f ./result-1/home-path)"
 echo
 echo "System profile updates:"
 nix store diff-closures $SYSPROFILE ./result
+echo
 
 read -r -p "Paused - enter to continue"
 
