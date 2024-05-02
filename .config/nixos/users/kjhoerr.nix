@@ -1,6 +1,9 @@
 # home/kjhoerr.nix
 # Requires home-manager flake
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  elem-wp-path = "${pkgs.pantheon.elementary-wallpapers}/share/backgrounds";
+in {
 
   home.username = "kjhoerr";
   home.homeDirectory = "/home/kjhoerr";
@@ -46,6 +49,10 @@
   ];
 
   dconf.settings = {
+    "org/gnome/desktop/background" = {
+      picture-uri = "${elem-wp-path}/odin.jpg";
+      picture-uri-dark = "${elem-wp-path}/odin-dark.jpg";
+    };
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = [
