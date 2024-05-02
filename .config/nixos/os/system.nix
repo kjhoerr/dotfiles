@@ -59,10 +59,11 @@ in {
     gnome.gnome-tweaks
     gnome.gnome-boxes
   ]) ++ (with pkgs.gnomeExtensions; [
-    gsconnect
-    tailscale-status
-    night-theme-switcher
     blur-my-shell
+    gsconnect
+    luminus-shell-y
+    night-theme-switcher
+    tailscale-qs
   ]);
 
   # Remove unused/icky packages
