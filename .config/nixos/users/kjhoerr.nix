@@ -53,6 +53,7 @@
         "tailscale-status@maxgallup.github.com"
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
+        "blur-my-shell@aunetx"
       ];
       favorite-apps = [
         "microsoft-edge-dev.desktop"

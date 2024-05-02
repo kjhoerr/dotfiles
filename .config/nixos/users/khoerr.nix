@@ -42,6 +42,7 @@
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
         "onedrive@client.onedrive.com"
+        "blur-my-shell@aunetx"
       ];
       favorite-apps = [
         "microsoft-edge-dev.desktop"
