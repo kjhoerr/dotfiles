@@ -52,6 +52,7 @@
         (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
         # Use nixpkgs-unstable PPD with latest source/inputs
         (_: _: { power-profiles-daemon = pkgs.power-profiles-daemon; })
+        (_: _: { gnomeExtensions = pkgs.gnomeExtensions; })
       ];
 
       # Base user config modules
