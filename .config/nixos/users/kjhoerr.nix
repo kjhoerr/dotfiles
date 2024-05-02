@@ -50,10 +50,11 @@
       disable-user-extensions = false;
       enabled-extensions = [
         "gsconnect@andyholmes.github.io"
-        "tailscale-status@maxgallup.github.com"
+        "tailscale@joaophi.github.com"
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
         "blur-my-shell@aunetx"
+        "luminus-shell-y@dikasp.gitlab"
       ];
       favorite-apps = [
         "microsoft-edge-dev.desktop"
