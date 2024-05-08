@@ -11,6 +11,7 @@
   home.packages = lib.mkBefore (with pkgs; [
     blackbox-terminal
     foliate
+    gnumeric
     keepassxc
     microsoft-edge-dev
     obsidian
