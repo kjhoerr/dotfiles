@@ -11,6 +11,7 @@ in {
   home.packages = with pkgs; [
     beeper
     doctl
+    flatpak-builder
     mkcert
   ];
 
@@ -45,6 +46,7 @@ in {
     "rust"
     "toml"
     "typescript"
+    "vala"
     "yaml"
   ];
 
