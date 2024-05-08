@@ -11,10 +11,12 @@
   home.packages = lib.mkBefore (with pkgs; [
     blackbox-terminal
     foliate
+    gnumeric
     keepassxc
     microsoft-edge-dev
     obsidian
     openlens
+    switcheroo
   ]);
 
   xdg.desktopEntries.microsoft-edge-dev = {

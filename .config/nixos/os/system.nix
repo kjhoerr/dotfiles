@@ -133,8 +133,8 @@ in {
   # Force gnome-keyring to disable, because it likes to bully gpg-agent
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
-  # Enable fwupd - does not work well with lanzaboote at the moment
   services.fwupd.enable = true;
+  services.flatpak.enable = true;
 
   # gpaste has a daemon, must be enabled over package
   programs.gpaste.enable = true;
