@@ -16,6 +16,7 @@
     microsoft-edge-dev
     obsidian
     openlens
+    switcheroo
   ]);
 
   xdg.desktopEntries.microsoft-edge-dev = {
