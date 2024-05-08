@@ -52,6 +52,7 @@ in {
       "/var/lib/colord"
       "/var/lib/docker"
       "/var/lib/fprint"
+      "/var/lib/AccountsService"
       "/var/lib/power-profiles-daemon"
       "/var/lib/tailscale"
       "/var/lib/upower"
