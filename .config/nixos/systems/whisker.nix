@@ -51,15 +51,6 @@
     [ { device = "/dev/disk/by-uuid/d4a415b7-048e-4db5-9621-d4c29a59f8d5"; }
     ];
 
-  # Enable variable refresh rate
-  services.xserver.desktopManager.gnome = {
-    extraGSettingsOverrides = ''
-      [org.gnome.mutter]
-      experimental-features=['variable-refresh-rate']
-    '';
-    extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
-  };
-
   hardware.cpu.amd.updateMicrocode = true;
 
   time.hardwareClockInLocalTime = true;
