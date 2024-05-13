@@ -21,7 +21,10 @@ in {
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
+    displayManager = {
+      gdm.enable = true;
+      defaultSession = lib.mkDefault "gnome";
+    };
     desktopManager = {
       gnome.enable = true;
     };
@@ -122,10 +125,7 @@ in {
   };
 
   # Wayland-specific configuration
-  services.xserver.displayManager = {
-    gdm.wayland = true;
-    defaultSession = lib.mkDefault "gnome";
-  };
+  services.xserver.displayManager.gdm.wayland = true;
   environment.sessionVariables = {
     # keepassxc / QT apps will use xwayland by default - override
     QT_QPA_PLATFORM = "wayland";
