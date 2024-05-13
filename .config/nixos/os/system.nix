@@ -122,7 +122,10 @@ in {
   };
 
   # Wayland-specific configuration
-  services.xserver.displayManager.gdm.wayland = true;
+  services.xserver.displayManager = {
+    gdm.wayland = true;
+    defaultSession = lib.mkDefault "gnome";
+  };
   environment.sessionVariables = {
     # keepassxc / QT apps will use xwayland by default - override
     QT_QPA_PLATFORM = "wayland";
