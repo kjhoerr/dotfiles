@@ -21,10 +21,7 @@ in {
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager = {
-      gdm.enable = true;
-      defaultSession = lib.mkDefault "gnome";
-    };
+    displayManager.gdm.enable = true;
     desktopManager = {
       gnome.enable = true;
     };
@@ -33,6 +30,7 @@ in {
       variant = "";
     };
   };
+  services.displayManager.defaultSession = "gnome";
   services.desktopManager.plasma6.enable = true;
 
   # unstable with both gnome and KDE enabled - force which sshaskpass is used
