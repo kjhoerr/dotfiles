@@ -14,6 +14,7 @@ in {
       cursor-theme = "capitaine-cursors";
       document-font-name = "Merriweather 11";
       font-name = "IBM Plex Sans Arabic 11";
+      icon-theme = "Adwaita";
       monospace-font-name = "FiraCode Nerd Font 10";
     };
 
