@@ -3,14 +3,28 @@
 
   networking.hostName = "ariadne";
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+      kernelModules = [ "dm-snapshot" "tpm_crb" ];
 
-  boot.initrd.luks.devices."enc" = {
-    device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
-    preLVM = true;
+      luks.devices."enc" = {
+        device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
+        preLVM = true;
+      };
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
+
+    kernelPatches = [
+      {
+        name = "pinctrl";
+        patch = pkgs.fetchurl {
+          url = "https://lore.kernel.org/linux-gpio/20240519124109.1523-1-mario.limonciello@amd.com/t.mbox.gz";
+          hash = "sha256-iyYJbRc8zqGr57pvePUSXsvryAOutj5LcoILo7VQcnQ=";
+        };
+      }
+    ];
   };
 
   fileSystems."/" =
