@@ -21,7 +21,7 @@
         name = "pinctrl";
         patch = pkgs.fetchurl {
           url = "https://lore.kernel.org/linux-gpio/20240519124109.1523-1-mario.limonciello@amd.com/t.mbox.gz";
-          hash = "sha256-iyYJbRc8zqGr57pvePUSXsvryAOutj5LcoILo7VQcnQ=";
+          hash = "sha256-eYREEFkWEzcCpZL+NmrlPrmt6ogY00GD+4KwSox/8vk=";
         };
       }
     ];
