@@ -21,16 +21,17 @@ in {
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager = {
-      gdm.enable = true;
-      defaultSession = lib.mkDefault "gnome";
-    };
+    displayManager.gdm.enable = lib.mkDefault true;
     desktopManager = {
       gnome.enable = true;
     };
-    layout = "us";
-    xkbVariant = "";
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
   };
+  services.displayManager.defaultSession = "gnome";
+  services.desktopManager.plasma6.enable = lib.mkDefault false;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -58,7 +59,7 @@ in {
     capitaine-cursors
     pciutils
     sbctl
-    pinentry-gnome
+    pinentry-gnome3
     podman-desktop
     wl-clipboard
     gnome.gnome-tweaks
@@ -75,10 +76,9 @@ in {
   environment.gnome.excludePackages = (with pkgs.gnome; [
     epiphany
     geary
-    gedit
     gnome-contacts
     gnome-music
-  ]);
+  ]) ++ [ pkgs.gedit ];
   services.xserver.excludePackages = with pkgs; [
     xterm
   ];
