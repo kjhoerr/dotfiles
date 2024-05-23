@@ -9,7 +9,7 @@ in {
 
   # Enable automatic upgrades through this flake repository
   system.autoUpgrade.enable = lib.mkDefault true;
-  system.autoUpgrade.flake = lib.mkDefault "github:kjhoerr/dotfiles/unstable";
+  system.autoUpgrade.flake = lib.mkDefault "github:kjhoerr/dotfiles";
 
   # Since automatic updates are enabled, automatically gc older generations
   # To note, this will gc home-manager user profiles as well
