@@ -21,7 +21,7 @@ in {
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
+    displayManager.gdm.enable = lib.mkDefault true;
     desktopManager = {
       gnome.enable = true;
     };
@@ -31,10 +31,7 @@ in {
     };
   };
   services.displayManager.defaultSession = "gnome";
-  services.desktopManager.plasma6.enable = true;
-
-  # unstable with both gnome and KDE enabled - force which sshaskpass is used
-  programs.ssh.askPassword = lib.mkForce "${pkgs.ksshaskpass}/bin/ksshaskpass";
+  services.desktopManager.plasma6.enable = lib.mkDefault false;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
