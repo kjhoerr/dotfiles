@@ -15,16 +15,6 @@
     };
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
-
-    kernelPatches = [
-      {
-        name = "pinctrl";
-        patch = pkgs.fetchurl {
-          url = "https://lore.kernel.org/linux-gpio/20240519124109.1523-1-mario.limonciello@amd.com/t.mbox.gz";
-          hash = "sha256-iyYJbRc8zqGr57pvePUSXsvryAOutj5LcoILo7VQcnQ=";
-        };
-      }
-    ];
   };
 
   fileSystems."/" =
