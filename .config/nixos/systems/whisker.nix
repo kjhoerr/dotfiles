@@ -3,18 +3,22 @@
 
   networking.hostName = "whisker";
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
-  boot.initrd.kernelModules = [ "tpm_tis" "amdgpu" ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd = {
+      availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
+      kernelModules = [ "tpm_tis" "amdgpu" ];
+
+      luks.devices."enc".device = "/dev/disk/by-uuid/cb549ee5-4e1c-4188-8906-312228068cc1";
+    };
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
+  };
   
   fileSystems."/" =
     { device = "/dev/mapper/enc";
       fsType = "btrfs";
       options = [ "subvol=root" ];
     };
-
-  boot.initrd.luks.devices."enc".device = "/dev/disk/by-uuid/cb549ee5-4e1c-4188-8906-312228068cc1";
 
   fileSystems."/home" =
     { device = "/dev/mapper/enc";
@@ -59,6 +63,7 @@
     '';
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
   };
+  services.desktopManager.plasma6.enable = true;
 
   hardware.cpu.amd.updateMicrocode = true;
 
