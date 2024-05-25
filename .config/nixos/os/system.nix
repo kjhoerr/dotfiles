@@ -32,6 +32,7 @@ in {
   };
   services.displayManager.defaultSession = "gnome";
   services.desktopManager.plasma6.enable = lib.mkDefault false;
+  programs.ssh.askPassword = lib.mkForce "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
