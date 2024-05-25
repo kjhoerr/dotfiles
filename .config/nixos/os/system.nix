@@ -21,9 +21,9 @@ in {
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = lib.mkDefault true;
+    displayManager.gdm.enable = true;
     desktopManager = {
-      gnome.enable = true;
+      gnome.enable = lib.mkDefault true;
     };
     xkb = {
       layout = "us";
