@@ -46,7 +46,7 @@
         "luminus-shell-y@dikasp.gitlab"
       ];
       favorite-apps = [
-        "microsoft-edge-dev.desktop"
+        "chromium-browser.desktop"
         "org.keepassxc.KeePassXC.desktop"
         "code.desktop"
         "org.gnome.Nautilus.desktop"

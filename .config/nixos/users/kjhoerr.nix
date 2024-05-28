@@ -66,7 +66,7 @@ in {
         "luminus-shell-y@dikasp.gitlab"
       ];
       favorite-apps = [
-        "microsoft-edge-dev.desktop"
+        "chromium-browser.desktop"
         "code.desktop"
         "beeper.desktop"
         "org.gnome.Nautilus.desktop"
