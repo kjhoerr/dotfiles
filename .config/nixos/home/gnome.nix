@@ -35,7 +35,9 @@ in {
       noise-lightness = 1.25;
     };
     "org/gnome/shell/extensions/blur-my-shell/applications" = {
+      dynamic-opacity = false;
       blur = true;
+      blur-on-overview = true;
       opacity = 210;
       whitelist = [ "com.raggesilver.BlackBox" ];
     };
