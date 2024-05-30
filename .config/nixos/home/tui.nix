@@ -5,7 +5,10 @@
 
   # Install packages via programs.* where possible
   # May include extra config OOTB that the package does not
-  programs.bash.enable = lib.mkDefault true;
+  programs.zsh = {
+    enable = lib.mkDefault true;
+    history.extended = true;
+  };
   programs.home-manager.enable = lib.mkDefault true;
   programs.k9s.enable = lib.mkDefault true;
   programs.kakoune.enable = lib.mkDefault true;
