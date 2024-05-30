@@ -127,6 +127,7 @@
   users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "Kevin Hoerr";
     extraGroups = [ "networkmanager" "wheel" ];
     hashedPasswordFile = "/persist/passwords/kjhoerr";
