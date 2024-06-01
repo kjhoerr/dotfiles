@@ -32,6 +32,8 @@ in {
   nix.sshServe.enable = lib.mkDefault false;
   nix.sshServe.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEVH5c050+fT7lIYhycEVvbDx6+aNeDliEFTNLP2EULk openpgp:0x69ED7111" ];
 
+  nix.binaryCaches = [ "http://nix-cache.local:9080/" ];
+
   # Add custom rebuild script to system path
   environment.systemPackages = lib.mkAfter ([ profiles-rebuild ]);
 
