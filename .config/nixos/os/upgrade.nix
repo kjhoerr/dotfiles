@@ -17,7 +17,7 @@ in {
   nix.gc.options = lib.mkDefault "--delete-older-than 14d";
 
   # Enable nix-community public binary cache, for potential build skips on flakes
-  nix.settings.substituters = lib.mkDefault [ "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
+  nix.settings.substituters = lib.mkDefault [ "http://nix-cache.local:9080/" "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
   nix.settings.trusted-public-keys = lib.mkDefault [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
   nix.settings.trusted-users = lib.mkDefault [ "root" "@wheel" ];
 
@@ -31,8 +31,6 @@ in {
   # Similar to SSHD config, leave off by default but add personal pubkey
   nix.sshServe.enable = lib.mkDefault false;
   nix.sshServe.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEVH5c050+fT7lIYhycEVvbDx6+aNeDliEFTNLP2EULk openpgp:0x69ED7111" ];
-
-  nix.binaryCaches = [ "http://nix-cache.local:9080/" ];
 
   # Add custom rebuild script to system path
   environment.systemPackages = lib.mkAfter ([ profiles-rebuild ]);
