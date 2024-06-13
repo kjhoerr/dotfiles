@@ -3,11 +3,11 @@
 
 function usage {
 	echo "Usage: $0 <user|system> <name of user or system> [additional options for nix build]"
-	echo "FLAKE_SOURCE is an environment variable that is used to identify which"
-	echo "repository should be used to build the flake."
+	echo "FLAKE_SOURCE is an environment variable that is used to identify which repository should be used to build the flake."
 	echo
-	echo "Example: $0 user percy"
-	echo "Example: $0 system whisker --substituters https://nix-community.cachix.org"
+	echo "Examples:"
+	echo "$0 user percy"
+	echo "$0 system whisker --substituters https://nix-community.cachix.org"
 }
 
 ## Setup - strongly assume defaults
