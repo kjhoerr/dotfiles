@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Helper script to build a local or remote flake. Defaults to current directory.
+
+function usage {
+	echo "Usage: $0 <user|system> <name of user or system> [additional options for nix build]"
+	echo "FLAKE_SOURCE is an environment variable that is used to identify which"
+	echo "repository should be used to build the flake."
+	echo
+	echo "Example: $0 user percy"
+	echo "Example: $0 system whisker --substituters https://nix-community.cachix.org"
+}
+
+## Setup - strongly assume defaults
+FLAKE_SOURCE="${FLAKE_SOURCE:-.}"
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit
+echo "Resultant build will be at the following directory: ${TMPDIR}"
+
+## Input
+if [ "$1" != "user" ] && [ "$1" != "system" ];
+then
+  usage
+  exit 1
+fi
+sysoruser="${1}"
+sysuserid="${2}"
+shift 2
+
+if [ "${sysoruser}" = "system" ];
+then
+	buildString="${FLAKE_SOURCE}#nixosConfigurations.${sysuserid}.config.system.build.toplevel"
+else
+  buildString="${FLAKE_SOURCE}#homeConfigurations.${sysuserid}.activationPackage"
+fi
+
+nix build "${buildString}" "$@"
+exit
+
