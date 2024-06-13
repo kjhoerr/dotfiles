@@ -127,3 +127,25 @@ Then reboot, and after logging in check if the file is still there:
 sudo root-diff | grep '/etc/this-is-a-persistent-file'
 ```
 
+## test-build.sh
+
+This script builds a system or user (home-manager) flake. This is to assist
+in testing any profile in a current or remote flake in case of any input or
+build errors. This is essentially an alias or shortcut so the full `nix build`
+command does not need to be recalled.
+
+Any options desired to be passed to `nix build` can be passed to the script
+directly.
+
+This script is included via the [`os/upgrades.nix`](../os/upgrades.nix) module.
+
+### Examples
+
+```bash
+test-build user kjhoerr
+
+# Pass a remote builder to nix build
+test-build system whisker --builders ssh://remote-host
+```
+
+
