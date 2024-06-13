@@ -28,7 +28,8 @@ fi
 
 echo
 echo "User profile updates:"
-nix store diff-closures ~/.nix-profile "$(readlink -f ./result-1/home-path)"
+nix store diff-closures ~/.nix-profile "$(readlink -f ./result-1/home-path)" \
+  | grep -v "env-manifest.nix: ε → ∅" | grep -v "user: ε → ∅"
 
 echo
 echo "System profile updates:"
