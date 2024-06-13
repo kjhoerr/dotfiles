@@ -3,6 +3,7 @@
 
 function usage {
 	echo "Usage: $0 <user|system> <name of user or system> [additional options for nix build]"
+	echo
 	echo "FLAKE_SOURCE is an environment variable that is used to identify which repository should be used to build the flake."
 	echo
 	echo "Examples:"
