@@ -12,9 +12,6 @@ function usage {
 
 ## Setup - strongly assume defaults
 FLAKE_SOURCE="${FLAKE_SOURCE:-.}"
-TMPDIR="$(mktemp -d)"
-cd "$TMPDIR" || exit
-echo "Resultant build will be at the following directory: ${TMPDIR}"
 
 ## Input
 if [ "$1" != "user" ] && [ "$1" != "system" ];
@@ -25,6 +22,13 @@ fi
 sysoruser="${1}"
 sysuserid="${2}"
 shift 2
+
+if [ "${FLAKE_SOURCE}" != "." ];
+then
+	TMPDIR="$(mktemp -d)"
+	cd "$TMPDIR" || exit
+	echo "Resultant build will be at the following directory: ${TMPDIR}"
+fi
 
 if [ "${sysoruser}" = "system" ];
 then
