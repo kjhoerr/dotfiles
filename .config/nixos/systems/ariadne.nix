@@ -59,7 +59,6 @@
     ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = true;
 
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
