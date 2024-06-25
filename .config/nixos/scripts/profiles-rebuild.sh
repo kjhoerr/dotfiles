@@ -5,11 +5,15 @@
 ## provided as option(s) to nix build
 
 ## Setup - strongly assume defaults
-SOURCE="github:kjhoerr/dotfiles"
+SOURCE="${FLAKE_SOURCE:-github:kjhoerr/dotfiles}"
 SYSPROFILE="/nix/var/nix/profiles/system"
 HOSTNAME=$(hostname)
 USERNAME=$(whoami)
-cd "$(mktemp -d)" || exit
+
+if [ "${FLAKE_SOURCE}" != "." ];
+then
+	cd "$(mktemp -d)" || exit
+fi
 
 ## Build NixOS, home-manager profiles
 if ! nix build "$@" \
@@ -29,7 +33,8 @@ fi
 echo
 echo "User profile updates:"
 nix store diff-closures ~/.nix-profile "$(readlink -f ./result-1/home-path)" \
-  | grep -v "env-manifest.nix: ε → ∅" | grep -v "user: ε → ∅"
+  | grep -v "env-manifest.nix: ε → ∅" \
+  | grep -v "user: ε → ∅"
 
 echo
 echo "System profile updates:"
