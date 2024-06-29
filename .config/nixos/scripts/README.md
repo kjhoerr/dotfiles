@@ -6,6 +6,28 @@ configurations as enabled through specific user/system modules.
 These scripts can be executed standalone, though as enabled through their
 modules may have dependencies that are not checked in the scripts themselves.
 
+## apply-tpm.sh
+
+This script assists in writing a LUKS passphrase into the TPM using PCRs.
+By default the PCRs that are selected are `0+2+7`. These can be overridden
+using the `OVERRIDE_PCRS` environment variable.
+
+There are two dependencies, `systemd` and `cryptsetup`, which should be
+already be available if this script is included from context of the
+secure-boot module.
+
+This script is included via the [`os/secure-boot.nix`](../os/secure-boot.nix)
+module.
+
+### Examples
+
+```bash
+apply-tpm
+
+# Select a specific disk to unlock with TPM; use a lighter PCR policy
+OVERRIDE_PCRS=0+7 apply-tpm /dev/nvme0n1p3
+```
+
 ## get-sri-hash.sh
 
 This script prefetches an archive for an external source and outputs the

@@ -1,6 +1,13 @@
 # secure-boot.nix
 # Requires lanzaboote flake
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+let
+  apply-tpm = pkgs.writeShellApplication {
+    name = "apply-tpm";
+    runtimeInputs = with pkgs; [ cryptsetup systemd ];
+    text = builtins.readFile ../scripts/apply-tpm.sh;
+  };
+in {
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -43,6 +50,8 @@
   #
   security.tpm2.enable = true;
   security.tpm2.tctiEnvironment.enable = true;
+
+  environment.systemPackages = lib.mkBefore [ apply-tpm ];
 
   # Add personal yubikey IDs for wiring up PAM (not enabled here)
   security.pam.yubico.mode = lib.mkDefault "challenge-response";
