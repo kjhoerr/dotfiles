@@ -117,7 +117,8 @@ in {
 
   # OCI engine
   virtualisation.podman = {
-    enable = true;
+    enable = lib.mkDefault true;
+    dockerSocket.enable = true;
     dockerCompat = true;
   };
 
