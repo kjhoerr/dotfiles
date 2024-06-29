@@ -15,8 +15,11 @@ if [ -z "${1}" ];
 then
 	partuuid="$(lsblk -o fstype,uuid | grep 'crypto_LUKS' | awk '{print $2;}')"
 	lukspath="$(readlink -f /dev/disk/by-uuid/"${partuuid}")"
+elif [ -b "${1}" ];
+then
+  lukspath="${1}"
 else
-	lukspath="${1}"
+  usage
 fi
 
 if ! cryptsetup isLuks -v "${lukspath}";
