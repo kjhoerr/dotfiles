@@ -5,7 +5,7 @@
 ## provided as option(s) to nix build
 
 ## Setup - strongly assume defaults
-SOURCE="${FLAKE_SOURCE:-github:kjhoerr/dotfiles}"
+SOURCE="${FLAKE_SOURCE:-github:kjhoerr/dotfiles/hardened}"
 SYSPROFILE="/nix/var/nix/profiles/system"
 HOSTNAME=$(hostname)
 USERNAME=$(whoami)
@@ -47,8 +47,8 @@ NEWSYSLINK=$(readlink -f ./result)
 
 ## Activate new profiles
 ## If either fails, the error will fall through the end of the script
-sudo nix-env --profile $SYSPROFILE --set "$NEWSYSLINK" \
- && sudo ./result/bin/switch-to-configuration boot \
+doas nix-env --profile $SYSPROFILE --set "$NEWSYSLINK" \
+ && doas ./result/bin/switch-to-configuration boot \
  && ./result-1/activate
 exit
 
