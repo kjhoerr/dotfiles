@@ -78,7 +78,7 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "podman" ];
     hashedPasswordFile = "/persist/passwords/kjhoerr";
   };
 
