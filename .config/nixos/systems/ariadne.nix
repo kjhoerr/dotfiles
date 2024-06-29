@@ -3,14 +3,18 @@
 
   networking.hostName = "ariadne";
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "tpm_tis" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+      kernelModules = [ "dm-snapshot" "tpm_crb" ];
 
-  boot.initrd.luks.devices."enc" = {
-    device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
-    preLVM = true;
+      luks.devices."enc" = {
+        device = "/dev/disk/by-uuid/6b8a5b1c-9cd5-4e25-a713-bba1e90ecaf5";
+        preLVM = true;
+      };
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
   };
 
   fileSystems."/" =
@@ -55,7 +59,6 @@
     ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = true;
 
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
@@ -71,6 +74,23 @@
     '';
     extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
   };
+
+  security.pam.services.login.fprintAuth = false;
+  # similarly to how other distributions handle the fingerprinting login
+  security.pam.services.gdm-fingerprint.text = ''
+    auth       required                    pam_shells.so
+    auth       requisite                   pam_nologin.so
+    auth       requisite                   pam_faillock.so      preauth
+    auth       required                    ${pkgs.fprintd}/lib/security/pam_fprintd.so
+    auth       optional                    pam_permit.so
+    auth       required                    pam_env.so
+    auth       [success=ok default=1]      ${pkgs.gnome.gdm}/lib/security/pam_gdm.so
+    auth       optional                    ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
+    account    include                     login
+    password   required                    pam_deny.so
+    session    include                     login
+    session    optional                    ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
+  '';
 
   # Set display settings with 150% fractional scaling
   systemd.tmpfiles.rules = [
@@ -103,13 +123,20 @@
 
   # User accounts
   users.mutableUsers = false;
-  users.users.root.passwordFile = "/persist/passwords/root";
+  users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    passwordFile = "/persist/passwords/kjhoerr";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "podman" ];
+    hashedPasswordFile = "/persist/passwords/kjhoerr";
   };
+
+  environment.systemPackages = with pkgs; [
+    fw-ectool
+    powertop
+    lact
+  ];
 
   programs.steam.enable = true;
 

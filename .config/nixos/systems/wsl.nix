@@ -8,9 +8,6 @@
     wslConf.automount.root = "/mnt";
     nativeSystemd = true;
 
-    # Enable native Docker support
-    docker-native.enable = true;
-
     # Needed to enable WSL wrapper for running VSCode WSL
     binShPkg = lib.mkForce (with pkgs; runCommand "nixos-wsl-bash-wrapper"
       {
@@ -23,6 +20,7 @@
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
+  hardware.opengl.enable = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
     neovim
@@ -32,9 +30,13 @@
     wget
   ];
 
+  virtualisation.docker.enable = true;
+
   # Provide wsl-vpnkit as built-in systemd service
   systemd.services.wsl-vpnkit = {
-    enable = false;
+    # This service will not run by default
+    # To run at boot change wantedBy to [ "multi-user.target" ]
+    enable = true;
     description = "Provide network connectivity to WSL2 when blocked by VPN";
 
     # Assumes wsl-vpnkit is installed as separate distro in WSL2.
@@ -44,13 +46,14 @@
     # Could also try to set up a derivation to add the script as standalone so that
     # there is no external dependency. Would have to be managed and updated manually
     serviceConfig = {
-      ExecStart = "/mnt/c/Windows/system32/wsl.exe -d wsl-vpnkit --cd /app wsl-vpnkit";
+      Type = "idle";
+      ExecStart = "/mnt/c/windows/system32/wsl.exe -d wsl-vpnkit --cd /app wsl-vpnkit";
       Restart = "always";
       KillMode = "mixed";
     };
 
     after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = lib.mkDefault [ ];
   };
 
   # Enable nix flakes

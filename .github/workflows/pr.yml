@@ -1,0 +1,62 @@
+jobs:
+  build-check-home:
+    name: "Build home-manager configurations"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        home-user: [ 'kjhoerr', 'khoerr', 'nixos' ]
+    steps:
+      - uses: easimon/maximize-build-space@v10
+        with:
+          overprovision-lvm: true
+          remove-android: true
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@V27
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-23.11
+
+      - name: Build Home-Manager configs
+        run: |-
+          nix build '.#homeConfigurations.${{ matrix.home-user }}.activationPackage'
+
+  build-check-nixos:
+    name: "Build NixOS configurations"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nixos-system: [ 'ariadne', 'cronos', 'whisker', 'nixos-wsl' ]
+    steps:
+      - uses: easimon/maximize-build-space@v10
+        with:
+          overprovision-lvm: true
+          remove-android: true
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@V27
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-23.11
+
+      - name: Build NixOS configs
+        run: |-
+          nix build '.#nixosConfigurations.${{ matrix.nixos-system }}.config.system.build.toplevel'
+
+name: PR Validation
+on:
+  pull_request:
+    branches-ignore:
+      - 'flake-updates'

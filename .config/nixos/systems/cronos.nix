@@ -1,5 +1,5 @@
 # cronos.nix
-{ lib, ... }: {
+{ lib, pkgs, ... }: {
 
   networking.hostName = "cronos";
 
@@ -51,17 +51,22 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = true;
 
+  environment.systemPackages = [
+    pkgs.gnomeExtensions.onedrive
+  ];
+
   # Turn off fprint - authentication is persisted
   services.fprintd.enable = lib.mkForce false;
 
   # User accounts
   users.mutableUsers = false;
-  users.users.root.passwordFile = "/persist/passwords/root";
+  users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.khoerr = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    passwordFile = "/persist/passwords/khoerr";
+    extraGroups = [ "networkmanager" "wheel" "podman" ];
+    hashedPasswordFile = "/persist/passwords/khoerr";
   };
   
   # This value determines the NixOS release from which the default

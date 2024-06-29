@@ -1,11 +1,11 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.3.0";
+      url = "github:nix-community/lanzaboote/v0.4.1";
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
@@ -13,12 +13,6 @@
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # User profile manager based on Nix
-    home-manager-wsl = {
-      url = "github:nix-community/home-manager/release-23.05";
-      inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
     # Module for running NixOS as WSL2 instance
@@ -38,6 +32,12 @@
 
     # Provides module support for specific vendor hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+
+    # fw ectool as configured for FW13 7040 AMD (until patch is upstreamed)
+    fw-ectool = {
+      url = "github:tlvince/ectool.nix";
+      inputs.nixpkgs.follows = "nixos-pkgs";
+    };
   };
 
   outputs = { nixpkgs, ... }@inputs:
@@ -49,11 +49,7 @@
         config.allowUnfree = true;
       };
       osOverlays = [
-        (self: super: {
-          # Override gnomeExtensions with unstable variant
-          # See: https://github.com/NixOS/nixpkgs/issues/228504
-          inherit (pkgs) gnomeExtensions;
-        })
+        (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
       ];
 
       # Base user config modules
@@ -106,6 +102,13 @@
         modules = homeModules ++ guiModules ++ userModules;
       });
 
+      # Function to build a home configuration from user modules for WSL
+      wslUser = (userModules: inputs.home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        # userModules overwrites, so is appended
+        modules = homeModules ++ serverHomeModules ++ userModules;
+      });
+
       # Function to build a nixos configuration from system modules
       nixosSystem = (systemModules: lib.nixosSystem {
         inherit system;
@@ -126,11 +129,13 @@
 
         kjhoerr = homeUser [ ./.config/nixos/users/kjhoerr.nix ];
 
+        nixos = wslUser [ ./.config/nixos/users/nixos.nix ];
+
       };
       nixosConfigurations = {
 
         ariadne = nixosSystem [
-          inputs.nixos-hardware.nixosModules.framework
+          inputs.nixos-hardware.nixosModules.framework-13-7040-amd
           ./.config/nixos/systems/ariadne.nix
         ];
 
@@ -145,18 +150,9 @@
         ];
 
         nixos-wsl = wslSystem [
-          # By design, user integration is tightly coupled to system for WSL
-          # Include home-manager module here so all updates are shipped together
-          inputs.home-manager-wsl.nixosModules.home-manager
           ./.config/nixos/systems/wsl.nix
           {
-            users.users.kjhoerr.extraGroups = lib.mkAfter [ "docker" ];
-            wsl.defaultUser = "kjhoerr";
-            home-manager.users.kjhoerr = {
-              imports = homeModules ++ serverHomeModules ++ [
-                ./.config/nixos/users/kjhoerr.nix
-              ];
-            };
+            users.users.nixos.extraGroups = lib.mkAfter [ "docker" ];
           }
         ];
 

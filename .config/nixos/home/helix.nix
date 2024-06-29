@@ -1,43 +1,52 @@
 # helix.nix
 { config, lib, pkgs, ... }:
 let
-  jdtls-config = {
-    # jdk reference same package used to configure `programs.java.package`?
-    command = "${pkgs.jdk17_headless}/bin/java";
-    args = [
-      "-Declipse.application=org.eclipse.jdt.ls.core.id1"
-      "-Dosgi.bundles.defaultStartLevel=4"
-      "-Declipse.product=org.eclipse.jdt.ls.core.product"
-      "-Dosgi.sharedConfiguration.area=${pkgs.jdt-language-server}/share/config"
-      "-Dosgi.sharedConfiguration.area.readOnly=true"
-      "-Dosgi.checkConfiguration=true"
-      "-Dosgi.configuration.cascaded=true"
-      "-Dlog.level=ALL"
-      "-javaagent:${pkgs.lombok}/share/java/lombok.jar"
-      "$JAVA_OPTS"
-      "-jar"
-      "${pkgs.jdt-language-server}/share/java/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar"
-      "--add-modules=ALL-SYSTEM"
-      "--add-opens"
-      "java.base/java.util=ALL-UNNAMED"
-      "--add-opens"
-      "java.base/java.lang=ALL-UNNAMED"
-      "-configuration"
-      "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
-      "-data"
-      "${config.xdg.cacheHome}/.jdt/jdtls_data"
-    ];
-  };
-
   # Override graalvm package with lower priority so jdk binaries can be selected
   # native-image still works great (at least with Quarkus)
-  graalvm17-ce-low = pkgs.graalvm17-ce.overrideAttrs(oldAttrs: {
+  graalvm-ce-low = pkgs.graalvm-ce.overrideAttrs(oldAttrs: {
     meta.priority = 10;
   });
+  jdtls-bin = if (lib.versionOlder pkgs.jdt-language-server.version "1.31.0") then "jdt-language-server" else "jdtls";
+  python-env = pkgs.python311.withPackages(ps: with ps; [
+    python-lsp-server
+  ] ++ ps.python-lsp-server.optional-dependencies.all);
+  lsp-enabled = lang: langconf: lib.mkIf (builtins.elem lang config.helix.lsps) langconf;
+  lsp-package = lang: packages: if builtins.elem lang config.helix.lsps then packages else [];
 in {
 
-  programs.helix = {
+  options = {
+    # To be declared in arbitrary user config. For example:
+    #
+    # helix.lsps = [ "bash" "css" "html" ];
+    helix.lsps = lib.mkOption {
+      type = lib.types.listOf (lib.types.enum [
+        "bash"
+        "c"
+        "c#"
+        "css"
+        "dockerfile"
+        "go"
+        "haskell"
+        "html"
+        "java"
+        "json"
+        "markdown"
+        "nix"
+        "python"
+        "rust"
+        "scala"
+        "toml"
+        "typescript"
+        "vala"
+        "yaml"
+        "zig"
+      ]);
+    };
+  };
+
+  config.programs.helix = {
     enable = lib.mkDefault true;
+    defaultEditor = lib.mkDefault true;
 
     settings = {
       theme = lib.mkDefault "base16_transparent";
@@ -46,25 +55,120 @@ in {
     };
 
     languages = {
-      language-server.jdt-language-server = jdtls-config;
+      language-server.bash-language-server = lsp-enabled "bash" {
+        command = "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
+        args = [ "start" ];
+      };
+      language-server.cmake-language-server = lsp-enabled "c" {
+        command = "${pkgs.cmake-language-server}/bin/cmake-language-server";
+      };
+      language-server.vscode-css-language-server = lsp-enabled "css" {
+        command = "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
+        args = [ "--stdio" ];
+        config = {
+          provideFormatter = true;
+          css.validate.enable = true;
+        };
+      };
+      language-server.docker-langserver = lsp-enabled "dockerfile" {
+        command = "${pkgs.nodePackages.dockerfile-language-server-nodejs}/bin/docker-langserver";
+        args = [ "--stdio" ];
+      };
+      language-server.gopls = lsp-enabled "go" {
+        command = "${pkgs.gopls}/bin/gopls";
+      };
+      language-server.haskell-language-server = lsp-enabled "haskell" {
+        command = "${pkgs.haskellPackages.haskell-language-server}/bin/haskell-language-server";
+        args = [ "--lsp" ];
+      };
+      language-server.vscode-html-language-server = lsp-enabled "html" {
+        command = "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
+        args = [ "--stdio" ];
+        config = {
+          provideFormatter = true;
+        };
+      };
+      language-server.jdtls = lsp-enabled "java" {
+        command = "${pkgs.jdt-language-server}/bin/${jdtls-bin}";
+        args = [
+          "--jvm-arg=-javaagent:${pkgs.lombok}/share/java/lombok.jar"
+          "-configuration"
+          "${config.xdg.cacheHome}/.jdt/jdtls_install/config_linux"
+          "-data"
+          "${config.xdg.cacheHome}/.jdt/jdtls_data"
+        ];
+      };
+      language-server.vscode-json-language-server = lsp-enabled "json" {
+        command = "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server";
+        args = [ "--stdio" ];
+        config = {
+          provideFormatter = true;
+          json.validate.enable = true;
+        };
+      };
+      language-server.marksman = lsp-enabled "markdown" {
+        # marksman outputs to stderr which causes Helix to report errors, but works fine
+        command = "${pkgs.marksman}/bin/marksman";
+        args = [ "server" ];
+      };
+      language-server.metals = lsp-enabled "scala" {
+        command = "${pkgs.metals}/bin/metals";
+      };
+      language-server.nil = lsp-enabled "nix" {
+        command = "${pkgs.nil}/bin/nil";
+      };
+      language-server.omnisharp = lsp-enabled "c#" {
+        command = "${pkgs.omnisharp-roslyn}/bin/OmniSharp";
+        args = [ "--languageserver" ];
+      };
+      language-server.pylsp = lsp-enabled "python" {
+        command = "${python-env}/bin/pylsp";
+      };
+      language-server.rust-analyzer = lsp-enabled "rust" {
+        command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+      };
+      language-server.tailwindcss-ls = lsp-enabled "css" {
+        command = "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
+        args = [ "--stdio" ];
+      };
+      language-server.taplo = lsp-enabled "toml" {
+        command = "${pkgs.taplo}/bin/taplo";
+        args = [ "lsp" "stdio" ];
+      };
+      language-server.typescript-language-server = lsp-enabled "typescript" {
+        command = "${pkgs.nodePackages.typescript-language-server}/lib/node_modules/.bin/typescript-language-server";
+        args = [ "--stdio" ];
+        config = {
+          hostInfo = "helix";
+        };
+      };
+      language-server.vala-language-server = lsp-enabled "vala" {
+        command = "${pkgs.vala-language-server}/bin/vala-language-server";
+      };
+      language-server.yaml-language-server = lsp-enabled "yaml" {
+        command = "${pkgs.nodePackages.yaml-language-server}/bin/yaml-language-server";
+        args = [ "--stdio" ];
+        config = {
+          yaml.keyOrdering = false;
+        };
+      };
+      language-server.zls = lsp-enabled "zig" {
+        command = "${pkgs.zls}/bin/zls";
+      };
       language = [
-        {
+        (lsp-enabled "java" {
           name = "java";
           roots = [ "pom.xml" ];
-
-          # temporary until helix release after 23.05
-          language-server = jdtls-config;
-        }
-        {
-          name = "yaml";
-          config = {
-            yaml.keyOrdering = false;
-          };
-        }
+        })
+        (lsp-enabled "python" {
+          name = "python";
+          language-servers = [ "pylsp" ];
+        })
       ];
     };
 
     themes = {
+      # A theme oriented for light system theme with transparent background
       base16_ltrans = {
         "ui.background" = { fg = "black"; };
         "ui.background.separator" = { fg = "gray"; };
@@ -146,46 +250,18 @@ in {
     };
   };
 
-  home.sessionVariables.EDITOR = "hx";
-
-  home.packages = lib.mkBefore ((with pkgs; [
+  # For any configured languages, also add their build tools to home.packages
+  config.home.packages = lib.mkBefore (with pkgs; [
     # debugging
     lldb
-    # native builds
-    # See top of helix.nix for override details
-    graalvm17-ce-low
-
-    # Language support
-    # go
-    gopls
-    # go debugging
-    delve
-    # java
-    jdt-language-server
-    maven
-    lombok
-    # markdown
-    marksman
-    # nix
-    nil
-    # rust
-    rust-analyzer
-    # scala
-    metals
-    # toml
-    taplo
-    # vala
-    vala-language-server
-  ]) ++ (with pkgs.nodePackages; [
-    # bash
-    bash-language-server
-    # dockerfile
-    dockerfile-language-server-nodejs
-    # typescript
-    typescript-language-server
-    # yaml
-    yaml-language-server
-  ]));
+    # testing
+    playwright-driver
+  ]
+    ++ (lsp-package "go" [ pkgs.delve ])
+    ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
+    ++ (lsp-package "python" [ python-env ])
+    ++ (lsp-package "typescript" [ pkgs.yarn-berry ])
+  );
 
 }
 

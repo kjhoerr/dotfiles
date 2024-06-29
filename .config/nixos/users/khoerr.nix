@@ -6,11 +6,32 @@
   home.homeDirectory = "/home/khoerr";
 
   home.packages = with pkgs; [
-    obsidian
+    azure-cli
+    kubelogin
+    liquibase
+    nodejs
+    openssh
     onedrive
+    thunderbird
+  ];
+  helix.lsps = [
+    "bash"
+    "css"
+    "dockerfile"
+    "html"
+    "java"
+    "json"
+    "markdown"
+    "nix"
+    "python"
+    "toml"
+    "typescript"
+    "yaml"
   ];
 
   programs.git.userEmail = "khoerr@ksmpartners.com";
+  programs.gpg.mutableKeys = true;
+  programs.gpg.mutableTrust = true;
 
   dconf.settings = {
     "org/gnome/shell" = {
@@ -19,9 +40,12 @@
         "gsconnect@andyholmes.github.io"
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
+        "onedrive@client.onedrive.com"
+        "blur-my-shell@aunetx"
+        "luminus-shell-y@dikasp.gitlab"
       ];
       favorite-apps = [
-        "microsoft-edge-dev.desktop"
+        "chromium-browser.desktop"
         "org.keepassxc.KeePassXC.desktop"
         "code.desktop"
         "org.gnome.Nautilus.desktop"

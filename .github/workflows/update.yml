@@ -3,9 +3,9 @@ jobs:
     name: Update nix flakes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: cachix/install-nix-action@v22
+      - uses: cachix/install-nix-action@V27
         with:
           extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
           nix_path: nixpkgs=channel:nixos-unstable
@@ -19,10 +19,13 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           nix flake update --commit-lock-file
 
-      - uses: actions/upload-artifact@v3
+      - name: Create archive of repository
+        run: tar cvf archive.tar .
+
+      - uses: actions/upload-artifact@v4
         name: Upload changes into artifacts
         with:
-          path: ${{ github.workspace }}
+          path: archive.tar
           retention-days: 1
 
   build-check-home:
@@ -31,9 +34,9 @@ jobs:
     needs: update-flakes
     strategy:
       matrix:
-        home-user: [ 'kjhoerr', 'khoerr' ]
+        home-user: [ 'kjhoerr', 'khoerr', 'nixos' ]
     steps:
-      - uses: easimon/maximize-build-space@v7
+      - uses: easimon/maximize-build-space@v10
         with:
           overprovision-lvm: true
           remove-android: true
@@ -42,11 +45,14 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
 
-      - uses: cachix/install-nix-action@v22
+      - name: Extract archive
+        run: tar xvf archive.tar
+
+      - uses: cachix/install-nix-action@V27
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -54,26 +60,21 @@ jobs:
             trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
             substituters = https://nix-community.cachix.org https://cache.nixos.org/
             trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org/
-            # save space on disk and in cache
-            auto-optimise-store = true
-            # keep all store paths necessary to build the outputs
-            keep-outputs = true
-            keep-derivations = true
-            store = /home/runner/nix
-          nix_path: nixpkgs=channel:nixos-23.05
-
-      - name: cache nix store for home-manager configurations
-        uses: actions/cache@v3
-        with:
-          key: nix-store-${{ hashFiles('flake.lock') }}-hm
-          path: ~/nix
-          restore-keys: |
-            nix-store-${{ hashFiles('flake.lock') }}-hm
-            nix-store-
+          nix_path: nixpkgs=channel:nixos-23.11
 
       - name: Build Home-Manager configs
         run: |-
           nix build '.#homeConfigurations.${{ matrix.home-user }}.activationPackage'
+
+      - name: Create GH issue based on workflow failure
+        if: failure()
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          filename: .github/WORKFLOW_FAILURE.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          WORKFLOW_JOB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   build-check-nixos:
     name: "Build NixOS configurations"
@@ -83,7 +84,7 @@ jobs:
       matrix:
         nixos-system: [ 'ariadne', 'cronos', 'whisker', 'nixos-wsl' ]
     steps:
-      - uses: easimon/maximize-build-space@v7
+      - uses: easimon/maximize-build-space@v10
         with:
           overprovision-lvm: true
           remove-android: true
@@ -92,11 +93,14 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
 
-      - uses: cachix/install-nix-action@v22
+      - name: Extract archive
+        run: tar xvf archive.tar
+
+      - uses: cachix/install-nix-action@V27
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -104,26 +108,21 @@ jobs:
             trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
             substituters = https://nix-community.cachix.org https://cache.nixos.org/
             trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org/
-            # save space on disk and in cache
-            auto-optimise-store = true
-            # keep all store paths necessary to build the outputs
-            keep-outputs = true
-            keep-derivations = true
-            store = /home/runner/nix
-          nix_path: nixpkgs=channel:nixos-23.05
-
-      - name: cache nix store for nixos configurations
-        uses: actions/cache@v3
-        with:
-          key: nix-store-${{ hashFiles('flake.lock') }}-os
-          path: ~/nix
-          restore-keys: |
-            nix-store-${{ hashFiles('flake.lock') }}-os
-            nix-store-
+          nix_path: nixpkgs=channel:nixos-23.11
 
       - name: Build NixOS configs
         run: |-
           nix build '.#nixosConfigurations.${{ matrix.nixos-system }}.config.system.build.toplevel'
+
+      - name: Create GH issue based on workflow failure
+        if: failure()
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          filename: .github/WORKFLOW_FAILURE.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          WORKFLOW_JOB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   create-pr:
     name: "Create Pull Request for flake updates"
@@ -131,12 +130,15 @@ jobs:
     needs: [ build-check-home, build-check-nixos ]
     steps:
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
 
+      - name: Extract archive
+        run: tar xvf archive.tar
+
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           body: |
             ## Run report
@@ -146,8 +148,8 @@ jobs:
           delete-branch: true
           title: Update flake.lock
 
-name: update
-"on":
+name: Update flake.lock
+on:
   schedule:
     - cron: 40 4 * * 0,2,4,6
   workflow_dispatch: null

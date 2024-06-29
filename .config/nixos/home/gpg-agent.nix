@@ -1,5 +1,12 @@
 # gpg-agent.nix
-{ lib, ... }: {
+{ lib, pkgs, ... }:
+let
+  gpg-sshid-ctl = pkgs.writeShellApplication {
+    name = "gpg-sshid-ctl";
+    runtimeInputs = with pkgs; [ openssh gnupg ];
+    text = builtins.readFile ../scripts/gpg-sshid-ctl.sh;
+  };
+in {
 
   programs.gpg.enable = lib.mkDefault true;
   programs.gpg.mutableKeys = lib.mkDefault false;
@@ -38,10 +45,13 @@ dRkFvHvWWUlOGTU8PAEAkwcdrCiv9u39IFb33fneTOvk3R5sUW26Ct35pF6Yjws=
 
   # gnome-keyring is greedy and will override SSH_AUTH_SOCK where undesired
   services.gnome-keyring.enable = lib.mkDefault false;
+  home.sessionVariables.SSH_AUTH_SOCK = "/run/user/1000/gnupg/S.gpg-agent.ssh";
 
   services.gpg-agent.enable = lib.mkDefault true;
   services.gpg-agent.enableSshSupport = lib.mkDefault true;
   services.gpg-agent.enableExtraSocket = lib.mkDefault true;
+
+  home.packages = lib.mkAfter [ gpg-sshid-ctl ];
 
 }
 

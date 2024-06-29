@@ -3,18 +3,22 @@
 
   networking.hostName = "whisker";
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
-  boot.initrd.kernelModules = [ "tpm_tis" "amdgpu" ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd = {
+      availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
+      kernelModules = [ "tpm_tis" "amdgpu" ];
+
+      luks.devices."enc".device = "/dev/disk/by-uuid/cb549ee5-4e1c-4188-8906-312228068cc1";
+    };
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
+  };
   
   fileSystems."/" =
     { device = "/dev/mapper/enc";
       fsType = "btrfs";
       options = [ "subvol=root" ];
     };
-
-  boot.initrd.luks.devices."enc".device = "/dev/disk/by-uuid/cb549ee5-4e1c-4188-8906-312228068cc1";
 
   fileSystems."/home" =
     { device = "/dev/mapper/enc";
@@ -51,8 +55,15 @@
     [ { device = "/dev/disk/by-uuid/d4a415b7-048e-4db5-9621-d4c29a59f8d5"; }
     ];
 
-  # disable unused ethernet interface
-  networking.interfaces.enp7s0.useDHCP = false;
+  # Enable variable refresh rate
+  services.xserver.desktopManager.gnome = {
+    extraGSettingsOverrides = ''
+      [org.gnome.mutter]
+      experimental-features=['variable-refresh-rate']
+    '';
+    extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
+  };
+  services.desktopManager.plasma6.enable = true;
 
   hardware.cpu.amd.updateMicrocode = true;
 
@@ -62,12 +73,13 @@
   networking.firewall.checkReversePath = "loose";
 
   users.mutableUsers = false;
-  users.users.root.passwordFile = "/persist/passwords/root";
+  users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    passwordFile = "/persist/passwords/kjhoerr";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "podman" ];
+    hashedPasswordFile = "/persist/passwords/kjhoerr";
   };
 
   programs.steam = {
@@ -76,7 +88,15 @@
     dedicatedServer.openFirewall = true;
   };
 
-  environment.systemPackages = lib.mkAfter [ pkgs.lutris ];
+  environment.systemPackages = lib.mkAfter (with pkgs; [
+    lact
+    lutris
+  ]);
+
+  services.mpd = {
+    enable = true;
+    fluidsynth = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
