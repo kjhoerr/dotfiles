@@ -16,7 +16,7 @@
     if !exists('g:vscode')
       syntax on
       set mouse=a
-      cmap w!! w !sudo tee > /dev/null %
+      cmap w!! w !doas tee > /dev/null %
     endif
   '';
 
