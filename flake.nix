@@ -1,11 +1,11 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.3.0";
+      url = "github:nix-community/lanzaboote/v0.4.1";
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
@@ -56,8 +56,6 @@
       };
       osOverlays = [
         (_: _: { fw-ectool = inputs.fw-ectool.packages.${system}.ectool; })
-        # Use nixpkgs-unstable PPD with latest source/inputs
-        (_: _: { power-profiles-daemon = pkgs.power-profiles-daemon; })
       ];
 
       # Base user config modules

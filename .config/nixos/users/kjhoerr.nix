@@ -1,12 +1,17 @@
 # home/kjhoerr.nix
 # Requires home-manager flake
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  elem-wp-path = "${pkgs.pantheon.elementary-wallpapers}/share/backgrounds";
+in {
 
   home.username = "kjhoerr";
   home.homeDirectory = "/home/kjhoerr";
 
   home.packages = with pkgs; [
+    beeper
     doctl
+    flatpak-builder
     mkcert
   ];
 
@@ -41,20 +46,27 @@
     "rust"
     "toml"
     "typescript"
+    "vala"
     "yaml"
   ];
 
   dconf.settings = {
+    "org/gnome/desktop/background" = {
+      picture-uri = "${elem-wp-path}/odin.jpg";
+      picture-uri-dark = "${elem-wp-path}/odin-dark.jpg";
+    };
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = [
         "gsconnect@andyholmes.github.io"
-        "tailscale-status@maxgallup.github.com"
+        "tailscale@joaophi.github.com"
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
+        "blur-my-shell@aunetx"
+        "luminus-shell-y@dikasp.gitlab"
       ];
       favorite-apps = [
-        "microsoft-edge-dev.desktop"
+        "chromium-browser.desktop"
         "code.desktop"
         "beeper.desktop"
         "org.gnome.Nautilus.desktop"

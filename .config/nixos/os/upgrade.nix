@@ -5,6 +5,10 @@ let
   profiles-rebuild = (pkgs.writeScriptBin "profiles-rebuild" profiles-rebuild-src).overrideAttrs(old: {
     buildCommand = "${old.buildCommand}\n patchShebangs $out";
   });
+  test-build-src = builtins.readFile ../scripts/test-build.sh;
+  test-build = (pkgs.writeScriptBin "test-build" test-build-src).overrideAttrs(old: {
+    buildCommand = "${old.buildCommand}\n patchShebangs $out";
+  });
 in {
 
   # Enable automatic upgrades through this flake repository
@@ -17,7 +21,7 @@ in {
   nix.gc.options = lib.mkDefault "--delete-older-than 14d";
 
   # Enable nix-community public binary cache, for potential build skips on flakes
-  nix.settings.substituters = lib.mkDefault [ "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
+  nix.settings.substituters = lib.mkDefault [ "http://nix-cache.local:9080/" "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
   nix.settings.trusted-public-keys = lib.mkDefault [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
   nix.settings.trusted-users = lib.mkDefault [ "root" "@wheel" ];
 
@@ -33,7 +37,7 @@ in {
   nix.sshServe.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEVH5c050+fT7lIYhycEVvbDx6+aNeDliEFTNLP2EULk openpgp:0x69ED7111" ];
 
   # Add custom rebuild script to system path
-  environment.systemPackages = lib.mkAfter ([ profiles-rebuild ]);
+  environment.systemPackages = lib.mkAfter ([ profiles-rebuild test-build ]);
 
   # Disable network targets due to common upgrade issues
   systemd = {

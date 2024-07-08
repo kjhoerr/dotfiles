@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
   mkUint32 = lib.hm.gvariant.mkUint32;
   mkTuple = lib.hm.gvariant.mkTuple; 
@@ -14,7 +14,8 @@ in {
       cursor-theme = "capitaine-cursors";
       document-font-name = "Merriweather 11";
       font-name = "IBM Plex Sans Arabic 11";
-      monospace-font-name = "FiraMono Nerd Font 10";
+      icon-theme = "Adwaita";
+      monospace-font-name = "FiraCode Nerd Font 10";
     };
 
     "com/raggesilver/BlackBox" = {
@@ -34,7 +35,9 @@ in {
       noise-lightness = 1.25;
     };
     "org/gnome/shell/extensions/blur-my-shell/applications" = {
+      dynamic-opacity = false;
       blur = true;
+      blur-on-overview = true;
       opacity = 210;
       whitelist = [ "com.raggesilver.BlackBox" ];
     };
@@ -46,6 +49,6 @@ in {
     components = [ "pkcs11" "secrets" ];
   };
 
-  services.gpg-agent.pinentryFlavor = lib.mkDefault "gnome3";
+  services.gpg-agent.pinentryPackage = lib.mkDefault pkgs.pinentry-gnome3;
 
 }

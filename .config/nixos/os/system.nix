@@ -22,10 +22,18 @@ in {
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-    layout = "us";
-    xkbVariant = "";
+    desktopManager = {
+      gnome.enable = lib.mkDefault true;
+    };
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
   };
+  services.displayManager.defaultSession = "gnome";
+  services.desktopManager.plasma6.enable = lib.mkDefault false;
+  programs.ssh.askPassword = lib.mkForce "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
+  programs.zsh.enable = lib.mkDefault true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -53,25 +61,26 @@ in {
     capitaine-cursors
     pciutils
     sbctl
-    pinentry-gnome
+    pinentry-gnome3
+    podman-desktop
     wl-clipboard
     gnome.gnome-tweaks
     gnome.gnome-boxes
   ]) ++ (with pkgs.gnomeExtensions; [
-    gsconnect
-    tailscale-status
-    night-theme-switcher
     blur-my-shell
+    gsconnect
+    luminus-shell-y
+    night-theme-switcher
+    tailscale-qs
   ]);
 
   # Remove unused/icky packages
   environment.gnome.excludePackages = (with pkgs.gnome; [
     epiphany
     geary
-    gedit
     gnome-contacts
     gnome-music
-  ]);
+  ]) ++ [ pkgs.gedit ];
   services.xserver.excludePackages = with pkgs; [
     xterm
   ];
@@ -106,8 +115,29 @@ in {
     };
   };
 
-  # Add Docker
-  virtualisation.docker.enable = true;
+  # OCI engine
+  virtualisation.podman = {
+    enable = lib.mkDefault true;
+    dockerSocket.enable = true;
+    dockerCompat = true;
+  };
+
+  # libvert
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = true;
+      swtpm.enable = true;
+      ovmf = {
+        enable = true;
+        packages = [(pkgs.OVMF.override {
+          secureBoot = true;
+          tpmSupport = true;
+        }).fd];
+      };
+    };
+  };
 
   # Wayland-specific configuration
   services.xserver.displayManager.gdm.wayland = true;
@@ -121,8 +151,8 @@ in {
   # Force gnome-keyring to disable, because it likes to bully gpg-agent
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
-  # Enable fwupd - does not work well with lanzaboote at the moment
   services.fwupd.enable = true;
+  services.flatpak.enable = true;
 
   # gpaste has a daemon, must be enabled over package
   programs.gpaste.enable = true;

@@ -7,13 +7,12 @@
 
   home.packages = with pkgs; [
     azure-cli
-    azuredatastudio
     kubelogin
     liquibase
     nodejs
     openssh
-    #obsidian
     onedrive
+    thunderbird
   ];
   helix.lsps = [
     "bash"
@@ -42,9 +41,11 @@
         "nightthemeswitcher@romainvigier.fr"
         "GPaste@gnome-shell-extensions.gnome.org"
         "onedrive@client.onedrive.com"
+        "blur-my-shell@aunetx"
+        "luminus-shell-y@dikasp.gitlab"
       ];
       favorite-apps = [
-        "microsoft-edge-dev.desktop"
+        "chromium-browser.desktop"
         "org.keepassxc.KeePassXC.desktop"
         "code.desktop"
         "org.gnome.Nautilus.desktop"

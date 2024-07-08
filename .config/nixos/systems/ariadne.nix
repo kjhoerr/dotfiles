@@ -1,17 +1,17 @@
 # ariadne.nix
-{ lib, pkgs, ... }: {
+{ pkgs, ... }: {
 
   networking.hostName = "ariadne";
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "tpm_crb" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
-  # Update for 6.8-rc5
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_testing;
-
+  boot = {
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+      kernelModules = [ "dm-snapshot" "tpm_crb" ];
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
+  };
   nixpkgs.hostPlatform = "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = true;
 
   services.tailscale.enable = true;
   networking.firewall.checkReversePath = "loose";
@@ -79,8 +79,9 @@
   users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.kjhoerr = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "podman" ];
     hashedPasswordFile = "/persist/passwords/kjhoerr";
   };
 

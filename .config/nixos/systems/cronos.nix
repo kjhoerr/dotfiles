@@ -63,8 +63,9 @@
   users.users.root.hashedPasswordFile = "/persist/passwords/root";
   users.users.khoerr = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "podman" ];
     hashedPasswordFile = "/persist/passwords/khoerr";
   };
   

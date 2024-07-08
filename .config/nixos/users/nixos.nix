@@ -35,7 +35,7 @@
 
   programs.gpg.mutableKeys = true;
   programs.gpg.mutableTrust = true;
-  services.gpg-agent.pinentryFlavor = "curses";
+  services.gpg-agent.pinentryPackage = pkgs.pinentry-curses;
   services.ssh-agent.enable = true;
 
   # Light theme related changes

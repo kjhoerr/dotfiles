@@ -7,29 +7,30 @@
   # May include extra config OOTB that the package does not
   programs.firefox.enable = lib.mkDefault true;
   programs.vscode.enable = lib.mkDefault true;
+  programs.chromium = {
+    enable = lib.mkDefault true;
+    package = pkgs.ungoogled-chromium;
+    dictionaries = [
+      pkgs.hunspellDictsChromium.en_US
+    ];
+    extensions = [
+      { id = "ocaahdebbfolfmndjeplogmgcagdmblk"; }
+      { id = "nngceckbapebfimnlniiiahkandclblb"; }
+      { id = "ecjfaoeopefafjpdgnfcjnhinpbldjij"; }
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
+      { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; }
+    ];
+  };
 
   home.packages = lib.mkBefore (with pkgs; [
-    beeper
     blackbox-terminal
     foliate
+    gnumeric
     keepassxc
-    runelite
-    discord-canary
-    microsoft-edge-dev
     obsidian
     openlens
+    switcheroo
   ]);
-
-  xdg.desktopEntries.microsoft-edge-dev = {
-    name = "Microsoft Edge (dev)";
-    genericName = "Web Browser";
-    exec = "${pkgs.microsoft-edge-dev}/bin/microsoft-edge-dev --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer %U";
-    terminal = false;
-    icon = "microsoft-edge-dev";
-    type = "Application";
-    categories = [ "Network" "WebBrowser" ];
-    mimeType = [ "application/pdf" "application/rdf+xml" "application/rss+xml" "application/xhtml+xml" "application/xhtml_xml" "application/xml" "image/gif" "image/jpeg" "image/png" "image/webp" "text/html" "text/xml" "x-scheme-handler/http" "x-scheme-handler/https"];
-  };
 
 }
 

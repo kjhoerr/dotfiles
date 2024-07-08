@@ -48,7 +48,7 @@
   users.users.kjhoerr = {
     isNormalUser = true;
     description = "Kevin Hoerr";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox-wayland
       bind
