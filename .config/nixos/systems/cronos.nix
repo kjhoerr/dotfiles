@@ -1,12 +1,20 @@
 # cronos.nix
-{ lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }: {
 
   networking.hostName = "cronos";
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ "tpm_tis" ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+  boot.blacklistedKernelModules = [
+    "nouveau"
+    "rivafb"
+    "nvidiafb"
+    "rivatv"
+    "nv"
+    "uvcvideo"
+  ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/e7801e57-5291-4c9a-beb7-1dc31a071023";
@@ -50,6 +58,19 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = true;
+
+  services.xserver.videoDrivers = [
+    "nvidia"
+    "intel"
+  ];
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.latest;
+
+    powerManagement.enable = true;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = true;
+  };
 
   environment.systemPackages = [
     pkgs.gnomeExtensions.onedrive
