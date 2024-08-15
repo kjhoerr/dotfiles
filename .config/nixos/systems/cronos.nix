@@ -14,7 +14,6 @@
     "nvidiafb"
     "rivatv"
     "nv"
-    "uvcvideo"
   ];
 
   fileSystems."/" =
