@@ -53,6 +53,7 @@ in {
       "/var/lib/docker"
       "/var/lib/fprint"
       "/var/lib/AccountsService"
+      "/var/lib/nixos"
       "/var/lib/power-profiles-daemon"
       "/var/lib/tailscale"
       "/var/lib/upower"
