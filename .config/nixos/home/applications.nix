@@ -28,7 +28,6 @@
     gnumeric
     keepassxc
     obsidian
-    openlens
     switcheroo
   ]);
 
