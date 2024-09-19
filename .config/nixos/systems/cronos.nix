@@ -6,7 +6,7 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ "tpm_tis" ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_6_6;
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
   boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
   boot.blacklistedKernelModules = [
     "nouveau"
@@ -55,8 +55,8 @@
       fsType = "vfat";
     };
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  nixpkgs.hostPlatform = "x86_64-linux";
+  powerManagement.cpuFreqGovernor = "powersave";
   hardware.cpu.intel.updateMicrocode = true;
 
   services.xserver.videoDrivers = [
