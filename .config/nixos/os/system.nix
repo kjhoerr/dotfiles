@@ -18,20 +18,21 @@ in {
   networking.useDHCP = lib.mkDefault true;
   networking.networkmanager.enable = true;
 
-  # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager = {
-      gnome.enable = lib.mkDefault true;
+    displayManager.gdm = {
+      enable = lib.mkDefault true;
+      wayland = true;
     };
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
+    desktopManager.gnome.enable = lib.mkDefault true;
   };
-  services.displayManager.defaultSession = "gnome";
-  services.desktopManager.plasma6.enable = lib.mkDefault false;
+  services.displayManager = {
+    defaultSession = "gnome";
+  };
+  services.desktopManager = {
+    cosmic.enable = lib.mkDefault true;
+    plasma6.enable = lib.mkDefault false;
+  };
   programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
   programs.zsh.enable = lib.mkDefault true;
 
@@ -140,7 +141,6 @@ in {
   };
 
   # Wayland-specific configuration
-  services.xserver.displayManager.gdm.wayland = true;
   environment.sessionVariables = {
     # keepassxc / QT apps will use xwayland by default - override
     QT_QPA_PLATFORM = "wayland";
