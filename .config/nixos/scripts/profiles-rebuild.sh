@@ -5,7 +5,7 @@
 ## provided as option(s) to nix build
 
 ## Setup - strongly assume defaults
-SOURCE="${FLAKE_SOURCE:-github:kjhoerr/dotfiles}"
+SOURCE="${FLAKE_SOURCE:-github:kjhoerr/dotfiles/24.11}"
 SYSPROFILE="/nix/var/nix/profiles/system"
 HOSTNAME=$(hostname)
 USERNAME=$(whoami)
