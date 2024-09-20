@@ -22,6 +22,8 @@
   i18n.defaultLocale = "en_US.UTF-8";
   hardware.opengl.enable = lib.mkForce false;
 
+  programs.zsh.enable = lib.mkDefault true;
+
   environment.systemPackages = with pkgs; [
     neovim
     kakoune
