@@ -32,14 +32,13 @@ in {
   };
   services.displayManager.defaultSession = "gnome";
   services.desktopManager.plasma6.enable = lib.mkDefault false;
-  programs.ssh.askPassword = lib.mkForce "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
+  programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
   programs.zsh.enable = lib.mkDefault true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
   # Enable sound using pipewire
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -64,8 +63,8 @@ in {
     pinentry-gnome3
     podman-desktop
     wl-clipboard
-    gnome.gnome-tweaks
-    gnome.gnome-boxes
+    gnome-tweaks
+    gnome-boxes
   ]) ++ (with pkgs.gnomeExtensions; [
     blur-my-shell
     gsconnect
@@ -75,12 +74,13 @@ in {
   ]);
 
   # Remove unused/icky packages
-  environment.gnome.excludePackages = (with pkgs.gnome; [
+  environment.gnome.excludePackages = with pkgs; [
     epiphany
     geary
+    gedit
     gnome-contacts
     gnome-music
-  ]) ++ [ pkgs.gedit ];
+  ];
   services.xserver.excludePackages = with pkgs; [
     xterm
   ];
