@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
@@ -84,9 +84,6 @@
         ./.config/nixos/os/upgrade.nix
         {
           nixpkgs.overlays = osOverlays;
-
-          # Use most up-to-date tailscale package from nixpkgs-unstable
-          services.tailscale.package = pkgs.tailscale;
         }
       ];
 
