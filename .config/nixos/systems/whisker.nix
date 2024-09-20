@@ -61,7 +61,7 @@
       [org.gnome.mutter]
       experimental-features=['variable-refresh-rate']
     '';
-    extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
+    extraGSettingsOverridePackages = [ pkgs.mutter ];
   };
   services.desktopManager.plasma6.enable = true;
 
