@@ -21,8 +21,8 @@ in {
   nix.gc.options = lib.mkDefault "--delete-older-than 14d";
 
   # Enable nix-community public binary cache, for potential build skips on flakes
-  nix.settings.substituters = lib.mkDefault [ "http://nix-cache.local:9080/" "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
-  nix.settings.trusted-public-keys = lib.mkDefault [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
+  nix.settings.substituters = lib.mkDefault [ "http://nix-cache.local:9080/" "https://cosmic.cachix.org/" "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
+  nix.settings.trusted-public-keys = lib.mkDefault [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
   nix.settings.trusted-users = lib.mkDefault [ "root" "@wheel" ];
 
   # Leave SSHD off by default, but set up sensible defaults for when it's enabled
