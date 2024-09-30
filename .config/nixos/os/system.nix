@@ -62,6 +62,7 @@ in {
     pciutils
     sbctl
     pinentry-gnome3
+    podman-compose
     podman-desktop
     wl-clipboard
     gnome.gnome-tweaks
@@ -120,6 +121,7 @@ in {
     enable = lib.mkDefault true;
     dockerSocket.enable = true;
     dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true;
   };
 
   # libvert
