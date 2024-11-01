@@ -42,6 +42,7 @@ in {
         "zig"
       ]);
     };
+    playwright.enable = lib.mkEnableOption "";
   };
 
   config.programs.helix = {
@@ -254,8 +255,6 @@ in {
   config.home.packages = lib.mkBefore (with pkgs; [
     # debugging
     lldb
-    # testing
-    playwright-driver
   ]
     ++ (lsp-package "go" [ pkgs.delve ])
     ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
@@ -263,6 +262,13 @@ in {
     ++ (lsp-package "rust" [ pkgs.rustup ])
     ++ (lsp-package "typescript" [ pkgs.yarn-berry ])
   );
+
+  config.home.sessionVariables = lib.mkIf config.playwright.enable {
+    PLAYWRIGHT_NODEJS_PATH = "${pkgs.nodejs_20}/bin/node";
+    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+  };
 
 }
 
