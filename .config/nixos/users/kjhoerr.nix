@@ -37,6 +37,7 @@ in {
     };
   };
 
+  playwright.enable = true;
   helix.lsps = [
     "bash"
     "css"
