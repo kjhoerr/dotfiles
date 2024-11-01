@@ -10,9 +10,12 @@ in {
 
   home.packages = with pkgs; [
     beeper
+    calibre
     doctl
     flatpak-builder
     mkcert
+    rclone
+    zoom-us
   ];
 
   services.syncthing.enable = true;
