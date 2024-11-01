@@ -14,6 +14,7 @@
     onedrive
     thunderbird
   ];
+  playwright.enable = true;
   helix.lsps = [
     "bash"
     "css"
