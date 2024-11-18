@@ -38,12 +38,6 @@
       url = "github:tlvince/ectool.nix";
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
-
-    # Cosmic DE for NixOS
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixos-pkgs";
-    };
   };
 
   outputs = { nixpkgs, ... }@inputs:
@@ -84,7 +78,6 @@
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
         inputs.nixos-hardware.nixosModules.common-hidpi
-        inputs.nixos-cosmic.nixosModules.default
         ./.config/nixos/os/persist.nix
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
