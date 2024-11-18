@@ -30,7 +30,6 @@ in {
     defaultSession = "gnome";
   };
   services.desktopManager = {
-    cosmic.enable = lib.mkDefault true;
     plasma6.enable = lib.mkDefault false;
   };
   programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
