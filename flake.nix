@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixos-pkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixos-pkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Secure Boot for NixOS
