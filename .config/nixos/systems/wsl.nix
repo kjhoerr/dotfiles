@@ -20,7 +20,7 @@
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
-  hardware.opengl.enable = lib.mkForce false;
+  hardware.graphics.enable = lib.mkForce false;
 
   programs.zsh.enable = lib.mkDefault true;
 
@@ -59,10 +59,7 @@
   };
 
   # Enable nix flakes
-  nix.package = pkgs.nixFlakes;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-  '';
+  nix.settings.experimental-features = "nix-command flakes";
 
   system.stateVersion = "22.05";
 }

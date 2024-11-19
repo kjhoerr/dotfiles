@@ -18,28 +18,27 @@ in {
   networking.useDHCP = lib.mkDefault true;
   networking.networkmanager.enable = true;
 
-  # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager = {
-      gnome.enable = lib.mkDefault true;
+    displayManager.gdm = {
+      enable = lib.mkDefault true;
+      wayland = true;
     };
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
+    desktopManager.gnome.enable = lib.mkDefault true;
   };
-  services.displayManager.defaultSession = "gnome";
-  services.desktopManager.plasma6.enable = lib.mkDefault false;
-  programs.ssh.askPassword = lib.mkForce "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
+  services.displayManager = {
+    defaultSession = "gnome";
+  };
+  services.desktopManager = {
+    plasma6.enable = lib.mkDefault false;
+  };
+  programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
   programs.zsh.enable = lib.mkDefault true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
   # Enable sound using pipewire
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -65,8 +64,8 @@ in {
     podman-compose
     podman-desktop
     wl-clipboard
-    gnome.gnome-tweaks
-    gnome.gnome-boxes
+    gnome-tweaks
+    gnome-boxes
   ]) ++ (with pkgs.gnomeExtensions; [
     blur-my-shell
     gsconnect
@@ -76,12 +75,13 @@ in {
   ]);
 
   # Remove unused/icky packages
-  environment.gnome.excludePackages = (with pkgs.gnome; [
+  environment.gnome.excludePackages = with pkgs; [
     epiphany
     geary
+    gedit
     gnome-contacts
     gnome-music
-  ]) ++ [ pkgs.gedit ];
+  ];
   services.xserver.excludePackages = with pkgs; [
     xterm
   ];
@@ -142,7 +142,6 @@ in {
   };
 
   # Wayland-specific configuration
-  services.xserver.displayManager.gdm.wayland = true;
   environment.sessionVariables = {
     # keepassxc / QT apps will use xwayland by default - override
     QT_QPA_PLATFORM = "wayland";
