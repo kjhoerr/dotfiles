@@ -12,7 +12,6 @@
     nodejs
     openssh
     onedrive
-    thunderbird
   ];
   playwright.enable = true;
   helix.lsps = [
