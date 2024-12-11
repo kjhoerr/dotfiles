@@ -11,7 +11,7 @@ function usage {
 	exit 1
 }
 
-if [ -z "${1}" ];
+if [ "$#" -eq 0 ];
 then
 	partuuid="$(lsblk -o fstype,uuid | grep 'crypto_LUKS' | awk '{print $2;}')"
 	lukspath="$(readlink -f /dev/disk/by-uuid/"${partuuid}")"
