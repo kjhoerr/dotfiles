@@ -61,7 +61,7 @@
 
   services.xserver.videoDrivers = [
     "nvidia"
-    "intel"
+    "modesetting"
   ];
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.beta;
