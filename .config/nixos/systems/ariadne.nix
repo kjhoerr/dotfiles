@@ -15,6 +15,8 @@
     };
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
+
+    kernelPackages = pkgs.linuxPackages_6_12;
   };
 
   fileSystems."/" =
