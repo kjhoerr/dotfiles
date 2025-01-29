@@ -27,6 +27,7 @@
     foliate
     gnumeric
     keepassxc
+    kiwix
     obsidian
     switcheroo
   ]);
