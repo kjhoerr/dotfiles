@@ -6,7 +6,7 @@
   home.homeDirectory = "/home/khoerr";
 
   home.packages = with pkgs; [
-    azure-cli
+    #azure-cli
     kubelogin
     liquibase
     nodejs
