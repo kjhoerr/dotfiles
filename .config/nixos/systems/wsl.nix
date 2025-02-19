@@ -6,7 +6,6 @@
   wsl = {
     enable = true;
     wslConf.automount.root = "/mnt";
-    nativeSystemd = true;
 
     # Needed to enable WSL wrapper for running VSCode WSL
     binShPkg = lib.mkForce (with pkgs; runCommand "nixos-wsl-bash-wrapper"
