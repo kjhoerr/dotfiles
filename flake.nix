@@ -66,6 +66,7 @@
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.impermanence.nixosModules.impermanence
         inputs.nixos-hardware.nixosModules.common-hidpi
+        ./.config/nixos/os/certs.nix
         ./.config/nixos/os/persist.nix
         ./.config/nixos/os/secure-boot.nix
         ./.config/nixos/os/system.nix
@@ -79,6 +80,7 @@
       wslModules = [
         "${inputs.nixos-pkgs}/nixos/modules/profiles/minimal.nix"
         inputs.nixos-wsl.nixosModules.wsl
+        ./.config/nixos/os/certs.nix
         ./.config/nixos/os/upgrade.nix
       ];
 
