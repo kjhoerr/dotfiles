@@ -21,12 +21,6 @@
       inputs.nixpkgs.follows = "nixos-pkgs";
     };
 
-    # Service to fix libraries and links for NixOS hosting as VSCode remote
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Links persistent folders into system
     impermanence.url = "github:nix-community/impermanence";
 
@@ -67,12 +61,6 @@
         ./.config/nixos/home/gnome.nix
       ];
 
-      # User config modules for hosting services
-      serverHomeModules = [
-        inputs.vscode-server.nixosModules.home
-        ./.config/nixos/home/services.nix
-      ];
-
       # Base OS configs, adapts to system configs
       osModules = [
         inputs.lanzaboote.nixosModules.lanzaboote
@@ -105,7 +93,7 @@
       wslUser = (userModules: inputs.home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         # userModules overwrites, so is appended
-        modules = homeModules ++ serverHomeModules ++ userModules;
+        modules = homeModules ++ userModules;
       });
 
       # Function to build a nixos configuration from system modules
