@@ -33,6 +33,9 @@
 
   virtualisation.docker.enable = true;
 
+  # Allow foreign binaries to run on NixOS
+  programs.nix-ld.enable = true;
+
   # Provide wsl-vpnkit as built-in systemd service
   systemd.services.wsl-vpnkit = {
     # This service will not run by default
