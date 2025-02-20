@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 let
-  jdk = config.cacerts.jdkPackage;
+  cfg = config.cacerts;
   add-keystore-cert = aliasname: cert: ''
-    ${jdk}/bin/keytool \
+    ${cfg.jdkPackage}/bin/keytool \
       -importcert \
       -file ${cert} \
       -keystore $out \
@@ -14,17 +14,21 @@ let
     builtins.mapAttrs add-keystore-cert certs
   ));
 
-  cacertsFile = pkgs.runCommand "cacerts-custom" {} ''
-    cp ${jdk}/lib/openjdk/lib/security/cacerts $out
+  cacertsFile = lib.mkIf cfg.enable (pkgs.runCommand "cacerts-custom" {} ''
+    cp ${cfg.jdkPackage}/lib/openjdk/lib/security/cacerts $out
     chmod +w $out
 
-    ${compile-command-keystore-certs config.cacerts.certificateFiles}
-  '';
+    ${compile-command-keystore-certs cfg.certificateFiles}
+  '');
 
 in {
-  options = {
-    cacerts.jdkPackage = lib.mkPackageOption pkgs "openjdk21_headless" { };
-    cacerts.certificateFiles = lib.mkOption {
+  options.cacerts = {
+
+    enable = lib.mkEnableOption "";
+
+    jdkPackage = lib.mkPackageOption pkgs "openjdk21_headless" { };
+
+    certificateFiles = lib.mkOption {
       type = with lib.types; attrsOf path;
       default = { };
       example = lib.literalExpression ''{ cert-for-bundle = /persist/ssl/certs/cert-for-bundle.crt; }'';
@@ -34,11 +38,12 @@ in {
         use by Java.
       '';
     };
+
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     # Include cert files in default CA cert bundle used system-wide
-    security.pki.certificateFiles = builtins.attrValues config.cacerts.certificateFiles;
+    security.pki.certificateFiles = builtins.attrValues cfg.certificateFiles;
 
     # Ensure javax.net.ssl.trustStore property is set to the custom cacerts file
     environment.variables.JAVAX_NET_SSL_TRUSTSTORE = cacertsFile;
