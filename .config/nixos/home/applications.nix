@@ -26,6 +26,7 @@
     blackbox-terminal
     foliate
     gnumeric
+    jetbrains.datagrip
     keepassxc
     kiwix
     obsidian
