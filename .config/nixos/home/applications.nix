@@ -28,7 +28,7 @@
     gnumeric
     jetbrains.datagrip
     keepassxc
-    kiwix
+    #kiwix
     obsidian
     switcheroo
   ]);
