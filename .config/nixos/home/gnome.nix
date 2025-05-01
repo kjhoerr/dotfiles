@@ -49,6 +49,6 @@ in {
     components = [ "pkcs11" "secrets" ];
   };
 
-  services.gpg-agent.pinentryPackage = lib.mkDefault pkgs.pinentry-gnome3;
+  services.gpg-agent.pinentry.package = lib.mkDefault pkgs.pinentry-gnome3;
 
 }
