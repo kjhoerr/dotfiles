@@ -72,7 +72,7 @@ in {
       favorite-apps = [
         "chromium-browser.desktop"
         "code.desktop"
-        "beeper.desktop"
+        "beepertexts.desktop"
         "org.gnome.Nautilus.desktop"
         "com.raggesilver.BlackBox.desktop"
       ];
