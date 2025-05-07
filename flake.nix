@@ -142,6 +142,7 @@
           ./.config/nixos/systems/wsl.nix
           {
             users.users.nixos.extraGroups = lib.mkAfter [ "docker" ];
+            users.users.nixos.shell = pkgs.zsh;
           }
         ];
 
