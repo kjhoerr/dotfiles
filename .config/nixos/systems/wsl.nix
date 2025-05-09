@@ -43,15 +43,9 @@
     enable = true;
     description = "Provide network connectivity to WSL2 when blocked by VPN";
 
-    # Assumes wsl-vpnkit is installed as separate distro in WSL2.
-    #
-    # See: https://github.com/sakai135/wsl-vpnkit#setup-as-a-distro
-    #
-    # Could also try to set up a derivation to add the script as standalone so that
-    # there is no external dependency. Would have to be managed and updated manually
     serviceConfig = {
       Type = "idle";
-      ExecStart = "/mnt/c/windows/system32/wsl.exe -d wsl-vpnkit --cd /app wsl-vpnkit";
+      ExecStart = "${pkgs.wsl-vpnkit}/bin/wsl-vpnkit";
       Restart = "always";
       KillMode = "mixed";
     };
