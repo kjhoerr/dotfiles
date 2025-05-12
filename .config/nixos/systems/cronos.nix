@@ -59,6 +59,8 @@
   powerManagement.cpuFreqGovernor = "powersave";
   hardware.cpu.intel.updateMicrocode = true;
 
+  time.hardwareClockInLocalTime = true;
+
   services.xserver.videoDrivers = [
     "nvidia"
     "modesetting"
