@@ -98,8 +98,12 @@ in {
       ibm-plex
       merriweather
       noto-fonts-emoji
-      (nerdfonts.override { fonts = [ "FiraCode" "UbuntuMono" "CascadiaCode" "Noto" ]; })
-    ];
+    ] ++ (with pkgs.nerd-fonts; [
+      fira-code
+      ubuntu-mono
+      caskaydia-cove
+      noto
+    ]);
 
     fontconfig = {
       defaultFonts = {
