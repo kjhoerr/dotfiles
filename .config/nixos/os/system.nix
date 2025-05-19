@@ -39,7 +39,7 @@ in {
   services.printing.enable = true;
 
   # Enable sound using pipewire
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -98,8 +98,12 @@ in {
       ibm-plex
       merriweather
       noto-fonts-emoji
-      (nerdfonts.override { fonts = [ "FiraCode" "UbuntuMono" "CascadiaCode" "Noto" ]; })
-    ];
+    ] ++ (with pkgs.nerd-fonts; [
+      fira-code
+      ubuntu-mono
+      caskaydia-cove
+      noto
+    ]);
 
     fontconfig = {
       defaultFonts = {

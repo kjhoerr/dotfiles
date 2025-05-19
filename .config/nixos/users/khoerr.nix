@@ -7,7 +7,6 @@
 
   home.packages = with pkgs; [
     azure-cli
-    citrix_workspace
     kubelogin
     liquibase
     nodejs
