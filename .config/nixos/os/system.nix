@@ -95,7 +95,6 @@ in {
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
-      ibm-plex
       merriweather
       noto-fonts-emoji
     ] ++ (with pkgs.nerd-fonts; [
@@ -108,8 +107,8 @@ in {
     fontconfig = {
       defaultFonts = {
         serif = [ "Merriweather" ];
-        sansSerif = [ "IBM Plex Sans" ];
-        monospace = [ "FiraCode" "CascadiaCode" ];
+        sansSerif = [ "Adwaita Sans" ];
+        monospace = [ "FiraCode" "CaskaydiaCove" ];
       };
 
       antialias = true;
