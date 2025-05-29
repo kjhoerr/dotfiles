@@ -137,7 +137,7 @@ in {
         args = [ "lsp" "stdio" ];
       };
       language-server.typescript-language-server = lsp-enabled "typescript" {
-        command = "${pkgs.nodePackages.typescript-language-server}/lib/node_modules/.bin/typescript-language-server";
+        command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
         args = [ "--stdio" ];
         config = {
           hostInfo = "helix";
