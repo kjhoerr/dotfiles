@@ -30,6 +30,7 @@
       "x-scheme-handler/https" = "chromium-browser.desktop";
       "x-scheme-handler/about" = "chromium-browser.desktop";
       "x-scheme-handler/unknown" = "chromium-browser.desktop";
+      "application/pdf" = "org.gnome.Evince.desktop";
     };
   };
 
