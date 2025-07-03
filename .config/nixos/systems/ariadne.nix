@@ -138,6 +138,8 @@
     fw-ectool
     powertop
     lact
+    android-tools
+    wineWowPackages.waylandFull
   ];
 
   programs.steam.enable = true;
