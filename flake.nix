@@ -73,6 +73,9 @@
         ./.config/nixos/os/upgrade.nix
         {
           nixpkgs.overlays = osOverlays;
+
+          # Use most up-to-date tailscale package from nixpkgs-unstable
+          services.tailscale.package = pkgs.tailscale;
         }
       ];
 
