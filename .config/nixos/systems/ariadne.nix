@@ -139,6 +139,7 @@
     powertop
     lact
     android-tools
+    protonplus
     wineWowPackages.waylandFull
   ];
 
