@@ -38,7 +38,7 @@
     blackbox-terminal
     foliate
     gnumeric
-    #jetbrains.datagrip
+    jetbrains.datagrip
     keepassxc
     kiwix
     obsidian
