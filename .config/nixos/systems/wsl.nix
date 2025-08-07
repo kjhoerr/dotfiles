@@ -6,6 +6,12 @@
   wsl = {
     enable = true;
     wslConf.automount.root = "/mnt";
+    usbip.enable = true;
+
+    extraBin = [
+      { src = "${lib.getExe pkgs.bash}"; }
+      { src = "${lib.getExe' pkgs.linuxPackages.usbip "usbip"}"; }
+    ];
 
     # Needed to enable WSL wrapper for running VSCode WSL
     binShPkg = lib.mkForce (with pkgs; runCommand "nixos-wsl-bash-wrapper"
@@ -26,10 +32,14 @@
   environment.systemPackages = with pkgs; [
     neovim
     kakoune
+    kmod
+    usbutils
     git
     gnupg
     wget
   ];
+
+  services.pcscd.enable = true;
 
   virtualisation.docker.enable = true;
 
