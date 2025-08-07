@@ -35,8 +35,8 @@
 
   programs.gpg.mutableKeys = true;
   programs.gpg.mutableTrust = true;
+  programs.gpg.scdaemonSettings.disable-ccid = true;
   services.gpg-agent.pinentry.package = pkgs.pinentry-curses;
-  services.ssh-agent.enable = true;
 
   # Light theme related changes
   programs.bash.initExtra = ''
