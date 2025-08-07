@@ -29,6 +29,8 @@
     "yaml"
   ];
 
+  services.syncthing.enable = true;
+
   programs.git.userEmail = "khoerr@ksmpartners.com";
   programs.gpg.mutableKeys = true;
   programs.gpg.mutableTrust = true;
