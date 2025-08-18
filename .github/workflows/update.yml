@@ -11,7 +11,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
 
       - name: Set default git branch (to reduce log spam)
-        run: git config --global init.defaultBranch trunk
+        run: git config --global init.defaultBranch main
 
       - name: Update flake.lock
         run: |
@@ -143,7 +143,7 @@ jobs:
           body: |
             ## Run report
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          base: trunk
+          base: main
           branch: flake-updates
           delete-branch: true
           title: Update flake.lock
