@@ -7,7 +7,7 @@
   programs.git.userEmail = lib.mkDefault "kjhoerr@protonmail.com";
   programs.git.signing.key = lib.mkDefault "BEDBA29269ED7111";
   programs.git.signing.signByDefault = lib.mkDefault true;
-  programs.git.extraConfig.init.defaultBranch = "trunk";
+  programs.git.extraConfig.init.defaultBranch = "main";
   programs.git.extraConfig.core.editor = "hx";
   programs.git.extraConfig.color.ui = "always";
   programs.git.extraConfig.stash.showPatch = true;
