@@ -37,10 +37,10 @@
   home.packages = lib.mkBefore (with pkgs; [
     blackbox-terminal
     foliate
-    #gnumeric
+    gnumeric
     jetbrains.datagrip
     keepassxc
-    kiwix
+    #kiwix
     obsidian
     switcheroo
   ]);
