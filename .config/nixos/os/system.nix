@@ -25,6 +25,12 @@ in {
       wayland = true;
     };
     desktopManager.gnome.enable = lib.mkDefault true;
+    xkb.extraLayouts.eng-cd = {
+      description = "English (Coleman-Dvorak Variant)";
+      languages = [ "eng" ];
+      symbolsfile = ../../xkb/coleman_dvorak.xkb;
+    };
+
   };
   services.displayManager = {
     defaultSession = "gnome";
