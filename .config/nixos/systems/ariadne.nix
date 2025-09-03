@@ -73,6 +73,8 @@
     extraGSettingsOverrides = ''
       [org.gnome.mutter]
       experimental-features=['scale-monitor-framebuffer']
+      [org.gnome.desktop.input-sources]
+      sources=[('xkb', 'eng-cd'), ('xkb', 'us')]
     '';
     extraGSettingsOverridePackages = [ pkgs.mutter ];
   };
