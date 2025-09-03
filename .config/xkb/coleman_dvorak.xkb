@@ -1,0 +1,80 @@
+// Custom Coleman-Dvorak Variant (English-US)
+// Authored by Kevin J Hoerr (kjhoerr@submelon.tech)
+//
+// I am unsure of accurate sources or inspirations other than the two layouts listed.
+// I've had this layout for a long time and I continue to use it. I recall making some
+// personal key adjustments based on my own observations, but I don't recall the
+// services or tools involved in making those observations.
+//
+// - Reduces hand movement
+// - Retains certain key positions ideal for hotkeys
+// - Some vim optimizations (though full vim support requires some rebinding)
+//
+// XKB configuration derived from https://github.com/logological/dvorak
+
+xkb_symbols "eng-cd" {
+
+ name[Group1]= "English (Coleman-Dvorak Variant)";
+ include "us(basic)"
+
+ key <TLDE> { [ grave,		asciitilde,	dead_grave,		dead_tilde		] };
+ key <AE01> { [ 1,		exclam,		onesuperior,		numerosign		] };
+ key <AE02> { [ 2,		at,		twosuperior,		dead_doubleacute	] };
+ key <AE03> { [ 3,		numbersign,	threesuperior,		dead_macron		] };
+ key <AE04> { [ 4,		dollar,		currency,		sterling		] };
+ key <AE05> { [ 5,		percent,	careof,			degree			] };
+ key <AE06> { [ 6,		asciicircum,	onequarter,		dead_circumflex		] };
+ key <AE07> { [ 7,		ampersand,	onehalf,		dead_horn		] };
+ key <AE08> { [ 8,		asterisk,	threequarters,		dead_ogonek		] };
+ key <AE09> { [ 9,		parenleft,	leftsinglequotemark,	dead_breve		] };
+ key <AE10> { [ 0,		parenright,	rightsinglequotemark,	dead_abovering		] };
+ key <AE11> { [ minus,		underscore,	endash,			emdash			] };
+ key <AE12> { [ equal,		plus,		U02DE,			plusminus		] }; // rhotic hook modifier
+ key <BKSP> { [ BackSpace									] };
+
+ key <TAB>  { [ Tab,		ISO_Left_Tab							] };
+ key <AD01> { [ apostrophe,	quotedbl,	dead_acute,		dead_diaeresis		] };
+ key <AD02> { [ comma,		less,		dead_cedilla,		leftdoublequotemark	] };
+ key <AD03> { [ period,		greater,	ellipsis,		rightdoublequotemark	] };
+ key <AD04> { [ p,		P,		paragraph,		section			] };
+ key <AD05> { [ y,		Y,		U028F						] }; // semi-high front rounded vowel
+ key <AD06> { [ q,		Q,		Greek_theta,		EuroSign		] };
+ key <AD07> { [ f,		F,		U025A,			U025D			] }; // rhotacized schwa, rhotacized lower-mid central vowel
+ key <AD08> { [ g,		G,		U0263,			U02E0			] }; // voiced velar fricative, modifier letter small gamma
+ key <AD09> { [ d,		D,		eth,			ETH			] };
+ key <AD10> { [ k,		K,		copyright,		registered		] };
+ key <AD11> { [ bracketleft,	braceleft,	U02C8						] }; // primary stress
+ key <AD12> { [ bracketright,	braceright,	U02CC,			U0329			] }; // secondary stress, combining vertical line below
+ key <BKSL> { [ backslash,	bar,		U02D0						] }; // length mark
+
+ key <CAPS> { [ Caps_Lock									] };
+ key <AC01> { [ o,		O,		oe,			OE			] };
+ key <AC02> { [ a,		A,		ae,			AE			] };
+ key <AC03> { [ e,		E,		schwa,			U025B			] }; // lower-mid front unrounded vowel
+ key <AC04> { [ i,		I,		U026A,			U22EE			] }; // semi-high front unrounded vowel, vertical ellipsis
+ key <AC05> { [ u,		U,		U028C,			U028A			] }; // lower-mid back unrounded vowel, near-close near-back rounded vowel
+ key <AC06> { [ h,		H,		U02B0						] }; // aspiration modifier
+ key <AC07> { [ r,		R,		U0279,			U0281			] }; // voiced alveolar approximant, voiced uvular fricative or approximant
+ key <AC08> { [ t,		T,		thorn,			THORN			] };
+ key <AC09> { [ n,		N,		eng,			U0272			] }; // voiced palatal nasal
+ key <AC10> { [ s,		S,		ssharp,			U0283			] }; // voiceless postalveolar fricative
+ key <AC11> { [ slash,		question,	oslash,			U0294			] }; // glottal stop
+ key <RTRN> { [ Return										] };
+
+ key <LFSH> { [ Shift_L										] };
+ key <AB01> { [ z,		Z,		U0292						] }; // voiced postalveolar fricative
+ key <AB02> { [ x,		X,		multiply,		division		] };
+ key <AB03> { [ c,		C,		U0254,			cent			] }; // lower-mid back rounded vowel
+ key <AB04> { [ v,		V,		U0325,			U031A			] }; // voiceless modifier, unreleased stop
+ key <AB05> { [ semicolon,	colon,		dead_ogonek,		dead_doubleacute	] };
+ key <AB06> { [ l,		L,		lstroke,		Lstroke			] };
+ key <AB07> { [ m,		M,		mu,			U2212			] }; // minus sign
+ key <AB08> { [ w,		W,		U0251,			U028D			] }; // low back unrounded vowel, voiceless rounded labiovelar approximant
+ key <AB09> { [ b,		B,		enfilledcircbullet				] };
+ key <AB10> { [ j,		J,		U0361,			U027E			] }; // ligature tie, voiced alveolar flap
+
+ key <LCTL> { [ Control_L									] };
+ key <SPCE> { [ space										] };
+
+ include "level3(ralt_switch)"
+};
