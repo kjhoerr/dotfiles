@@ -28,7 +28,7 @@ in {
     xkb.extraLayouts.eng-cd = {
       description = "English (Coleman-Dvorak Variant)";
       languages = [ "eng" ];
-      symbolsfile = ../../xkb/coleman_dvorak.xkb;
+      symbolsFile = ../../xkb/coleman_dvorak.xkb;
     };
 
   };
