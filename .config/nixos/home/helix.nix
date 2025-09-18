@@ -258,7 +258,7 @@ in {
   ]
     ++ (lsp-package "go" [ pkgs.delve ])
     ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
-    ++ (lsp-package "python" [ python-env ])
+    #++ (lsp-package "python" [ python-env ])
     ++ (lsp-package "rust" [ pkgs.rustup ])
     ++ (lsp-package "typescript" [ pkgs.yarn-berry ])
   );
