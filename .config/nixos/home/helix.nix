@@ -122,9 +122,9 @@ in {
         command = "${pkgs.omnisharp-roslyn}/bin/OmniSharp";
         args = [ "--languageserver" ];
       };
-      language-server.pylsp = lsp-enabled "python" {
-        command = "${python-env}/bin/pylsp";
-      };
+      #language-server.pylsp = lsp-enabled "python" {
+      #  command = "${python-env}/bin/pylsp";
+      #};
       language-server.rust-analyzer = lsp-enabled "rust" {
         command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
       };
