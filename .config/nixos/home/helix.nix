@@ -122,9 +122,9 @@ in {
         command = "${pkgs.omnisharp-roslyn}/bin/OmniSharp";
         args = [ "--languageserver" ];
       };
-      language-server.pylsp = lsp-enabled "python" {
-        command = "${python-env}/bin/pylsp";
-      };
+      #language-server.pylsp = lsp-enabled "python" {
+      #  command = "${python-env}/bin/pylsp";
+      #};
       language-server.rust-analyzer = lsp-enabled "rust" {
         command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
       };
@@ -258,7 +258,7 @@ in {
   ]
     ++ (lsp-package "go" [ pkgs.delve ])
     ++ (lsp-package "java" [ graalvm-ce-low pkgs.maven ])
-    ++ (lsp-package "python" [ python-env ])
+    #++ (lsp-package "python" [ python-env ])
     ++ (lsp-package "rust" [ pkgs.rustup ])
     ++ (lsp-package "typescript" [ pkgs.yarn-berry ])
   );
