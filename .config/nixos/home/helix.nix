@@ -72,7 +72,7 @@ in {
         };
       };
       language-server.docker-langserver = lsp-enabled "dockerfile" {
-        command = "${pkgs.nodePackages.dockerfile-language-server-nodejs}/bin/docker-langserver";
+        command = "${pkgs.dockerfile-language-server}/bin/docker-langserver";
         args = [ "--stdio" ];
       };
       language-server.gopls = lsp-enabled "go" {
